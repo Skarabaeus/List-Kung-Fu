@@ -6,6 +6,11 @@ gem 'rails', '3.0.0.rc'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'paperclip'
+gem 'devise', :git => "git://github.com/plataformatec/devise.git", :tag => "v1.1.rc2"
+gem 'rmagick' # for paperclip
+gem 'RedCloth' # for textile support
+
 
 # Use unicorn as the web server
 # gem 'unicorn'
