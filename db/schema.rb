@@ -10,13 +10,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100930192049) do
+ActiveRecord::Schema.define(:version => 20101002164505) do
 
   create_table "filters", :force => true do |t|
     t.string   "name"
     t.string   "searchtext"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
+  end
+
+  create_table "filters_tags", :id => false, :force => true do |t|
+    t.integer "filter_id"
+    t.integer "tag_id"
   end
 
   create_table "list_items", :force => true do |t|
@@ -24,12 +30,25 @@ ActiveRecord::Schema.define(:version => 20100930192049) do
     t.boolean  "completed"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "list_id"
+    t.integer  "parent_item_id"
   end
 
   create_table "lists", :force => true do |t|
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "owner_id"
+  end
+
+  create_table "lists_tags", :id => false, :force => true do |t|
+    t.integer "list_id"
+    t.integer "tag_id"
+  end
+
+  create_table "lists_users", :id => false, :force => true do |t|
+    t.integer "list_id"
+    t.integer "user_id"
   end
 
   create_table "tags", :force => true do |t|
