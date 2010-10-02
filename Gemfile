@@ -8,6 +8,7 @@ gem 'devise', :git => "git://github.com/plataformatec/devise.git", :tag => "v1.1
 gem 'rmagick' # for paperclip
 gem 'RedCloth' # for textile support
 gem 'aws-s3', :require => 'aws/s3'
+gem 'jquery-rails'
 
 group :development, :test do
 	gem 'ruby-debug'
