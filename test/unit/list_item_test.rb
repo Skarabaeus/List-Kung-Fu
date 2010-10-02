@@ -1,8 +1,10 @@
 require 'test_helper'
 
 class ListItemTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  test "needs at least a list" do
+    assert_raise( ActiveRecord::RecordInvalid ) do
+      f = ListItem.new
+      f.save!
+    end
   end
 end

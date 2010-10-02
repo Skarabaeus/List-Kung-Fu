@@ -16,14 +16,18 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation
   
   def tags
-    lists = []
     all_tags = []
     
-    lists << self.lists << self.shared_lists
-    lists.flatten.each do |list|
+    self.all_lists.each do |list|
       all_tags << list.tags
     end
     
     all_tags.flatten
+  end
+  
+  def all_lists
+    lists = []
+    lists << self.lists << self.shared_lists
+    lists.flatten
   end
 end
