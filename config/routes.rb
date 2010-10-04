@@ -1,9 +1,11 @@
 ListKungFu::Application.routes.draw do
+  get "app/index"
+
   devise_for :users
 
   resources :lists
 
-  root :to => "Lists#index"
+  root :to => "app#index"
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
