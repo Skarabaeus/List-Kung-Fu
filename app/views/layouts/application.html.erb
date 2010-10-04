@@ -2,15 +2,23 @@
 <html>
 <head>
   <title>List Kung Fu</title>
-  <%= stylesheet_link_tag 'scaffold' %>
-  <%= javascript_include_tag :defaults %>
+	<%= stylesheet_link_tag 'http://yui.yahooapis.com/2.8.1/build/reset/reset-min.css' %>
+  <%= stylesheet_link_tag 'application', 'scaffold' %>
   <%= csrf_meta_tag %>
 </head>
 <body>
-	<p class="notice"><%= notice %></p>
-	<p class="alert"><%= alert %></p>
-
-<%= yield %>
-
+	<div id="wrapper">
+		<div id="header">
+			<p class="notice"><%= notice %></p>
+			<p class="alert"><%= alert %></p>
+		</div>
+		<div id="application">
+			<%= yield %>	
+		</div>		
+	</div>
+<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js' %> 
+<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' %>
+<%= javascript_include_tag 'http://static.ukijs.org/pkg/0.3.8/uki.js' %>
+<%= javascript_include_tag 'application' %>
 </body>
 </html>
