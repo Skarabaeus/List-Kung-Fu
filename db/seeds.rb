@@ -5,3 +5,13 @@
 #
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
+
+
+user = User.create(:email => 'siebel.stefan@gmail.com', :password => 'testtest')
+
+100.times do |n|
+  temp = List.new(:title => "Liste # #{n}")
+  temp.owner = user
+  temp.save!
+end
+  
