@@ -3,37 +3,50 @@ class ListsController < ApplicationController
   respond_to :html, :json
   
   def index
-    respond_with(@lists = List.all, :status => :ok, :notice => 'All Lists!')
+    @lists = List.all
+    respond_with(@lists)
   end
 
   def show
-    respond_with(@list = List.find(params[:id]))
+    @list = List.find(params[:id])
+    respond_with(@list)
   end
 
   def new
-    respond_with(@list = List.new)
+    @list = List.new
+    respond_with(@list)
   end
 
   def edit
-    respond_with(@list = List.find(params[:id]))
+    @list = List.find(params[:id])
+    flash[:notice] = "Hello World"
+    respond_with( @list )
   end
 
   def create
     @list = List.new(params[:list])
     @list.owner = User.first #obviously this is just temporary.
-    @list.save
-    respond_with(@list)
+
+    if @list.save
+      flash[:notice] = 'List has been created.'
+    end
+    
+    respond_with( @list )
   end
 
   def update
     @list = List.find(params[:id])
-    @list.update_attributes(params[:list])
-    respond_with(@list)
+    if @list.update_attributes(params[:list])
+      flash[:notice] = 'List has been updated.'
+    end
+    
+    respond_with( @list )
   end
 
   def destroy
-    @list = List.find(params[:id])
+    @list = List.find( params[:id] )
     @list.destroy
-    respond_with(@list)
+    
+    respond_with( @list )
   end
 end
