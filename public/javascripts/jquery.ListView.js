@@ -5,7 +5,7 @@
 		};
 
 
-		var template = 'Template: {{title}}';
+		var template = '{{title}}';
 		
 
 		
@@ -23,7 +23,7 @@
 			_create: function() {
 				var widget = this;
 				
-				List.index(function( data, status, xhr ) {
+				List.Index(function( data, status, xhr ) {
 
 					var ui = uki({ view: 'Box'
 						, rect: '0 0 300 400'

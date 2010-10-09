@@ -11,7 +11,7 @@ var Controller = function(spec, my) {
 		return protocol + hostname + port + "/";
 	};
 
-	that.clearFlash = function() {
+	that.ClearFlash = function() {
 		that.flash = {
 			notice: "",
 			error: "",
@@ -20,22 +20,22 @@ var Controller = function(spec, my) {
 		}	
 	};
 	
-	that.clearFlash();
+	that.ClearFlash();
 	
 	that.table = spec.table || null;
 	that.model = spec.model || null;
 	that.baseURL = spec.base_url || GetDefaultBaseUrl();
 	
-	that.clearData = function(){
+	that.ClearData = function(){
 		that.dataIndex = null;
 		that.dataShow = null;
 		that.dataNew = null;
 		that.dataEdit = null;
 	};
 	
-	that.clearData();
+	that.ClearData();
 
-	that.index = function( successCallback ) {
+	that.Index = function( successCallback ) {
 		
 		var result = $.ajax({
 			url: that.baseURL + that.table,
@@ -53,7 +53,7 @@ var Controller = function(spec, my) {
 		});
 	};
 	
-	that.show = function( id, successCallback ) {
+	that.Show = function( id, successCallback ) {
 		$.ajax({
 			url: that.baseURL + that.table + "/" + id,
 			dataType: "json",
@@ -70,7 +70,7 @@ var Controller = function(spec, my) {
 		});
 	};
 
-	that.new = function( successCallback ) {
+	that.New = function( successCallback ) {
 		$.ajax({
 			url: that.baseURL + that.table + "/new",
 			dataType: "json",
@@ -87,7 +87,7 @@ var Controller = function(spec, my) {
 		});
 	};
 
-	that.create = function( obj, successCallback ) {
+	that.Create = function( obj, successCallback ) {
 		var data = JSON.stringify( obj );
 		
 		$.ajax({
@@ -110,7 +110,7 @@ var Controller = function(spec, my) {
 		});
 	};
 
-	that.edit = function( id, successCallback ) {
+	that.Edit = function( id, successCallback ) {
 		$.ajax({
 			url: that.baseURL + that.table + "/" + id + "/edit",
 			dataType: "json",
@@ -127,7 +127,7 @@ var Controller = function(spec, my) {
 		});
 	};
 
-	that.update = function( obj, successCallback ) {
+	that.Update = function( obj, successCallback ) {
 		var data = JSON.stringify( obj );
 		
 		$.ajax({
@@ -154,7 +154,7 @@ var Controller = function(spec, my) {
 		});
 	};
 
-	that.destroy = function( id, successCallback ) {
+	that.Destroy = function( id, successCallback ) {
 		$.ajax({
 			url: that.baseURL + that.table + "/" + id,
 			dataType: "json",
