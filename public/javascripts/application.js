@@ -1,4 +1,7 @@
-/*
+/* 
+	Create main UI
+*/
+
 uki(
 {
 	view: 'HSplitPane'
@@ -15,11 +18,33 @@ uki(
 				, handlePosition: 400
 				, topMin: 400
 				, bottomMin: 100
-				, topChildViews: {  }
-				, bottomChildViews: {  }
+				, topChildViews: [
+					{ view: 'ScrollPane'
+						, rect: '300 400'
+						, anchors: 'top left right bottom'
+						, id: 'ListViewPane'
+						, childViews: { view: 'Box'
+							, rect: '0 0 300 400'
+							, anchors: 'top left right'
+							, background: '#CCC'
+							, id: 'ListViewBox'
+							, childViews: { view: 'List'
+								, rect: '0 0 300 400'
+								, anchors: 'top left right'
+								, rowHeight: 30
+								, id: 'ListViewList'
+								, throttle: 0
+								, multiselect: true
+								, textSelectable: true 
+							}
+						}
+					}
+				]
 			}
 		]
 	,	rightChildViews: {  }
 }).attachTo( $("#application").get(0), '1000 600' );
-*/
 
+
+
+$("#ListViewPane").ListView();
