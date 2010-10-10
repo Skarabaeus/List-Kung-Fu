@@ -3,19 +3,33 @@
 <head>
   <title>List Kung Fu</title>
 	<%= stylesheet_link_tag 'http://yui.yahooapis.com/2.8.1/build/reset/reset-min.css' %>
-  <%= stylesheet_link_tag 'application', 'scaffold' %>
+  <%= stylesheet_link_tag 'application', 'scaffold', 'jquery-ui', 'layout-default-latest' %>
   <%= csrf_meta_tag %>
 </head>
 <body>
-	<div id="wrapper">
-		<div id="header">
-			<p class="notice"><%= notice %></p>
-			<p class="alert"><%= alert %></p>
-		</div>
-		<div id="application">
-			<%= yield %>	
-		</div>		
+	<div class="ui-layout-north" id="mainlayout-north">
+		<%= yield :north %>
 	</div>
+
+	<div class="ui-layout-west" id="mainlayout-west">
+		<%= yield :west %>
+	</div>
+
+	<div class="ui-layout-south" id="mainlayout-south">
+		<p class="notice"><%= notice %></p>
+		<p class="alert"><%= alert %></p>
+		
+		<%= yield :south %>
+	</div>
+
+	<div class="ui-layout-east" id="mainlayout-east">
+		<%= yield :east %>
+	</div>
+
+	<div class="ui-layout-center" id="mainlayout-center">
+		<%= yield :center %>
+	</div>
+	
 <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js' %> 
 <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' %>
 <%= javascript_include_tag 'jquery.layout.min-1.2.0', 'json2', 'mustache', 'jquery.hotkeys' %>

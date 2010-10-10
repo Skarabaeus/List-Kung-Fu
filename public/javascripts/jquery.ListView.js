@@ -5,7 +5,7 @@
 		};
 
 
-		var template = '<span>{{title}}</span>';
+		var template = '<div>{{title}}</div>';
 		
 
 		
@@ -24,8 +24,10 @@
 				var widget = this;
 				
 				List.Index(function( data, status, xhr ) {
-
-
+					
+					for ( var i = 0; i < data.length; i++ ) {
+						widget.element.append( $( $.mustache( template, data[ i ].list ) ) );
+					}
 
 
 				});
