@@ -97,14 +97,14 @@ var Controller = function(spec, my) {
 			processData: false,
 			contentType: "application/json",
 			data: data,
-			success: function( data, status, xhr ) {
+			complete: function( xhr, status ) {
 				that.flash.notice = xhr.getResponseHeader("X-Flash-Notice");
 				that.flash.error = xhr.getResponseHeader("X-Flash-Error");
 				that.flash.warning = xhr.getResponseHeader("X-Flash-Warning");
 				that.flash.message = xhr.getResponseHeader("X-Flash-Message");
 				
 				if ( typeof( successCallback ) === 'function' ) {
-					successCallback( data, status, xhr );
+					successCallback( status, xhr );
 				}
 			}
 		});
@@ -141,14 +141,14 @@ var Controller = function(spec, my) {
 			{
 				xhr.setRequestHeader("X-Http-Method-Override", "PUT");
 			},
-			success: function( data, status, xhr ) {
+			complete: function( xhr, status ) {
 				that.flash.notice = xhr.getResponseHeader("X-Flash-Notice");
 				that.flash.error = xhr.getResponseHeader("X-Flash-Error");
 				that.flash.warning = xhr.getResponseHeader("X-Flash-Warning");
 				that.flash.message = xhr.getResponseHeader("X-Flash-Message");
 				
 				if ( typeof( successCallback ) === 'function' ) {
-					successCallback( data, status, xhr );
+					successCallback( status, xhr );
 				}
 			}
 		});
@@ -165,14 +165,14 @@ var Controller = function(spec, my) {
 			{
 				xhr.setRequestHeader("X-Http-Method-Override", "DELETE");
 			},
-			success: function( data, status, xhr ) {
+			complete: function( xhr, status ){
 				that.flash.notice = xhr.getResponseHeader("X-Flash-Notice");
 				that.flash.error = xhr.getResponseHeader("X-Flash-Error");
 				that.flash.warning = xhr.getResponseHeader("X-Flash-Warning");
 				that.flash.message = xhr.getResponseHeader("X-Flash-Message");
 				
 				if ( typeof( successCallback ) === 'function' ) {
-					successCallback( data, status, xhr );
+					successCallback( status, xhr );
 				}
 			}
 		});

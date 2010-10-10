@@ -12,12 +12,18 @@
 	</div>
 
 	<div class="ui-layout-west" id="mainlayout-west">
-		<%= yield :west %>
+		<div class="header"></div>
+		<div class="ui-layout-content">
+			<%= yield :west %>
+		</div>
 	</div>
 
 	<div class="ui-layout-south" id="mainlayout-south">
-		<p class="notice"><%= notice %></p>
-		<p class="alert"><%= alert %></p>
+		<div id="ajax-indicator">
+			<%= image_tag 'ajax-loader.gif', :class  => 'ajax-indicator' %> Loading ...
+		</div>
+		<p id="notice"></p>
+		<p id="alert"></p>
 		
 		<%= yield :south %>
 	</div>
