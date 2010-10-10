@@ -24,6 +24,16 @@ html, body {
 
 /*--------------------*/
 
+.highlighted-row {
+	background-color:#F6F0D2;
+}
 
+.selected-row {
+	background-color:#eef !important;
+}
+
+.row {
+	margin:5px;
+}
 
 /*--------------------*/
