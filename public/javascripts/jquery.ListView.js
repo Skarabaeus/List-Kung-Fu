@@ -34,12 +34,27 @@
 					var nextItem = widget.selectedList.element.next();
 					var prevItem = widget.selectedList.element.prev();
 					
-					List.Destroy(widget.selectedList.data.list.id, function(){
+					$('<div id="dialog-confirm"> \
+						<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Do you really want to delete this List? \
+						</div>').dialog({
 						
-						widget.selectedList.element.fadeOut(function(){
-							$(this).remove();
-							nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
-						});
+						resizable: false,
+						modal: true,
+						buttons: {
+							"Delete List": function() {
+								$( this ).dialog( "close" );
+								
+								List.Destroy(widget.selectedList.data.list.id, function(){
+									widget.selectedList.element.fadeOut(function(){
+										$(this).remove();
+										nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
+									});
+								});
+							},
+							Cancel: function() {
+								$( this ).dialog( "close" );
+							}
+						}
 					});
 				} else {
 					$("#notice").text("Select the list which you want to delete").fadeIn().delay(5000).fadeOut();
@@ -114,7 +129,7 @@
 				});
 
 				newElement.bind('keydown', 'del', function(e){
-					toolbar.find( "#list-delete" ).trigger('click').effect('puff', {}, 300, function(){ $(this).show(); });
+					toolbar.find( "#list-delete" ).effect('puff', {}, 300, function(){ $(this).show(); }).trigger('click');
 				});
 			
 				/*
@@ -133,11 +148,6 @@
 		
 		var template = '<div>{{title}}</div>';
 		
-
-		
-
-		// put all private functions in here
-		// that improves minification. See http://blog.project-sierra.de/archives/1622
 
 		return {
 			// default options
