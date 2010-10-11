@@ -3,11 +3,12 @@
 <head>
   <title>List Kung Fu</title>
 	<%= stylesheet_link_tag 'http://yui.yahooapis.com/2.8.1/build/reset/reset-min.css' %>
-  <%= stylesheet_link_tag 'application', 'scaffold', 'jquery-ui', 'layout-default-latest' %>
+  <%= stylesheet_link_tag 'application', 'scaffold', 'jquery-ui-1.8.5.custom', 'layout-default-latest' %>
   <%= csrf_meta_tag %>
 </head>
 <body>
 	<div class="ui-layout-north" id="mainlayout-north">
+		<%= image_tag 'listkungfu_header.png', :id => 'header-image' %>
 		<%= yield :north %>
 	</div>
 

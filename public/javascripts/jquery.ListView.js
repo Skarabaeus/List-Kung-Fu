@@ -29,20 +29,22 @@
 				
 				var toolbar = $('<div id="list-toolbar"> \
 					<button id="list-new">Create</button> \
-					<button id="list-edit">Edit</button> \
 					<button id="list-delete">Delete</button> \
 					</div>')
 				
 				widget.element.find("div.header").append(toolbar);
 				
 				toolbar.find("#list-new").button({
-					text: true
-				});
-				toolbar.find("#list-edit").button({
-					text: true
+					text: false,
+					icons: {
+						primary: 'ui-icon-plusthick'
+					}
 				});
 				toolbar.find("#list-delete").button({
-					text: true
+					text: false,
+					icons: {
+						primary: 'ui-icon-trash'
+					}
 				});
 				
 				toolbar.find("#list-delete").bind('click', { widget: widget }, function( e ) {
@@ -56,9 +58,15 @@
 					} else {
 						$("#notice").text("Select the list which you want to delete").fadeIn().delay(5000).fadeOut();
 					}
-					
+					$( e.target ).blur();
+					return false;
 				});
 				
+				toolbar.find("#list-new").bind('click', { widget: widget }, function( e ) {
+					alert("create new list");
+					$( e.target ).blur();
+					return false;
+				});				
 				
 				List.Index(function( data, status, xhr ) {
 					
@@ -67,9 +75,6 @@
 						
 						newElement.attr('tabindex', i);						
 						newElement.data('data', data[ i ]);
-						if ( i % 2 === 0) {
-							newElement.addClass("highlighted-row")
-						}
 						newElement.addClass('row');
 						
 						newElement.bind('keydown', 'down', function( e ){
@@ -98,12 +103,15 @@
 								data: $( e.target ).data("data")
 							};
 						});
-						
-						
+
 						newElement.bind( 'keydown dblclick', 'return', function(e){
 							alert(JSON.stringify($(e.target).data("data")));
 						});
-						
+
+						newElement.bind('keydown', 'del', function(e){
+							toolbar.find( "#list-delete" ).trigger('click').effect('puff', {}, 300, function(){ $(this).show(); });
+						});
+					
 						widget.element.find('div.ui-layout-content').append( newElement );
 					}
 

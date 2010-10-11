@@ -10,8 +10,8 @@ $(document).ready(function () {
 		},
 		
 		north: {
-			maxSize: 100,
-			minSize: 100
+			maxSize: 92,
+			minSize: 92
 		},
 		
 		south: {
@@ -41,11 +41,41 @@ $("#ajax-indicator").bind("ajaxSend", function(){
 });
 
 
+
+/*
+	Initialize Views
+*/
+
+$("#mainlayout-west").ListView();
+
+
+/*
+	Global Shortcuts
+*/
+
+// insert new list
+
+$(document).bind('keydown', 'ctrl+i', function(e){
+	$("#mainlayout-west").find( "#list-new" ).effect('puff', {}, 300, function(){ $(this).show(); }).trigger('click');
+	return false;
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 $( "#notice ").hide(function(e){
 	$( e.target ).html("");
 });
 $( "#alert" ).hide(function(e){
 	$( e.target ).html("");
 });
-
-$("#mainlayout-west").ListView();

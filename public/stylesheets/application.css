@@ -39,18 +39,41 @@ html, body {
 	padding:10px;
 }
 
-/*--------------------*/
-
-.highlighted-row {
-	background-color:#F6F0D2;
+#header-image {
+	margin:0;
+	padding:0;
 }
 
+.ui-layout-north {
+	overflow:hidden !important;
+}
+
+#list-toolbar {
+	height:50px;
+	max-height:50px;
+}
+
+#list-toolbar > div {
+	display:inline !important;
+	float:left;
+}
+
+#list-toolbar > button {
+	display:inline;
+	float:left;
+}
+
+/*--------------------*/
+
 .selected-row {
-	background-color:#eef !important;
+	border: 2px solid #009426;
 }
 
 .row {
 	margin:5px;
 }
 
+.row:nth-child(odd){
+	background-color:#F6F0D2;
+}
 /*--------------------*/
