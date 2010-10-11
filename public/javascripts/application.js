@@ -1,10 +1,20 @@
+// Global Application Object
+
+var ListKungFu = {
+	LayoutWest: $("#mainlayout-west"),
+	LayoutNorth: $("#mainlayout-north"),
+	LayoutEast: $("#mainlayout-east"),
+	LayoutSouth: $("#mainlayout-south"),
+	LayoutCenter: $("#mainlayout-center")
+};
+
+
 /*
 	Main Layout
 */
 
-var ListKungFuLayout;
 $(document).ready(function () {
-	ListKungFuLayout = $('body').layout({
+	ListKungFu.MainLayout = $('body').layout({
 		defaults: {
 			
 		},
@@ -31,51 +41,9 @@ $(document).ready(function () {
 });
 
 /*
-	Global Ajax Events
-*/
-
-$("#ajax-indicator").bind("ajaxSend", function(){
-  $(this).show();
-}).bind("ajaxComplete", function(){
-  $(this).hide();
-});
-
-
-
-/*
 	Initialize Views
 */
 
-$("#mainlayout-west").ListView();
+ListKungFu.LayoutSouth.StatusBar();
+ListKungFu.LayoutWest.ListView();
 
-
-/*
-	Global Shortcuts
-*/
-
-// insert new list
-
-$(document).bind('keydown', 'ctrl+i', function(e){
-	$("#mainlayout-west").find( "#list-new" ).effect('puff', {}, 300, function(){ $(this).show(); }).trigger('click');
-	return false;
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$( "#notice ").hide(function(e){
-	$( e.target ).html("");
-});
-$( "#alert" ).hide(function(e){
-	$( e.target ).html("");
-});

@@ -20,12 +20,6 @@
 	</div>
 
 	<div class="ui-layout-south" id="mainlayout-south">
-		<div id="ajax-indicator">
-			<%= image_tag 'ajax-loader.gif', :class  => 'ajax-indicator' %> Loading ...
-		</div>
-		<p id="notice"></p>
-		<p id="alert"></p>
-		
 		<%= yield :south %>
 	</div>
 
@@ -40,7 +34,7 @@
 <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js' %> 
 <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' %>
 <%= javascript_include_tag 'jquery.layout.min-1.2.0', 'json2', 'mustache', 'jquery.hotkeys' %>
-<%= javascript_include_tag 'Controller', 'jquery.ListView' %>
+<%= javascript_include_tag 'Controller', 'jquery.ListView', 'jquery.StatusBar' %>
 <%= javascript_include_tag 'application' %>
 </body>
 </html>

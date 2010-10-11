@@ -63,6 +63,10 @@ html, body {
 	float:left;
 }
 
+* {
+	outline:0;
+}
+
 /*--------------------*/
 
 .selected-row {
