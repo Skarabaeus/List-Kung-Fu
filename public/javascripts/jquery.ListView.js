@@ -49,16 +49,22 @@
 				
 				toolbar.find("#list-delete").bind('click', { widget: widget }, function( e ) {
 					var widget = e.data.widget;
+					var nextItem = widget.selectedList.element.next();
+					var prevItem = widget.selectedList.element.prev();
+					
 					if ( widget.selectedList !== null ) {
 						List.Destroy(widget.selectedList.data.list.id, function(){
+							
 							widget.selectedList.element.fadeOut(function(){
 								$(this).remove();
+								nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
 							});
 						});
 					} else {
 						$("#notice").text("Select the list which you want to delete").fadeIn().delay(5000).fadeOut();
 					}
 					$( e.target ).blur();
+	
 					return false;
 				});
 				
