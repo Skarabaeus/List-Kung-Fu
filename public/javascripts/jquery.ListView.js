@@ -167,9 +167,10 @@
 
 				newElement.bind('keydown', 'right', function(){
 					widget.element.find('div#list-list').hide('slide', { direction: 'left'}, 'slow', function(){
-						widget.element.find('div#testedit').show('slide', { direction: 'right' }, 'slow');
+						widget.element.find('div#testedit').show('slide', { direction: 'right' }, 'slow', function(){
+							widget.element.find('div#testedit').focus();
+						});
 					});
-
 				});
 
 
@@ -206,7 +207,6 @@
 					data: the data object (retrieved from server)
 				}
 			*/
-
 			selectedList: null,
 
 			// required function. Automatically called when widget is created
@@ -230,7 +230,14 @@
 
 
 
-				var test = $('<div class="ui-layout-content" id="testedit" style="background-color:#faa;"><span id="test" tabindex="10000">Test</span></div>');
+				var test = $('<div class="ui-layout-content" id="testedit" style="background-color:#faa;" tabindex="100001"><span id="test" tabindex="10000">Test</span></div>');
+				test.bind('keydown', 'left', function(){
+					widget.element.find('div#testedit').hide('slide', { direction: 'left' }, 'slow', function(){
+						widget.element.find('div#list-list').show('slide', { direction: 'right'}, 'slow', function(){
+							widget.element.find(".row").first().focus();
+						});
+					});
+				});
 				widget.element.append(test);
 				test.hide();
 			},
