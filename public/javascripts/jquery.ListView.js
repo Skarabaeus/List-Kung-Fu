@@ -69,12 +69,20 @@
 
 					// make it possible to use arrow keys to navigate from one button to another
 					$( ".ui-dialog-buttonpane > button" ).bind('keydown', 'right', function(e) {
-						$( e.target ).blur();
-						$( e.target ).next( 'button' ).focus();
+						var $target = $( e.target );
+
+						if ( $target.next( 'button' ).length > 0 ) {
+							$target.blur();
+							$target.next( 'button' ).focus();
+						}
 					});
 					$( ".ui-dialog-buttonpane > button" ).bind('keydown', 'left', function(e) {
-						$( e.target ).blur();
-						$( e.target ).prev( 'button' ).focus();
+						var $target = $( e.target );
+
+						if ( $target.prev( 'button' ).length > 0 ) {
+							$target.blur();
+							$target.prev( 'button' ).focus();
+						}
 					});
 
 
