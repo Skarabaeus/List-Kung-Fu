@@ -190,7 +190,7 @@
 			destroy: function() {
 				widget.toolbar.remove();
 				widget.element.find(".row").remove();
-			},
+			}
 		};
 	}();
 	
