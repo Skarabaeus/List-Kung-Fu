@@ -67,6 +67,17 @@
 					// is there no other way to do this?
 					$( ".ui-dialog-buttonpane > button" ).first().focus();
 
+					// make it possible to use arrow keys to navigate from one button to another
+					$( ".ui-dialog-buttonpane > button" ).bind('keydown', 'right', function(e) {
+						$( e.target ).blur();
+						$( e.target ).next( 'button' ).focus();
+					});
+					$( ".ui-dialog-buttonpane > button" ).bind('keydown', 'left', function(e) {
+						$( e.target ).blur();
+						$( e.target ).prev( 'button' ).focus();
+					});
+
+
 
 				} else {
 					$("#notice").text("Select the list which you want to delete").fadeIn().delay(5000).fadeOut();
