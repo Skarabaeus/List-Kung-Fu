@@ -34,31 +34,44 @@
 					var nextItem = widget.selectedList.element.next();
 					var prevItem = widget.selectedList.element.prev();
 					
-					$('<div id="dialog-confirm"> \
-						<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Do you really want to delete this List? \
-						</div>').dialog({
+					if ( typeof(widget.deleteDialog) === 'undefined' ) {
+						widget.deleteDialog = $('<div id="dialog-confirm"> \
+							<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Do you really want to delete this List? \
+							</div>').dialog({
 						
-						resizable: false,
-						modal: true,
-						buttons: {
-							"Delete List": function() {
-								$( this ).dialog( "close" );
+							resizable: false,
+							modal: true,
+							buttons: {
+								"Delete List": function() {
+									$( this ).dialog( "close" );
 								
-								List.Destroy(widget.selectedList.data.list.id, function(){
-									widget.selectedList.element.fadeOut(function(){
-										$(this).remove();
-										nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
+									List.Destroy(widget.selectedList.data.list.id, function(){
+										widget.selectedList.element.fadeOut(function(){
+											$(this).remove();
+											nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
+										});
+
 									});
-								});
+								},
+								Cancel: function() {
+									$( this ).dialog( "close" );
+								},
 							},
-							Cancel: function() {
-								$( this ).dialog( "close" );
-							}
-						}
-					});
+							autoOpen:false
+						});
+					}
+
+					widget.deleteDialog.dialog("open");
+
+					// focus first button (which is the "delete button")
+					// is there no other way to do this?
+					$( ".ui-dialog-buttonpane > button" ).first().focus();
+
+
 				} else {
 					$("#notice").text("Select the list which you want to delete").fadeIn().delay(5000).fadeOut();
 				}
+
 				$( e.target ).blur();
 
 				return false;
@@ -140,10 +153,12 @@
 		};
 
 		var _RegisterGlobalKeyboardShortcuts = function( toolbar ) {
+
 			$(document).bind('keydown', 'ctrl+i', function(e){
 				toolbar.find( "#list-new" ).effect('puff', {}, 300, function(){ $(this).show(); $(this).trigger('click') });
 				return false;
 			});
+
 		};
 		
 		var template = '<div>{{title}}</div>';
