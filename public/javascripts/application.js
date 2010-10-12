@@ -29,7 +29,8 @@ $(document).ready(function () {
 		},
 		
 		west: {
-			minSize: 300
+			minSize: 300,
+			contentIgnoreSelector: '#testedit'
 		},
 		
 		east: {
