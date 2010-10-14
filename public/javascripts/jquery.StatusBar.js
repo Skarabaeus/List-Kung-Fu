@@ -47,7 +47,7 @@
 				widget.ajaxLoader.remove();
 				widget.notice.remove();
 				widget.alert.remove();
-			},
+			}
 		};
 	}();
 	// register widget

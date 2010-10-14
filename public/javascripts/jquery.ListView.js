@@ -55,7 +55,7 @@
 								},
 								"Cancel": function() {
 									$( this ).dialog( "close" );
-								},
+								}
 							},
 							autoOpen:false
 						});
