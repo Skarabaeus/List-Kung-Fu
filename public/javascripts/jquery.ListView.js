@@ -167,8 +167,8 @@
 
 				newElement.bind('keydown', 'right', function(){
 					widget.element.find('div#list-list').hide('slide', { direction: 'left'}, 'slow', function(){
-						widget.element.find('div#testedit').show('slide', { direction: 'right' }, 'slow', function(){
-							widget.element.find('div#testedit').focus();
+						widget.element.find('div#list-form').show('slide', { direction: 'right' }, 'slow', function(){
+							//widget.element.find('div#testedit').focus();
 						});
 					});
 				});
@@ -230,20 +230,16 @@
 
 
 
-				var test = $('<div class="ui-layout-content" id="testedit" style="background-color:#faa;" tabindex="100001"><span id="test" tabindex="10000">Test</span></div>');
-				test.bind('keydown', 'left', function(){
-					widget.element.find('div#testedit').hide('slide', { direction: 'left' }, 'slow', function(){
-						widget.element.find('div#list-list').show('slide', { direction: 'right'}, 'slow', function(){
-							widget.element.find(".row").first().focus();
-						});
-					});
-				});
-				widget.element.append(test);
-				test.hide();
+				widget.listForm = $('<div class="ui-layout-content" id="list-form"></div>');
+				widget.element.append( widget.listForm );
+				widget.listForm.ListViewForm();
+
 			},
 
 			destroy: function() {
 				widget.toolbar.remove();
+				widget.listForm.ListViewForm("destroy");
+				widget.listForm.remove();
 				widget.element.find(".row").remove();
 			}
 		};

@@ -30,7 +30,7 @@ $(document).ready(function () {
 		
 		west: {
 			minSize: 300,
-			contentIgnoreSelector: '#testedit'
+			contentIgnoreSelector: '#list-form'
 		},
 		
 		east: {
@@ -39,12 +39,14 @@ $(document).ready(function () {
 		}
 	});
 
+	/*
+		Initialize Views
+	*/
+
+	ListKungFu.LayoutSouth.StatusBar();
+	ListKungFu.LayoutWest.ListView();
+
 });
 
-/*
-	Initialize Views
-*/
 
-ListKungFu.LayoutSouth.StatusBar();
-ListKungFu.LayoutWest.ListView();
 
