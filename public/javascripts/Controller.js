@@ -113,10 +113,11 @@ var Controller = function(spec, my) {
 	that.Edit = function( id, successCallback ) {
 		$.ajax({
 			url: that.baseURL + that.table + "/" + id + "/edit",
-			dataType: "json",
-			type: "GET",
-			processData: false,
-			contentType: "application/json",
+			dataType: "script",
+			type: "GET"
+			//processData: false,
+			//contentType: "application/json",
+			/*
 			success: function( data, status, xhr ) {
 				that.dataEdit = data;
 				
@@ -124,6 +125,7 @@ var Controller = function(spec, my) {
 					successCallback( data, status, xhr );
 				}
 			}
+			*/
 		});
 	};
 

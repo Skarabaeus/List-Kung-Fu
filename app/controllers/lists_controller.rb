@@ -1,6 +1,6 @@
 class ListsController < ApplicationController
   
-  respond_to :html, :json
+  respond_to :json, :js
   
   def index
     @lists = List.all
@@ -19,8 +19,10 @@ class ListsController < ApplicationController
 
   def edit
     @list = List.find(params[:id])
-    flash[:notice] = "Hello World"
-    respond_with( @list )
+
+    respond_to do |format|
+      format.js
+    end
   end
 
   def create

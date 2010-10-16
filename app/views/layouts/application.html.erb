@@ -5,10 +5,6 @@
 	<%= stylesheet_link_tag 'http://yui.yahooapis.com/2.8.1/build/reset/reset-min.css' %>
   <%= stylesheet_link_tag 'application', 'scaffold', 'jquery-ui-1.8.5.custom', 'layout-default-latest' %>
   <%= csrf_meta_tag %>
-
-	<script id="ListViewForm" type="text/html">
-		<%= render :file => 'lists/form' %>
-	</script>
 </head>
 <body>
 	<div class="ui-layout-north" id="mainlayout-north">
@@ -37,6 +33,7 @@
 	
 <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js' %> 
 <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' %>
+<%= javascript_include_tag 'jquery-rails' %>
 <%= javascript_include_tag 'jquery.layout.min-1.2.0', 'json2', 'mustache', 'jquery.hotkeys' %>
 <%= javascript_include_tag 'Controller', 'jquery.ListView', 'jquery.StatusBar' %>
 <%= javascript_include_tag 'jquery.ListViewForm' %>

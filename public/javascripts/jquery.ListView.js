@@ -167,9 +167,16 @@
 
 				newElement.bind('keydown', 'right', function(){
 					widget.element.find('div#list-list').hide('slide', { direction: 'left'}, 'slow', function(){
-						widget.element.find('div#list-form').show('slide', { direction: 'right' }, 'slow', function(){
-							//widget.element.find('div#testedit').focus();
-						});
+						// remove eventual old occurances
+						if ( widget.listForm != null ) {
+							widget.listForm.ListViewForm("destroy");
+							widget.listForm.remove();
+						}
+						
+						// create fresh form
+						widget.listForm = $('<div class="ui-layout-content" id="list-form"></div>');
+						widget.element.append( widget.listForm );
+						widget.listForm.ListViewForm( {  selectedList: widget.selectedList } );
 					});
 				});
 
@@ -214,6 +221,7 @@
 				var widget = this;
 
 				widget.toolbar = _CreateToolbar( widget );
+				widget.listForm = null;
 
 				// retrieve Lists from server and add them to DOM.
 				List.Index( function( data, status, xhr ) {
@@ -227,13 +235,10 @@
 
 				// register global keyboard shortcuts
 				_RegisterGlobalKeyboardShortcuts( widget.toolbar );
-
-
-
-				widget.listForm = $('<div class="ui-layout-content" id="list-form"></div>');
-				widget.element.append( widget.listForm );
-				widget.listForm.ListViewForm();
-
+			},
+			
+			GetListFormElement: function() {
+				return this.listForm;
 			},
 
 			destroy: function() {
