@@ -29,8 +29,7 @@ $(document).ready(function () {
 		},
 		
 		west: {
-			minSize: 300,
-			contentIgnoreSelector: '#list-form'
+			minSize: 300
 		},
 		
 		east: {
@@ -45,6 +44,7 @@ $(document).ready(function () {
 
 	ListKungFu.LayoutSouth.StatusBar();
 	ListKungFu.LayoutWest.ListView();
+
 
 });
 

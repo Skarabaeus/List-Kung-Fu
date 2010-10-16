@@ -16,12 +16,6 @@ html, body {
 	height:100%;
 }
 
-#header {
-	height:100px;
-	width:100%;
-	border-bottom:3px solid #000;
-}
-
 .ajax-indicator {
 	vertical-align:middle;
 }

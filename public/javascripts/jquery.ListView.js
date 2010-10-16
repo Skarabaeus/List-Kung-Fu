@@ -184,6 +184,7 @@
 			for ( var i = 0; i < data.length; i++ ) {
 				widget.element.find('div#list-list').append( _GetListElement( widget, data[ i ], i ) ) ;
 			}
+			ListKungFu.MainLayout.resizeContent( "west" );
 		};
 
 		var _RegisterGlobalKeyboardShortcuts = function( toolbar ) {
