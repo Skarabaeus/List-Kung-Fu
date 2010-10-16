@@ -1,6 +1,9 @@
 (function(){
 	var ListView = function(){
 
+
+		var template = '<div>{{title}}</div>';
+
 		var _CreateToolbar = function( widget ) {
 			var toolbar = $('<div id="list-toolbar"> \
 				<button id="list-new">Create</button> \
@@ -108,84 +111,78 @@
 			return toolbar
 		};
 
+		var _GetListElement = function( widget, data, i ) {
+			// get HTML for single List representation
+			var newElement = $( $.mustache( template, data.list ) );
+
+			// add tabindex so that list is focusable
+			newElement.attr('tabindex', i);
+
+			// save List data directly in DOM element
+			newElement.data('data', data);
+
+			// add CSS class
+			newElement.addClass('row');
+
+			/////////////////////////////
+			//	bind Events for new List DOM
+			/////////////////////////////
+			newElement.bind('keydown', 'down', function( e ){
+				e.preventDefault();
+				$( e.target ).next().focus();
+				return false;
+			});
+
+			newElement.bind('keydown', 'up', function( e ){
+				e.preventDefault();
+				$( e.target ).prev().focus();
+				return false;
+			});
+
+			newElement.bind('focus', { widget: widget }, function(e){
+				var widget = e.data.widget;
+
+				// remove selection from all rows
+				widget.element.find('.row').removeClass('selected-row');
+
+				// add it to the selected row.
+				$( e.target ).addClass('selected-row');
+
+				widget.selectedList = {
+					element: $( e.target ),
+					data: $( e.target ).data("data")
+				};
+			});
+
+			newElement.bind( 'keydown dblclick', 'return', function(e){
+				alert(JSON.stringify($(e.target).data("data")));
+			});
+
+			newElement.bind('keydown', 'del', function(e){
+				toolbar.find( "#list-delete" ).effect('puff', {}, 300, function(){ $(this).show(); }).trigger('click');
+			});
+
+			newElement.bind('keydown', 'right', function(){
+				widget.element.find('div#list-list').hide('slide', { direction: 'left'}, 'slow', function(){
+					// remove eventual old occurances
+					if ( widget.listForm != null ) {
+						widget.listForm.ListViewForm("destroy");
+						widget.listForm.remove();
+					}
+
+					// create fresh form
+					widget.listForm = $('<div class="ui-layout-content" id="list-form"></div>');
+					widget.element.append( widget.listForm );
+					widget.listForm.ListViewForm( {  selectedList: widget.selectedList } );
+				});
+			});
+
+			return newElement;
+		};
+
 		var _AddListToDOM = function( widget, toolbar, data ) {
 			for ( var i = 0; i < data.length; i++ ) {
-
-			/*
-					Create new List DOM element
-				*/
-
-				// get HTML for single List representation
-				var newElement = $( $.mustache( template, data[ i ].list ) );
-
-				// add tabindex so that list is focusable
-				newElement.attr('tabindex', i);
-
-				// save List data directly in DOM element
-				newElement.data('data', data[ i ]);
-
-				// add CSS class
-				newElement.addClass('row');
-
-				/*
-					bind Events for new List DOM
-				*/
-				newElement.bind('keydown', 'down', function( e ){
-					e.preventDefault();
-					$( e.target ).next().focus();
-					return false;
-				});
-
-				newElement.bind('keydown', 'up', function( e ){
-					e.preventDefault();
-					$( e.target ).prev().focus();
-					return false;
-				});
-
-				newElement.bind('focus', { widget: widget }, function(e){
-					var widget = e.data.widget;
-
-					// remove selection from all rows
-					widget.element.find('.row').removeClass('selected-row');
-
-					// add it to the selected row.
-					$( e.target ).addClass('selected-row');
-
-					widget.selectedList = {
-						element: $( e.target ),
-						data: $( e.target ).data("data")
-					};
-				});
-
-				newElement.bind( 'keydown dblclick', 'return', function(e){
-					alert(JSON.stringify($(e.target).data("data")));
-				});
-
-				newElement.bind('keydown', 'del', function(e){
-					toolbar.find( "#list-delete" ).effect('puff', {}, 300, function(){ $(this).show(); }).trigger('click');
-				});
-
-				newElement.bind('keydown', 'right', function(){
-					widget.element.find('div#list-list').hide('slide', { direction: 'left'}, 'slow', function(){
-						// remove eventual old occurances
-						if ( widget.listForm != null ) {
-							widget.listForm.ListViewForm("destroy");
-							widget.listForm.remove();
-						}
-						
-						// create fresh form
-						widget.listForm = $('<div class="ui-layout-content" id="list-form"></div>');
-						widget.element.append( widget.listForm );
-						widget.listForm.ListViewForm( {  selectedList: widget.selectedList } );
-					});
-				});
-
-
-				/*
-					add the element to content area of west layout.
-				*/
-
-				widget.element.find('div#list-list').append( newElement );
+				widget.element.find('div#list-list').append( _GetListElement( widget, data[ i ], i ) ) ;
 			}
 		};
 
@@ -198,7 +195,6 @@
 
 		};
 
-		var template = '<div>{{title}}</div>';
 
 
 		return {
@@ -207,16 +203,15 @@
 
 			},
 
-			/*
-				holds object with selected list:
-				{
-					element: jQuery object with the UI element displaying the list
-					data: the data object (retrieved from server)
-				}
-			*/
+			///////
+			//	holds object with selected list:
+			//	{
+			//		element: jQuery object with the UI element displaying the list
+			//		data: the data object (retrieved from server)
+			//	}
+			//////
 			selectedList: null,
 
-			// required function. Automatically called when widget is created
 			_create: function() {
 				var widget = this;
 
@@ -236,9 +231,24 @@
 				// register global keyboard shortcuts
 				_RegisterGlobalKeyboardShortcuts( widget.toolbar );
 			},
-			
+
 			GetListFormElement: function() {
 				return this.listForm;
+			},
+
+			Show: function( updatedElement ) {
+				var widget = this;
+
+				widget.element.find( 'div#list-list' ).show('slide', { direction: 'right'}, 'slow', function(){
+					if ( updatedElement ) {
+						var newElement = _GetListElement( widget, updatedElement, widget.selectedList.element.attr("tabindex") );
+						widget.selectedList.element.replaceWith( newElement );
+						widget.selectedList.element = newElement;
+					}
+					widget.selectedList.element.focus();
+
+				});
+
 			},
 
 			destroy: function() {

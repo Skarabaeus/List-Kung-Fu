@@ -42,13 +42,8 @@
 			Hide: function( updatedElement ) {
 				var widget = this;
 				
-				alert( updatedElement );
-				
-				
 				widget.element.hide('slide', { direction: 'left' }, 'slow', function(){
-					widget.element.parent().find('div#list-list').show('slide', { direction: 'right'}, 'slow', function(){
-						widget.options.selectedList.element.focus();
-					});
+					widget.element.parent().ListView( "Show", updatedElement );
 				});	
 			},			
 
