@@ -114,18 +114,12 @@ var Controller = function(spec, my) {
 		$.ajax({
 			url: that.baseURL + that.table + "/" + id + "/edit",
 			dataType: "script",
-			type: "GET"
-			//processData: false,
-			//contentType: "application/json",
-			/*
+			type: "GET",
 			success: function( data, status, xhr ) {
-				that.dataEdit = data;
-				
 				if ( typeof( successCallback ) === 'function' ) {
 					successCallback( data, status, xhr );
 				}
 			}
-			*/
 		});
 	};
 

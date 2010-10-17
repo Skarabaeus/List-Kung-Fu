@@ -16,22 +16,22 @@ var ListKungFu = {
 $(document).ready(function () {
 	ListKungFu.MainLayout = $('body').layout({
 		defaults: {
-			
+
 		},
-		
+
 		north: {
 			maxSize: 92,
 			minSize: 92
 		},
-		
+
 		south: {
 			minSize: 50
 		},
-		
+
 		west: {
 			minSize: 300
 		},
-		
+
 		east: {
 			minSize: 100,
 			initClosed: true
@@ -43,7 +43,10 @@ $(document).ready(function () {
 	*/
 
 	ListKungFu.LayoutSouth.StatusBar();
-	ListKungFu.LayoutWest.ListView();
+	ListKungFu.LayoutWest.ListView({
+		contentDimensionsChanged: function(){ ListKungFu.MainLayout.resizeContent( "west" ); }
+
+	});
 
 
 });

@@ -42,6 +42,11 @@ html, body {
 	overflow:hidden !important;
 }
 
+* {
+	outline:0;
+}
+
+/*--------------------*/
 #list-toolbar {
 	height:50px;
 	max-height:50px;
@@ -57,12 +62,6 @@ html, body {
 	float:left;
 }
 
-* {
-	outline:0;
-}
-
-/*--------------------*/
-
 .selected-row {
 	border: 2px solid #009426;
 }
@@ -74,5 +73,9 @@ html, body {
 
 .row:nth-child(odd){
 	background-color:#F6F0D2;
+}
+
+#list-form form, #list-form input[type=text] {
+	width:100%;
 }
 /*--------------------*/

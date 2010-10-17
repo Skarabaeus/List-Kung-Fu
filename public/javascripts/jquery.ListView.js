@@ -164,33 +164,48 @@
 
 			newElement.bind('keydown', 'right', function(){
 				widget.element.find('div#list-list').hide('slide', { direction: 'left'}, 'slow', function(){
+
 					// remove eventual old occurances
 					if ( widget.listForm != null ) {
-						widget.listForm.ListViewForm("destroy");
 						widget.listForm.remove();
+						widget.listForm = null;
 					}
 
 					// create fresh form
 					widget.listForm = $('<div class="ui-layout-content" id="list-form"></div>');
 					widget.element.append( widget.listForm );
-					widget.listForm.ListViewForm( {  selectedList: widget.selectedList } );
+
+					// triggers /lists/id/edit and calls this.DisplayForm with the
+					// HTML of the form.
+					List.Edit( widget.selectedList.data.list.id, function( data, status, xhr ) {
+						widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
+							widget.HideForm();
+						});
+					});
 				});
 			});
 
 			return newElement;
 		};
 
+		var _triggerResize = function( widget ) {
+			widget._trigger("contentDimensionsChanged", 0, {} );
+		};
+
 		var _AddListToDOM = function( widget, toolbar, data ) {
+			widget.listlist = widget.element.find('div#list-list');
 			for ( var i = 0; i < data.length; i++ ) {
-				widget.element.find('div#list-list').append( _GetListElement( widget, data[ i ], i ) ) ;
+				widget.listlist.append( _GetListElement( widget, data[ i ], i ) ) ;
 			}
-			ListKungFu.MainLayout.resizeContent( "west" );
+			_triggerResize( widget );
 		};
 
 		var _RegisterGlobalKeyboardShortcuts = function( toolbar ) {
 
 			$(document).bind('keydown', 'ctrl+i', function(e){
-				toolbar.find( "#list-new" ).effect('puff', {}, 300, function(){ $(this).show(); $(this).trigger('click') });
+				toolbar.find( "#list-new" ).effect('puff', {}, 300, function(){
+					$(this).show();
+					$(this).trigger('click') });
 				return false;
 			});
 
@@ -233,11 +248,7 @@
 				_RegisterGlobalKeyboardShortcuts( widget.toolbar );
 			},
 
-			GetListFormElement: function() {
-				return this.listForm;
-			},
-
-			Show: function( updatedElement ) {
+			ShowListView: function( updatedElement ) {
 				var widget = this;
 
 				widget.element.find( 'div#list-list' ).show('slide', { direction: 'right'}, 'slow', function(){
@@ -247,14 +258,30 @@
 						widget.selectedList.element = newElement;
 					}
 					widget.selectedList.element.focus();
-
 				});
 
 			},
 
+			HideForm: function( updatedElement ) {
+				var widget = this;
+
+				widget.listForm.hide('slide', { direction: 'left' }, 'slow', function(){
+					widget.ShowListView( updatedElement );
+					widget.listForm.remove();
+					widget.listForm = null;
+				});
+			},
+
+			DisplayForm: function( html ) {
+				var widget = this;
+				widget.listForm.append( unescape( html ) );
+				widget.listForm.show('slide', { direction: 'right' }, 'slow', function(){
+					widget.listForm.find('input').first().focus();
+				});
+			},
+
 			destroy: function() {
 				widget.toolbar.remove();
-				widget.listForm.ListViewForm("destroy");
 				widget.listForm.remove();
 				widget.element.find(".row").remove();
 			}
