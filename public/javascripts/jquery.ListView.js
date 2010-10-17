@@ -143,7 +143,7 @@
 				var widget = e.data.widget;
 
 				// remove selection from all rows
-				widget.element.find('.row').removeClass('selected-row');
+				widget.listlist.find('.row').removeClass('selected-row');
 
 				// add it to the selected row.
 				$( e.target ).addClass('selected-row');
@@ -163,7 +163,7 @@
 			});
 
 			newElement.bind('keydown', 'right', function(){
-				widget.element.find('div#list-list').hide('slide', { direction: 'left'}, 'slow', function(){
+				widget.listlist.hide('slide', { direction: 'left'}, 'slow', function(){
 
 					// remove eventual old occurances
 					if ( widget.listForm != null ) {
@@ -173,7 +173,7 @@
 
 					// create fresh form
 					widget.listForm = $('<div class="ui-layout-content" id="list-form"></div>');
-					widget.element.append( widget.listForm );
+					widget.wrapper.append( widget.listForm );
 
 					// triggers /lists/id/edit and calls this.DisplayForm with the
 					// HTML of the form.
@@ -193,7 +193,9 @@
 		};
 
 		var _AddListToDOM = function( widget, toolbar, data ) {
-			widget.listlist = widget.element.find('div#list-list');
+			widget.listlist = $( '<div id="list-list"></div>' );
+			widget.wrapper.append( widget.listlist );
+
 			for ( var i = 0; i < data.length; i++ ) {
 				widget.listlist.append( _GetListElement( widget, data[ i ], i ) ) ;
 			}
@@ -230,7 +232,7 @@
 
 			_create: function() {
 				var widget = this;
-
+				widget.wrapper = widget.element.find('div#list-wrapper');
 				widget.toolbar = _CreateToolbar( widget );
 				widget.listForm = null;
 
@@ -238,7 +240,7 @@
 				List.Index( function( data, status, xhr ) {
 
 					// remove all existing rows
-					widget.element.find(".row").remove();
+					widget.wrapper.find(".row").remove();
 
 					// add newly received Lists to DOM
 					_AddListToDOM( widget, widget.toolbar, data );
@@ -251,7 +253,7 @@
 			ShowListView: function( updatedElement ) {
 				var widget = this;
 
-				widget.element.find( 'div#list-list' ).show('slide', { direction: 'right'}, 'slow', function(){
+				widget.listlist.show('slide', { direction: 'right'}, 'slow', function(){
 					if ( updatedElement ) {
 						var newElement = _GetListElement( widget, updatedElement, widget.selectedList.element.attr("tabindex") );
 						widget.selectedList.element.replaceWith( newElement );
@@ -283,7 +285,7 @@
 			destroy: function() {
 				widget.toolbar.remove();
 				widget.listForm.remove();
-				widget.element.find(".row").remove();
+				widget.wrapper.find(".row").remove();
 			}
 		};
 	}();
