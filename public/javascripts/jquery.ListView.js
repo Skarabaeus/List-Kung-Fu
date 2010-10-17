@@ -4,6 +4,20 @@
 
 		var template = '<div>{{title}}</div>';
 
+		var _DeleteList = function( widget, delay ) {
+			var nextItem = widget.selectedList.element.next();
+			var prevItem = widget.selectedList.element.prev();
+			delay = delay || 0;
+
+			List.Destroy(widget.selectedList.data.list.id, function(){
+				widget.selectedList.element.delay( delay ).fadeOut(function(){
+					$(this).remove();
+					nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
+				});
+			});
+
+		};
+
 		var _CreateToolbar = function( widget ) {
 			var toolbar = $('<div id="list-toolbar"> \
 				<button id="list-new">Create</button> \
@@ -34,8 +48,7 @@
 				var widget = e.data.widget;
 
 				if ( widget.selectedList !== null ) {
-					var nextItem = widget.selectedList.element.next();
-					var prevItem = widget.selectedList.element.prev();
+
 
 					if ( typeof(widget.deleteDialog) === 'undefined' ) {
 						widget.deleteDialog = $('<div id="dialog-confirm"> \
@@ -48,13 +61,14 @@
 								"Delete List": function() {
 									$( this ).dialog( "close" );
 
-									List.Destroy(widget.selectedList.data.list.id, function(){
-										widget.selectedList.element.fadeOut(function(){
-											$(this).remove();
-											nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
+									if ( widget.listForm !== null ) {
+										widget.listForm.bind( "FormHidden", function() {
+											_DeleteList( widget, 1000 );
 										});
-
-									});
+										widget.HideForm();
+									} else {
+										_DeleteList( widget );
+									}
 								},
 								"Cancel": function() {
 									$( this ).dialog( "close" );
@@ -159,7 +173,7 @@
 			});
 
 			newElement.bind('keydown', 'del', function(e){
-				toolbar.find( "#list-delete" ).effect('puff', {}, 300, function(){ $(this).show(); }).trigger('click');
+				widget.toolbar.find( "#list-delete" ).effect('puff', {}, 300, function(){ $(this).show(); }).trigger('click');
 			});
 
 			newElement.bind('keydown', 'right', function(){
@@ -189,7 +203,7 @@
 		};
 
 		var _triggerResize = function( widget ) {
-			widget._trigger("contentDimensionsChanged", 0, {} );
+			widget._trigger("ContentDimensionsChanged", 0, {} );
 		};
 
 		var _AddListToDOM = function( widget, toolbar, data ) {
@@ -210,10 +224,7 @@
 					$(this).trigger('click') });
 				return false;
 			});
-
 		};
-
-
 
 		return {
 			// default options
@@ -269,6 +280,7 @@
 
 				widget.listForm.hide('slide', { direction: 'left' }, 'slow', function(){
 					widget.ShowListView( updatedElement );
+					widget.listForm.trigger( "FormHidden" );
 					widget.listForm.remove();
 					widget.listForm = null;
 				});

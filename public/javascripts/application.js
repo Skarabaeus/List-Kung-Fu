@@ -44,7 +44,7 @@ $(document).ready(function () {
 
 	ListKungFu.LayoutSouth.StatusBar();
 	ListKungFu.LayoutWest.ListView({
-		contentDimensionsChanged: function(){ ListKungFu.MainLayout.resizeContent( "west" ); }
+		ContentDimensionsChanged: function(){ ListKungFu.MainLayout.resizeContent( "west" ); }
 
 	});
 
