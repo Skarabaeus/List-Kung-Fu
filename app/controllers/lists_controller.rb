@@ -1,6 +1,6 @@
 class ListsController < ApplicationController
-  
-  respond_to :json, :js
+
+  respond_to :js, :json
   
   def index
     @lists = List.all
@@ -15,7 +15,7 @@ class ListsController < ApplicationController
   def new
     @list = List.new
 
-    respond_to do |format|
+    respond_with( @list ) do |format|
       format.js
     end
   end
@@ -23,7 +23,7 @@ class ListsController < ApplicationController
   def edit
     @list = List.find(params[:id])
 
-    respond_to do |format|
+    respond_with( @list ) do |format|
       format.js
     end
   end
