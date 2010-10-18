@@ -96,7 +96,7 @@
 						}
 						return false;
 					});
-					
+
 					$( ".ui-dialog-buttonpane > button" ).bind('keydown', 'left', function(e) {
 						var $target = $( e.target );
 
@@ -124,7 +124,7 @@
 			});
 
 			toolbar.find("#list-new").bind('click', { widget: widget }, function( e ) {
-				
+
 				widget.listlist.hide('slide', { direction: 'left'}, 'slow', function(){
 
 					// remove eventual old occurances
@@ -146,8 +146,8 @@
 						widget.selectedList = null;
 					});
 				});
-				
-				
+
+
 				$( e.target ).blur();
 				return false;
 			});
@@ -300,18 +300,18 @@
 
 				widget.listlist.show('slide', { direction: 'right'}, 'slow', function(){
 					if ( updatedElement ) {
-						
+
 						var newElement = _GetListElement( widget, updatedElement );
-						
+
 						if ( _IsNewList( widget, updatedElement ) ) {
 							widget.listlist.prepend( newElement );
 						} else {
 							widget.selectedList.element.replaceWith( newElement );
 						}
 
-						widget.selectedList =  { 
+						widget.selectedList =  {
 							data: updatedElement,
-							element: newElement 
+							element: newElement
 						};
 					}
 					widget.selectedList.element.focus();
