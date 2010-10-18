@@ -73,13 +73,9 @@ var Controller = function(spec, my) {
 	that.New = function( successCallback ) {
 		$.ajax({
 			url: that.baseURL + that.table + "/new",
-			dataType: "json",
+			dataType: "script",
 			type: "GET",
-			processData: false,
-			contentType: "application/json",
 			success: function( data, status, xhr ) {
-				that.dataNew = data;
-				
 				if ( typeof( successCallback ) === 'function' ) {
 					successCallback( data, status, xhr );
 				}

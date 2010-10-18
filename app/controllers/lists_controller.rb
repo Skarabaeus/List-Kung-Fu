@@ -14,7 +14,10 @@ class ListsController < ApplicationController
 
   def new
     @list = List.new
-    respond_with(@list)
+
+    respond_to do |format|
+      format.js
+    end
   end
 
   def edit

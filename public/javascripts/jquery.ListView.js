@@ -4,6 +4,14 @@
 
 		var template = '<div>{{title}}</div>';
 
+		var _IsNewList = function( widget, element ) {
+			if ( widget.selectedList === null || widget.selectedList.data.list.id !== element.list.id ) {
+				return true;
+			} else {
+				return false;
+			}
+		};
+
 		var _DeleteList = function( widget, delay ) {
 			var nextItem = widget.selectedList.element.next();
 			var prevItem = widget.selectedList.element.prev();
@@ -88,6 +96,7 @@
 						}
 						return false;
 					});
+					
 					$( ".ui-dialog-buttonpane > button" ).bind('keydown', 'left', function(e) {
 						var $target = $( e.target );
 
@@ -115,7 +124,30 @@
 			});
 
 			toolbar.find("#list-new").bind('click', { widget: widget }, function( e ) {
-				alert("create new list");
+				
+				widget.listlist.hide('slide', { direction: 'left'}, 'slow', function(){
+
+					// remove eventual old occurances
+					if ( widget.listForm != null ) {
+						widget.listForm.remove();
+						widget.listForm = null;
+					}
+
+					// create fresh form
+					widget.listForm = $('<div class="ui-layout-content" id="list-form"></div>');
+					widget.wrapper.append( widget.listForm );
+
+					// triggers /lists/id/edit and calls this.DisplayForm with the
+					// HTML of the form.
+					List.New( function( data, status, xhr ) {
+						widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
+							widget.HideForm();
+						});
+						widget.selectedList = null;
+					});
+				});
+				
+				
 				$( e.target ).blur();
 				return false;
 			});
@@ -125,12 +157,14 @@
 			return toolbar
 		};
 
-		var _GetListElement = function( widget, data, i ) {
+		var _GetListElement = function( widget, data ) {
 			// get HTML for single List representation
 			var newElement = $( $.mustache( template, data.list ) );
 
 			// add tabindex so that list is focusable
-			newElement.attr('tabindex', i);
+			// it looks like for the purpose of being focusable
+			// it's not required that the tabindex is different for each element
+			newElement.attr('tabindex', 0);
 
 			// save List data directly in DOM element
 			newElement.data('data', data);
@@ -211,7 +245,7 @@
 			widget.wrapper.append( widget.listlist );
 
 			for ( var i = 0; i < data.length; i++ ) {
-				widget.listlist.append( _GetListElement( widget, data[ i ], i ) ) ;
+				widget.listlist.append( _GetListElement( widget, data[ i ] ) ) ;
 			}
 			_triggerResize( widget );
 		};
@@ -266,9 +300,19 @@
 
 				widget.listlist.show('slide', { direction: 'right'}, 'slow', function(){
 					if ( updatedElement ) {
-						var newElement = _GetListElement( widget, updatedElement, widget.selectedList.element.attr("tabindex") );
-						widget.selectedList.element.replaceWith( newElement );
-						widget.selectedList.element = newElement;
+						
+						var newElement = _GetListElement( widget, updatedElement );
+						
+						if ( _IsNewList( widget, updatedElement ) ) {
+							widget.listlist.prepend( newElement );
+						} else {
+							widget.selectedList.element.replaceWith( newElement );
+						}
+
+						widget.selectedList =  { 
+							data: updatedElement,
+							element: newElement 
+						};
 					}
 					widget.selectedList.element.focus();
 				});

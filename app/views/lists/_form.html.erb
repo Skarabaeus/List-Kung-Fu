@@ -1,4 +1,4 @@
-<button id="list-back-button">Back</button>
+<button id="list-back-button" tabindex="10000">Back</button>
 
 <%= form_for( list, :remote => true ) do |f| %>
   <% if list.errors.any? %>
@@ -15,9 +15,9 @@
 
   <div class="field">
     <%= f.label :title %><br />
-    <%= f.text_field :title %>
+    <%= f.text_field :title, :tabindex => 10001 %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit :tabindex => 10003 %>
   </div>
 <% end %>
