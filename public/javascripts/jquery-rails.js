@@ -73,8 +73,8 @@ jQuery(function ($) {
     /**
      * remote handlers
      */
-    $('form[data-remote]').live('submit', function (e) {
-        $(this).callRemote();
+    $('form[data-remote]').find("input[type=submit]").live('click', function (e) {
+        $(this).parentsUntil('form[data-remote]').last().parent().callRemote();
         e.preventDefault();
     });
 
