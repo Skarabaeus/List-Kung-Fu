@@ -3,7 +3,9 @@ ListKungFu::Application.routes.draw do
 
   devise_for :users
 
-  resources :lists
+  resources :lists do
+    resources :list_items
+  end
 
   root :to => "app#index"
   

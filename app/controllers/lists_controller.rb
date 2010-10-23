@@ -1,6 +1,6 @@
 class ListsController < ApplicationController
 
-  respond_to :js, :json
+  respond_to :xml
   
   def index
     @lists = List.all
