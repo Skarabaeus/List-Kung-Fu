@@ -17,7 +17,7 @@ var Controller = function(spec, my) {
 			error: "",
 			warning: "",
 			message: ""
-		}	
+		}
 	};
 	
 	// initialize flash
@@ -48,19 +48,23 @@ var Controller = function(spec, my) {
 		
 	}
 	
-	var ConstructRoute = function( params ) {
+	that.ConstructRoute = function( params ) {
 		var constructedRoute = "";
 		var id = "";
 		for ( var i = 0; i < that.route.length; i++ ) {
-			constructedRoute += that.route[ i ] + "/";
+			constructedRoute += that.route[ i ];
 
 		 	id = params[ that.route[ i ] ] || "";
 			
 			if ( id !== "" ) {
-				constructedRoute += id;
+				constructedRoute += "/" + id;
 			}
 			id = "";
 
+			// if this is not the last part of the route, add a slash
+			if ( i !== that.route.length - 1 ) {
+				constructedRoute +=  "/";
+			}
 		}
 		
 		return constructedRoute;
@@ -88,10 +92,10 @@ var Controller = function(spec, my) {
 	
 	that.Show = function( setup ) {
 		var successCallback = setup.successCallback || null;
-		
+		var route = that.ConstructRoute( setup );
 		
 		$.ajax({
-			url: that.baseURL + that.route + "/" + id,
+			url: that.baseURL + route,
 			dataType: "xml",
 			type: "GET",
 			processData: false,
@@ -102,9 +106,12 @@ var Controller = function(spec, my) {
 		});
 	};
 
-	that.New = function( successCallback ) {
+	that.New = function( setup ) {
+		var successCallback = setup.successCallback || null;
+		var route = that.ConstructRoute( setup );
+		
 		$.ajax({
-			url: that.baseURL + that.route + "/new",
+			url: that.baseURL + route + "/new",
 			dataType: "xml",
 			type: "GET",
 			processData: false,
@@ -115,25 +122,31 @@ var Controller = function(spec, my) {
 		});
 	};
 
-	that.Create = function( obj, successCallback ) {
-		var data = JSON.stringify( obj );
+	that.Create = function( setup ) {
+		var successCallback = setup.successCallback || null;
+		var route = that.ConstructRoute( setup );
+		var send = setup.send;
+		var data = JSON.stringify( send );
 		
 		$.ajax({
-			url: that.baseURL + that.route,
+			url: that.baseURL + route,
 			dataType: "xml",
 			type: "POST",
 			processData: false,
 			contentType: "application/json",
 			data: data,
-			complete: function( data, status, xhr ) {
+			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
 			}
 		});
 	};
 
-	that.Edit = function( id, successCallback ) {
+	that.Edit = function( setup ) {
+		var successCallback = setup.successCallback || null;
+		var route = that.ConstructRoute( setup );
+						
 		$.ajax({
-			url: that.baseURL + that.route + "/" + id + "/edit",
+			url: that.baseURL + route + "/edit",
 			dataType: "xml",
 			type: "GET",
 			parseData: false,
@@ -144,11 +157,14 @@ var Controller = function(spec, my) {
 		});
 	};
 
-	that.Update = function( obj, successCallback ) {
-		var data = JSON.stringify( obj );
+	that.Update = function( setup ) {
+		var successCallback = setup.successCallback || null;
+		var route = that.ConstructRoute( setup );
+		var send = setup.send;
+		var data = JSON.stringify( send );
 		
 		$.ajax({
-			url: that.baseURL + that.route + "/" + obj[that.model].id,
+			url: that.baseURL + route,
 			dataType: "xml",
 			type: "POST",
 			processData: false,
@@ -158,15 +174,18 @@ var Controller = function(spec, my) {
 			{
 				xhr.setRequestHeader("X-Http-Method-Override", "PUT");
 			},
-			complete: function( data, status, xhr ) {
+			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
 			}
 		});
 	};
 
-	that.Destroy = function( id, successCallback ) {
+	that.Destroy = function( setup ) {
+		var successCallback = setup.successCallback || null;
+		var route = that.ConstructRoute( setup );
+		
 		$.ajax({
-			url: that.baseURL + that.route + "/" + id,
+			url: that.baseURL + route,
 			dataType: "xml",
 			type: "POST",
 			processData: false,
@@ -175,7 +194,7 @@ var Controller = function(spec, my) {
 			{
 				xhr.setRequestHeader("X-Http-Method-Override", "DELETE");
 			},
-			complete: function( data, status, xhr ){
+			success: function( data, status, xhr ){
 				that.DefaultCallback( successCallback, data, status, xhr );
 			}
 		});

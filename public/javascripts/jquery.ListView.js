@@ -17,13 +17,15 @@
 			var prevItem = widget.selectedList.element.prev();
 			delay = delay || 0;
 
-			List.Destroy(widget.selectedList.data.list.id, function(){
-				widget.selectedList.element.delay( delay ).fadeOut(function(){
-					$(this).remove();
-					nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
-				});
+			List.Destroy({
+				successCallback: function(){
+					widget.selectedList.element.delay( delay ).fadeOut(function(){
+						$(this).remove();
+						nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
+					})			
+				},
+				lists: widget.selectedList.data.list.id
 			});
-
 		};
 
 		var _CreateToolbar = function( widget ) {
@@ -139,11 +141,18 @@
 
 					// triggers /lists/id/edit and calls this.DisplayForm with the
 					// HTML of the form.
-					List.New( function( data, status, xhr ) {
-						widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
-							widget.HideForm();
-						});
-						widget.selectedList = null;
+					List.New({
+						successCallback: function( template, json, status, xhr ) {
+							widget.listForm.append( template );
+							widget.listForm.show('slide', { direction: 'right' }, 'slow', function(){
+								widget.listForm.find('input').first().focus();
+							});							
+							
+							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
+								widget.HideForm();
+							});
+							widget.selectedList = null;
+						}
 					});
 				});
 
@@ -225,10 +234,18 @@
 
 					// triggers /lists/id/edit and calls this.DisplayForm with the
 					// HTML of the form.
-					List.Edit( widget.selectedList.data.list.id, function( data, status, xhr ) {
-						widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
-							widget.HideForm();
-						});
+					List.Edit({
+						successCallback: function( template, json, status, xhr ) {
+							widget.listForm.append( template );
+							widget.listForm.show('slide', { direction: 'right' }, 'slow', function(){
+								widget.listForm.find('input').first().focus();
+							});
+							
+							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
+								widget.HideForm();
+							});
+						},
+						lists: widget.selectedList.data.list.id
 					});
 				});
 			});
@@ -282,14 +299,16 @@
 				widget.listForm = null;
 
 				// retrieve Lists from server and add them to DOM.
-				List.Index( function( data, status, xhr ) {
+				List.Index( {
+					successCallback: function( template, json, status, xhr ) {
 
-					// remove all existing rows
-					widget.wrapper.find(".row").remove();
+						// remove all existing rows
+						widget.wrapper.find(".row").remove();
 
-					// add newly received Lists to DOM
-					_AddListToDOM( widget, widget.toolbar, data );
-				});
+						// add newly received Lists to DOM
+						_AddListToDOM( widget, widget.toolbar, json );
+					}
+				} );
 
 				// register global keyboard shortcuts
 				_RegisterGlobalKeyboardShortcuts( widget.toolbar );
@@ -314,7 +333,9 @@
 							element: newElement
 						};
 					}
-					widget.selectedList.element.focus();
+					if ( widget.selectedList ) {
+						widget.selectedList.element.focus();	
+					}
 				});
 
 			},
@@ -327,14 +348,6 @@
 					widget.listForm.trigger( "FormHidden" );
 					widget.listForm.remove();
 					widget.listForm = null;
-				});
-			},
-
-			DisplayForm: function( html ) {
-				var widget = this;
-				widget.listForm.append( unescape( html ) );
-				widget.listForm.show('slide', { direction: 'right' }, 'slow', function(){
-					widget.listForm.find('input').first().focus();
 				});
 			},
 
