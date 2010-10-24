@@ -2,8 +2,6 @@
 	var ListView = function(){
 
 
-		var template = '<div>{{title}}</div>';
-
 		var _IsNewList = function( widget, element ) {
 			if ( widget.selectedList === null || widget.selectedList.data.list.id !== element.list.id ) {
 				return true;
@@ -160,7 +158,7 @@
 								List.Create({
 									send: data,
 									successCallback: function( template, json, status, xhr ) {
-										widget.HideForm( json );
+										widget.HideForm( json, template );
 									}
 								});
 							});
@@ -180,7 +178,7 @@
 			return toolbar
 		};
 
-		var _GetListElement = function( widget, data ) {
+		var _GetListElement = function( widget, data, template ) {
 			// get HTML for single List representation
 			var newElement = $( $.mustache( template, data.list ) );
 
@@ -269,7 +267,7 @@
 
 									send: data,
 									successCallback: function( template, json, status, xhr ){
-										widget.HideForm( json );
+										widget.HideForm( json, template );
 									},
 									lists: widget.selectedList.data.list.id
 								});
@@ -289,12 +287,13 @@
 			widget._trigger("ContentDimensionsChanged", 0, {} );
 		};
 
-		var _AddListToDOM = function( widget, toolbar, data ) {
+		var _AddListToDOM = function( widget, data, template ) {
 			widget.listlist = $( '<div id="list-list"></div>' );
 			widget.wrapper.append( widget.listlist );
+			var toolbar = widget.toolbar;
 
 			for ( var i = 0; i < data.length; i++ ) {
-				widget.listlist.append( _GetListElement( widget, data[ i ] ) ) ;
+				widget.listlist.append( _GetListElement( widget, data[ i ], template ) ) ;
 			}
 			_triggerResize( widget );
 		};
@@ -338,7 +337,7 @@
 						widget.wrapper.find(".row").remove();
 
 						// add newly received Lists to DOM
-						_AddListToDOM( widget, widget.toolbar, json );
+						_AddListToDOM( widget, json, template );
 					}
 				} );
 
@@ -346,13 +345,13 @@
 				_RegisterGlobalKeyboardShortcuts( widget.toolbar );
 			},
 
-			ShowListView: function( updatedElement ) {
+			ShowListView: function( updatedElement, template ) {
 				var widget = this;
 
 				widget.listlist.show('slide', { direction: 'right'}, 'slow', function(){
 					if ( updatedElement ) {
 
-						var newElement = _GetListElement( widget, updatedElement );
+						var newElement = _GetListElement( widget, updatedElement, template );
 
 						if ( _IsNewList( widget, updatedElement ) ) {
 							widget.listlist.prepend( newElement );
@@ -372,11 +371,11 @@
 
 			},
 
-			HideForm: function( updatedElement ) {
+			HideForm: function( updatedElement, template ) {
 				var widget = this;
 
 				widget.listForm.hide('slide', { direction: 'left' }, 'slow', function(){
-					widget.ShowListView( updatedElement );
+					widget.ShowListView( updatedElement, template );
 					widget.listForm.trigger( "FormHidden" );
 					widget.listForm.remove();
 					widget.listForm = null;
