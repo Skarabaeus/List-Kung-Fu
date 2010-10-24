@@ -13,6 +13,5 @@ class List < ActiveRecord::Base
   validates_presence_of :owner
   validates_presence_of :title
   
-  
   attr_accessible :title
 end
