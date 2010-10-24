@@ -1,7 +1,6 @@
 (function(){
 	var ListView = function(){
 
-
 		var _IsNewList = function( widget, element ) {
 			if ( widget.selectedList === null || widget.selectedList.data.list.id !== element.list.id ) {
 				return true;
@@ -73,7 +72,7 @@
 										widget.listForm.bind( "FormHidden", function() {
 											_DeleteList( widget, 1000 );
 										});
-										widget.HideForm();
+										_HideForm( widget );
 									} else {
 										_DeleteList( widget );
 									}
@@ -147,7 +146,7 @@
 							});
 
 							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
-								widget.HideForm();
+								_HideForm( widget );
 							});
 
 							widget.listForm.bind( "submit", function( e ){
@@ -158,7 +157,7 @@
 								List.Create({
 									send: data,
 									successCallback: function( template, json, status, xhr ) {
-										widget.HideForm( json, template );
+										_HideForm( widget, json, template );
 									}
 								});
 							});
@@ -254,7 +253,7 @@
 							});
 
 							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
-								widget.HideForm();
+								_HideForm( widget );
 							});
 
 							widget.listForm.bind( "submit", function(e){
@@ -267,7 +266,7 @@
 
 									send: data,
 									successCallback: function( template, json, status, xhr ){
-										widget.HideForm( json, template );
+										_HideForm( widget, json, template );
 									},
 									lists: widget.selectedList.data.list.id
 								});
@@ -308,6 +307,41 @@
 			});
 		};
 
+		var _ShowListView = function( widget, updatedElement, template ) {
+
+			widget.listlist.show('slide', { direction: 'right'}, 'slow', function(){
+				if ( updatedElement ) {
+
+					var newElement = _GetListElement( widget, updatedElement, template );
+
+					if ( _IsNewList( widget, updatedElement ) ) {
+						widget.listlist.prepend( newElement );
+					} else {
+						widget.selectedList.element.replaceWith( newElement );
+					}
+
+					widget.selectedList =  {
+						data: updatedElement,
+						element: newElement
+					};
+				}
+				if ( widget.selectedList ) {
+					widget.selectedList.element.focus();
+				}
+			});
+
+		};
+
+		var _HideForm = function( widget, updatedElement, template ) {
+
+			widget.listForm.hide('slide', { direction: 'left' }, 'slow', function(){
+				_ShowListView( widget, updatedElement, template );
+				widget.listForm.trigger( "FormHidden" );
+				widget.listForm.remove();
+				widget.listForm = null;
+			});
+		};
+
 		return {
 			// default options
 			options: {
@@ -343,43 +377,6 @@
 
 				// register global keyboard shortcuts
 				_RegisterGlobalKeyboardShortcuts( widget.toolbar );
-			},
-
-			ShowListView: function( updatedElement, template ) {
-				var widget = this;
-
-				widget.listlist.show('slide', { direction: 'right'}, 'slow', function(){
-					if ( updatedElement ) {
-
-						var newElement = _GetListElement( widget, updatedElement, template );
-
-						if ( _IsNewList( widget, updatedElement ) ) {
-							widget.listlist.prepend( newElement );
-						} else {
-							widget.selectedList.element.replaceWith( newElement );
-						}
-
-						widget.selectedList =  {
-							data: updatedElement,
-							element: newElement
-						};
-					}
-					if ( widget.selectedList ) {
-						widget.selectedList.element.focus();
-					}
-				});
-
-			},
-
-			HideForm: function( updatedElement, template ) {
-				var widget = this;
-
-				widget.listForm.hide('slide', { direction: 'left' }, 'slow', function(){
-					widget.ShowListView( updatedElement, template );
-					widget.listForm.trigger( "FormHidden" );
-					widget.listForm.remove();
-					widget.listForm = null;
-				});
 			},
 
 			destroy: function() {
