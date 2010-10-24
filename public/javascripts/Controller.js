@@ -11,6 +11,28 @@ var Controller = function(spec, my) {
 		return protocol + hostname + port + "/";
 	};
 
+	var ConstructErrorObj = function( errors ) {
+		var errorObj = $( errors ).length > 0 ? {} : false;
+
+		$( errors ).each(function( index, error ){
+			var model = $( error ).attr( "model" );
+			var field = $( error ).attr( "field" );
+			var message = $( error ).text();
+
+			// init model
+			errorObj[ model ] = errorObj[ model ] || {};
+
+			// init field
+			errorObj[ model ][ field ] = errorObj[ model ][ field ] || [];
+
+			// push current error message
+			errorObj[ model ][ field ].push( message );
+
+		});
+
+		return errorObj;
+	};
+
 	that.ClearFlash = function() {
 		that.flash = {
 			notice: "",
@@ -37,6 +59,8 @@ var Controller = function(spec, my) {
 
 	};
 
+
+
 	that.baseURL = spec.base_url || GetDefaultBaseUrl();
 	that.route = spec.route;
 
@@ -45,9 +69,11 @@ var Controller = function(spec, my) {
 
 		var json = $.parseJSON( $( data ).find( 'JSON' ).text() );
 		var template = $( data ).find( 'Template' ).text();
+		var errors = ConstructErrorObj( $( data ).find( 'Error' ) );
+
 
 		if ( typeof( callback ) === 'function' ) {
-			callback( template, json , status, xhr );
+			callback( template, json , status, xhr, errors );
 		}
 
 		that.ClearFlash();

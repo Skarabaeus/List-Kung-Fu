@@ -9,13 +9,41 @@
 			}
 		};
 
+		var	_HighlightFormErrors = function( form, errors ) {
+			for ( var model in errors ) {
+				var currentModel = errors[ model ];
+
+				for ( var field in currentModel ) {
+					var currentField = currentModel[ field ];
+
+					var errorExplanation = $( '<div class="error_explanation"><ul></ul></div>' );
+					var errorList = errorExplanation.find( "ul" );
+
+					var name = model + "[" + field + "]";
+					var input = form.find( "*[name=" + name + "]" );
+
+					for (var i = 0; i < currentField.length; i++ ) {
+						input.parent( ".field" ).addClass( "field_with_errors" );
+						errorList.append( '<li>' + currentField[ i ] + '</li>' );
+					}
+
+					input.parent( ".field" ).append( errorExplanation );
+				}
+			}
+		};
+
+		var _ClearFormErrors = function( form ) {
+			form.find( ".field" ).removeClass( "field_with_errors" );
+			form.find( ".error_explanation" ).remove();
+		};
+
 		var _DeleteList = function( widget, delay ) {
 			var nextItem = widget.selectedList.element.next();
 			var prevItem = widget.selectedList.element.prev();
 			delay = delay || 0;
 
 			List.Destroy({
-				successCallback: function(){
+				successCallback: function( template, json, status, xhr, errors ){
 					widget.selectedList.element.delay( delay ).fadeOut(function(){
 						$(this).remove();
 						nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
@@ -139,7 +167,7 @@
 					// triggers /lists/id/edit and calls this.DisplayForm with the
 					// HTML of the form.
 					List.New({
-						successCallback: function( template, json, status, xhr ) {
+						successCallback: function( template, json, status, xhr, errors ) {
 							widget.listForm.append( template );
 							widget.listForm.show('slide', { direction: 'right' }, 'slow', function(){
 								widget.listForm.find('input').first().focus();
@@ -156,8 +184,14 @@
 
 								List.Create({
 									send: data,
-									successCallback: function( template, json, status, xhr ) {
-										_HideForm( widget, json, template );
+									successCallback: function( template, json, status, xhr, errors ) {
+										_ClearFormErrors( widget.listForm );
+
+										if ( errors === false ) {
+											_HideForm( widget, json, template );
+										} else {
+											_HighlightFormErrors( widget.listForm, errors );
+										}
 									}
 								});
 							});
@@ -227,7 +261,9 @@
 			});
 
 			newElement.bind('keydown', 'del', function(e){
-				widget.toolbar.find( "#list-delete" ).effect('puff', {}, 300, function(){ $(this).show(); }).trigger('click');
+				widget.toolbar.find( "#list-delete" ).effect('puff', {}, 300, function(){
+					$(this).show();
+				}).trigger('click');
 			});
 
 			newElement.bind('keydown', 'right', function(){
@@ -246,7 +282,7 @@
 					// triggers /lists/id/edit and calls this.DisplayForm with the
 					// HTML of the form.
 					List.Edit({
-						successCallback: function( template, json, status, xhr ) {
+						successCallback: function( template, json, status, xhr, errors ) {
 							widget.listForm.append( template );
 							widget.listForm.show('slide', { direction: 'right' }, 'slow', function(){
 								widget.listForm.find('input').first().focus();
@@ -265,8 +301,14 @@
 								List.Update({
 
 									send: data,
-									successCallback: function( template, json, status, xhr ){
-										_HideForm( widget, json, template );
+									successCallback: function( template, json, status, xhr, errors ){
+										_ClearFormErrors( widget.listForm );
+
+										if ( errors === false ) {
+											_HideForm( widget, json, template );
+										} else {
+											_HighlightFormErrors( widget.listForm, errors );
+										}
 									},
 									lists: widget.selectedList.data.list.id
 								});
@@ -365,7 +407,7 @@
 
 				// retrieve Lists from server and add them to DOM.
 				List.Index( {
-					successCallback: function( template, json, status, xhr ) {
+					successCallback: function( template, json, status, xhr, errors ) {
 
 						// remove all existing rows
 						widget.wrapper.find(".row").remove();
