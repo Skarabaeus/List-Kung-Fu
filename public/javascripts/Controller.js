@@ -52,7 +52,8 @@ var Controller = function(spec, my) {
 		that.flash.message = xhr.getResponseHeader("X-Flash-Message") || "";
 
 		if ( typeof( spec.onFlashUpdate ) === 'function' ) {
-			if ( that.flash.notice !== "" || that.flash.error !== "" || that.flash.warning !== "" ||  that.flash.message !== "" ) {
+			if ( that.flash.notice !== "" || that.flash.error !== "" ||
+					that.flash.warning !== "" ||  that.flash.message !== "" ) {
 				spec.onFlashUpdate( that.flash.notice, that.flash.error, that.flash.warning, that.flash.message );
 			}
 		}
@@ -77,9 +78,26 @@ var Controller = function(spec, my) {
 		}
 
 		that.ClearFlash();
+	};
 
+	that.DefaultErrorCallback = function( xhr, errorType, exception ) {
+		$('<div id="dialog-confirm"> \
+			<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"> \
+			</span>Something went wrong :-( Either try again or reload the page!</div>').dialog({
 
-	}
+			resizable: false,
+			modal: true,
+			buttons: {
+				"Try again": function() {
+					$( this ).dialog( "close" );
+				},
+				"Reload": function() {
+					window.location.reload();
+				}
+			}
+		});
+
+	};
 
 	that.ConstructRoute = function( params ) {
 		var constructedRoute = "";
@@ -119,6 +137,9 @@ var Controller = function(spec, my) {
 			contentType: "application/json",
 			success: function ( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
+			},
+			error: function( xhr, errorType, exception ) {
+				that.DefaultErrorCallback( xhr, errorType, exception );
 			}
 		});
 	};
@@ -135,6 +156,9 @@ var Controller = function(spec, my) {
 			contentType: "application/json",
 			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
+			},
+			error: function( xhr, errorType, exception ) {
+				that.DefaultErrorCallback( xhr, errorType, exception );
 			}
 		});
 	};
@@ -151,6 +175,9 @@ var Controller = function(spec, my) {
 			contentType: "application/json",
 			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
+			},
+			error: function( xhr, errorType, exception ) {
+				that.DefaultErrorCallback( xhr, errorType, exception );
 			}
 		});
 	};
@@ -170,6 +197,9 @@ var Controller = function(spec, my) {
 			data: data,
 			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
+			},
+			error: function( xhr, errorType, exception ) {
+				that.DefaultErrorCallback( xhr, errorType, exception );
 			}
 		});
 	};
@@ -186,6 +216,9 @@ var Controller = function(spec, my) {
 			contentType: "application/json",
 			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
+			},
+			error: function( xhr, errorType, exception ) {
+				that.DefaultErrorCallback( xhr, errorType, exception );
 			}
 		});
 	};
@@ -209,6 +242,9 @@ var Controller = function(spec, my) {
 			},
 			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
+			},
+			error: function( xhr, errorType, exception ) {
+				that.DefaultErrorCallback( xhr, errorType, exception );
 			}
 		});
 	};
@@ -229,6 +265,9 @@ var Controller = function(spec, my) {
 			},
 			success: function( data, status, xhr ){
 				that.DefaultCallback( successCallback, data, status, xhr );
+			},
+			error: function( xhr, errorType, exception ) {
+				that.DefaultErrorCallback( xhr, errorType, exception );
 			}
 		});
 
