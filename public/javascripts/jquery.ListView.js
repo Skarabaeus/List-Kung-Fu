@@ -151,6 +151,20 @@
 							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
 								widget.HideForm();
 							});
+
+							widget.listForm.bind( "submit", function( e ){
+								e.preventDefault();
+								var data = json;
+								json.list.title = widget.listForm.find( "#list_title" ).val();
+
+								List.Create({
+									send: data,
+									successCallback: function( template, json, status, xhr ) {
+										widget.HideForm( json );
+									}
+								});
+							});
+
 							widget.selectedList = null;
 						}
 					});
