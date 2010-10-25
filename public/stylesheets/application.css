@@ -63,7 +63,7 @@ html, body {
 }
 
 .selected-row {
-	border: 2px solid #009426;
+	border: 3px solid #009426;
 }
 
 .row {

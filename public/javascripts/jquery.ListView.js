@@ -182,6 +182,9 @@
 								var data = json;
 								json.list.title = widget.listForm.find( "#list_title" ).val();
 
+								var serializedForm = $(this).find("form").serializeForm();
+								json.list = serializedForm.list;
+
 								List.Create({
 									send: data,
 									successCallback: function( template, json, status, xhr, errors ) {
@@ -295,12 +298,11 @@
 							widget.listForm.bind( "submit", function(e){
 								e.preventDefault();
 
-								var data = widget.selectedList.data;
-								data.list.title = widget.listForm.find( "#list_title" ).val();
+								var serializedForm = $(this).find("form").serializeForm();
 
 								List.Update({
 
-									send: data,
+									send: serializedForm,
 									successCallback: function( template, json, status, xhr, errors ){
 										_ClearFormErrors( widget.listForm );
 
