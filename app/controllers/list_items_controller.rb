@@ -1,9 +1,9 @@
 class ListItemsController < ApplicationController
 
-  respond_to :js, :json
+  respond_to :xml
   
   def index
-    @list_items = ListItem.order('created_at desc')
+    @list_items = ListItem.where( "list_id = ?", params[ :list_id ] )
     respond_with(@list_items)
   end
 
@@ -29,7 +29,7 @@ class ListItemsController < ApplicationController
   end
 
   def create
-    @list_item = ListItem.new(params[:list])
+    @list_item = ListItem.new(params[:list_item])
 
     if @list_item.save
       flash[:notice] = 'List Item has been created.'
@@ -40,7 +40,7 @@ class ListItemsController < ApplicationController
 
   def update
     @list_item = ListItem.find(params[:id])
-    if @list_item.update_attributes(params[:list])
+    if @list_item.update_attributes(params[:list_item])
       flash[:notice] = 'List Item has been updated.'
     end
     

@@ -43,12 +43,19 @@ $(document).ready(function () {
 	*/
 
 	ListKungFu.LayoutSouth.StatusBar();
-	ListKungFu.LayoutWest.ListView({
-		ContentDimensionsChanged: function(){ ListKungFu.MainLayout.resizeContent( "west" ); }
 
+	ListKungFu.LayoutCenter.ListItemView({
+		OpenList: function() {}
 	});
 
-
+	ListKungFu.LayoutWest.ListView({
+		ContentDimensionsChanged: function(){
+			ListKungFu.MainLayout.resizeContent( "west" );
+		},
+		OpenList: function( event, data ) {
+			ListKungFu.LayoutCenter.ListItemView( "OpenList", data.selectedList );
+		}
+	});
 });
 
 

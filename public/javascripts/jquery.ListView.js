@@ -260,7 +260,7 @@
 			});
 
 			newElement.bind( 'keydown dblclick', 'return', function(e){
-				alert(JSON.stringify($(e.target).data("data")));
+				widget._trigger("OpenList", 0, { selectedList: $(e.target).data("data") } );
 			});
 
 			newElement.bind('keydown', 'del', function(e){
