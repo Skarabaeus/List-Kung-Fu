@@ -6,6 +6,8 @@ ListKungFu::Application.routes.draw do
   resources :lists do
     resources :list_items
   end
+  
+  resources :list_items
 
   root :to => "app#index"
   

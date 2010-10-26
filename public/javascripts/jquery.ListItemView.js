@@ -1,7 +1,14 @@
 (function(){
 	var ListItemView = function(){
 
-		var _myPrivateFunction = function() {
+		var _AddListItem = function( widget, listItem, template ) {
+			var newElement = $( $.mustache( template, listItem.list_item ) );
+			
+			newElement.data( "data", listItem );
+			
+			
+			
+			widget.listItemList.append (newElement);
 		};
 
 		// put all private functions in here
@@ -36,7 +43,7 @@
 				ListItem.Index( {
 					successCallback: function( template, json, status, xhr, errors ) {
 						$.each( json, function( index, listItem ) {
-							widget.listItemList.append( "<div>" + listItem.list_item.body + "</div>")
+							_AddListItem( widget, listItem, template )
 						});
 
 					},

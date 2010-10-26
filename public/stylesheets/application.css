@@ -93,3 +93,20 @@ button:hover, input[type=submit]:hover {
 	background-color: #aaa;
 }
 /*--------------------*/
+
+.list-item > .completed, .list-item > .list-item-content {
+	float:left;
+	padding:10px;
+	margin:0;
+}
+
+.list-item > .completed {
+	vertical-align:middle;
+	text-align:center;
+}
+
+.list-item > .list-item-content {
+
+}
+
+/*--------------------*/
