@@ -3,12 +3,28 @@
 
 		var _AddListItem = function( widget, listItem, template ) {
 			var newElement = $( $.mustache( template, listItem.list_item ) );
-			
+
 			newElement.data( "data", listItem );
-			
-			
-			
+
 			widget.listItemList.append (newElement);
+
+			newElement.find( ".complete-button" ).bind( 'click', { element: newElement }, function( e ){
+				var data = e.data.element.data( "data" );
+				var $that = $( this );
+
+				// set item completed
+				data.list_item.completed = true;
+
+				ListItem.Update({
+					successCallback: function(){
+						$that.hide();
+					},
+					lists: data.list_item.list_id,
+					list_items: data.list_item.id,
+					send: data
+				});
+
+			});
 		};
 
 		// put all private functions in here

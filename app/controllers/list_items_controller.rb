@@ -1,10 +1,14 @@
 class ListItemsController < ApplicationController
 
   respond_to :xml
-  
+
   def index
-    @list_items = ListItem.where( "list_id = ?", params[ :list_id ] )
-    respond_with(@list_items)
+    if params[ :show_completed ] == true
+      @list_items = ListItem.where( "list_id = ?", params[ :list_id ] ).order( "created_at desc" )
+    else
+      @list_items = ListItem.where( "list_id = ? AND completed = ?", params[ :list_id ], false ).order( "created_at desc" )
+    end
+    respond_with( @list_items )
   end
 
   def show
@@ -34,7 +38,7 @@ class ListItemsController < ApplicationController
     if @list_item.save
       flash[:notice] = 'List Item has been created.'
     end
-    
+
     respond_with( @list_item )
   end
 
@@ -43,14 +47,14 @@ class ListItemsController < ApplicationController
     if @list_item.update_attributes(params[:list_item])
       flash[:notice] = 'List Item has been updated.'
     end
-    
+
     respond_with( @list_item )
   end
 
   def destroy
     @list_item = ListItem.find( params[:id] )
     @list_item.destroy
-    
+
     respond_with( @list_item )
   end
 end
