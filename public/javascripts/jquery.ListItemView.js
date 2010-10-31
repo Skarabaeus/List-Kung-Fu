@@ -8,22 +8,66 @@
 
 			widget.listItemList.append (newElement);
 
-			newElement.find( ".complete-button" ).bind( 'click', { element: newElement }, function( e ){
+			newElement.find( ".completed" ).bind( 'click', { element: newElement }, function( e ){
 				var data = e.data.element.data( "data" );
-				var $that = $( this );
+				var $element = $( e.data.element );
 
-				// set item completed
-				data.list_item.completed = true;
+				_MarkCompleted( $element, data );
 
-				ListItem.Update({
-					successCallback: function(){
-						$that.hide();
-					},
-					lists: data.list_item.list_id,
-					list_items: data.list_item.id,
-					send: data
-				});
+			});
+		};
 
+		var _MarkCompleted = function( element, listItem ) {
+			// set item completed
+			listItem.list_item.completed = true;
+
+			// update item server side
+			ListItem.Update({
+				successCallback: function(){
+					// hide the main content of the list item and instead,
+					// display the UNDO button.
+					element.find( ".list-item-wrapper" ).hide('slow', function(){
+						var $undo = $( '<div class="undo">Undo</div>' );
+						$undo.bind( "click", function() {
+							_MarkUncompleted( element, listItem );
+						});
+
+						element.append( $undo );
+						// automatically remove the undo button and the complete
+						// element after 5 seconds.
+						/*
+						element.delay( 5000, "undoQueue" ).queue( "undoQueue", function(){
+							$( this ).hide('slow', function(){
+								$( this ).remove();
+							});
+						  $( this ).dequeue( "undoQueue" );
+						});
+						*/
+					});
+				},
+				lists: listItem.list_item.list_id,
+				list_items: listItem.list_item.id,
+				send: listItem
+			});
+		};
+
+		var _MarkUncompleted = function( element, listItem ) {
+			// element.clearQueue( "undoQueue" );
+
+			// set item completed
+			listItem.list_item.completed = false;
+
+			// update item server side
+			ListItem.Update({
+				successCallback: function(){
+					element.find( ".undo" ).hide('slow', function(){
+						$( this ).remove();
+					});
+					element.find( ".list-item-wrapper" ).show('slow');
+				},
+				lists: listItem.list_item.list_id,
+				list_items: listItem.list_item.id,
+				send: listItem
 			});
 		};
 

@@ -94,19 +94,22 @@ button:hover, input[type=submit]:hover {
 }
 /*--------------------*/
 
-.list-item > .completed, .list-item > .list-item-content {
+.list-item-wrapper > .completed, .list-item-wrapper > .list-item-content {
 	float:left;
-	padding:10px;
 	margin:0;
 }
 
-.list-item > .completed {
-	vertical-align:middle;
-	text-align:center;
+.list-item-wrapper > .completed {
+	background-image:url(/images/checked_green_grey_24.png);
+	background-position: 0 -24px;
+	background-repeat: no-repeat;
+	height:24px;
+	width:24px;
+	margin-right:10px;
 }
 
-.list-item > .list-item-content {
-
+.list-item-wrapper > .completed:hover {
+	background-position:0 0;
 }
 
 /*--------------------*/
