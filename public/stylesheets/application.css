@@ -46,6 +46,10 @@ html, body {
 	outline:0;
 }
 
+.clickable {
+	cursor:pointer;
+}
+
 /*--------------------*/
 #list-toolbar {
 	height:50px;
@@ -67,8 +71,8 @@ html, body {
 }
 
 .row {
-	margin:5px;
-	padding:5px;
+	margin:0px;
+	padding:7px;
 }
 
 .row:nth-child(odd){
@@ -92,6 +96,8 @@ button, input[type=submit] {
 button:hover, input[type=submit]:hover {
 	background-color: #aaa;
 }
+
+
 /*--------------------*/
 
 .list-item-wrapper > .completed, .list-item-wrapper > .list-item-content {
@@ -100,12 +106,22 @@ button:hover, input[type=submit]:hover {
 }
 
 .list-item-wrapper > .completed {
-	background-image:url(/images/checked_green_grey_24.png);
+	background-image:url(/images/checked_green_grey_24.gif);
 	background-position: 0 -24px;
 	background-repeat: no-repeat;
 	height:24px;
 	width:24px;
 	margin-right:10px;
+}
+
+.list-item {
+	border-bottom: 3px solid #ddd;
+}
+
+.undo > img {
+	vertical-align:middle;
+	margin:0 10px 0 0;
+	padding:0;
 }
 
 .list-item-wrapper > .completed:hover {

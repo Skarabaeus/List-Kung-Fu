@@ -24,25 +24,24 @@
 			// update item server side
 			ListItem.Update({
 				successCallback: function(){
+					var queueName = "list-item-undo-" + listItem.list_item.id;
+
 					// hide the main content of the list item and instead,
 					// display the UNDO button.
 					element.find( ".list-item-wrapper" ).hide('slow', function(){
-						var $undo = $( '<div class="undo">Undo</div>' );
+						var $undo = $( '<div class="undo clickable"><img src="/images/undo-icon.gif"/>Undo</div>' );
 						$undo.bind( "click", function() {
-							_MarkUncompleted( element, listItem );
+							_MarkUncompleted( element, listItem, queueName );
 						});
 
 						element.append( $undo );
-						// automatically remove the undo button and the complete
-						// element after 5 seconds.
-						/*
-						element.delay( 5000, "undoQueue" ).queue( "undoQueue", function(){
-							$( this ).hide('slow', function(){
-								$( this ).remove();
+
+						$undo.delay( 5000, queueName ).queue( queueName, function(){
+							element.hide('slow', function(){
+								element.remove();
 							});
-						  $( this ).dequeue( "undoQueue" );
-						});
-						*/
+						}).dequeue( queueName );
+
 					});
 				},
 				lists: listItem.list_item.list_id,
@@ -51,8 +50,10 @@
 			});
 		};
 
-		var _MarkUncompleted = function( element, listItem ) {
-			// element.clearQueue( "undoQueue" );
+		var _MarkUncompleted = function( element, listItem, queueName ) {
+			if ( queueName !== "" ) {
+				element.clearQueue( queueName );
+			}
 
 			// set item completed
 			listItem.list_item.completed = false;
