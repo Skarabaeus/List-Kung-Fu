@@ -36,6 +36,9 @@
 
 						element.append( $undo );
 
+						// hide complete element after 5 seconds. In case the user
+						// clicks "undo", the queue will be cleared and the element
+						// won't be hidden.
 						$undo.delay( 5000, queueName ).queue( queueName, function(){
 							element.hide('slow', function(){
 								element.remove();
@@ -72,8 +75,43 @@
 			});
 		};
 
-		// put all private functions in here
-		// that improves minification. See http://blog.project-sierra.de/archives/1622
+		var _CreateToolbar = function( widget ) {
+			// empty header
+			widget.header.html("");
+			
+			// build new header
+			var $showCompletedItems = $( '<input type="checkbox" id="showCompleted"/> <label for="showCompleted">Show Completed Items</label>' );
+			
+			$showCompletedItems.bind( "change", function( e ){
+
+				if ( e.target.checked === true ) {
+				
+					widget.completedList = $( '<div id="completedList"></div>' );
+					
+					var data = widget.element.data( "data-list" );
+					ListItem.Index( {
+						successCallback: function( template, json, status, xhr, errors ) {
+							
+							$.each( json, function( index, listItem ) {
+								widget.completedList.append("<div>" + listItem.list_item.body + "</div>");
+							});
+							
+							
+							widget.wrapper.prepend( widget.completedList );
+						},
+						send: { show: "completed" },
+						lists: data.list.id
+					});
+				} else {
+					widget.completedList.remove();
+					widget.completedList = null;
+				}
+				
+			});
+			
+			
+			widget.header.append( $showCompletedItems );
+		};
 
 		return {
 			// default options
@@ -86,7 +124,8 @@
 
 				widget.wrapper = widget.element.find('div#list-item-wrapper');
 				widget.listItemList = $( '<div id="list-item-list"></div>');
-
+				widget.header = widget.element.find( '.header' );
+				
 				widget.wrapper.append( widget.listItemList );
 
 			},
@@ -100,13 +139,15 @@
 
 				// remove all children
 				widget.listItemList.find("*").remove();
+				widget.element.data( "data-list", data );
 
 				ListItem.Index( {
 					successCallback: function( template, json, status, xhr, errors ) {
 						$.each( json, function( index, listItem ) {
 							_AddListItem( widget, listItem, template )
 						});
-
+						
+						_CreateToolbar( widget );
 					},
 					lists: data.list.id
 				} );

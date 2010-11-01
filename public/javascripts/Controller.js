@@ -128,13 +128,15 @@ var Controller = function(spec, my) {
 	that.Index = function( setup ) {
 		var successCallback = setup.successCallback || null;
 		var route = that.ConstructRoute( setup );
+		var data = setup.send;
 
 		var result = $.ajax({
 			url: that.baseURL + route,
 			dataType: "xml",
 			type: "GET",
-			processData: false,
+			processData: true,
 			contentType: "application/json",
+			data: data,
 			success: function ( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
 			},

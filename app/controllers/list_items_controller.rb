@@ -3,9 +3,12 @@ class ListItemsController < ApplicationController
   respond_to :xml
 
   def index
-    if params[ :show_completed ] == true
+    case params[ :show ]
+    when "all"
       @list_items = ListItem.where( "list_id = ?", params[ :list_id ] ).order( "created_at desc" )
-    else
+    when "completed"
+      @list_items = ListItem.where( "list_id = ? AND completed = ?", params[ :list_id ], true ).order( "created_at desc" )
+    else # uncompleted
       @list_items = ListItem.where( "list_id = ? AND completed = ?", params[ :list_id ], false ).order( "created_at desc" )
     end
     respond_with( @list_items )

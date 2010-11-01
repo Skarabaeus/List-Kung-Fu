@@ -128,4 +128,12 @@ button:hover, input[type=submit]:hover {
 	background-position:0 0;
 }
 
+.header label {
+	vertical-align:middle;
+	font-size:10pt;
+}
+
+.header input {
+	vertical-align:middle;
+}
 /*--------------------*/
