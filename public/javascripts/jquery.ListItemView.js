@@ -1,7 +1,9 @@
 (function(){
 	var ListItemView = function(){
+		
+		var widget = null;
 
-		var _AddListItem = function( widget, listItem, template ) {
+		var _AddListItem = function( listItem, template ) {
 			var newElement = $( $.mustache( template, listItem.list_item ) );
 
 			newElement.data( "data", listItem );
@@ -44,6 +46,13 @@
 								element.remove();
 							});
 						}).dequeue( queueName );
+						
+						// in case completed items are displayed, update them:
+						if ( widget.ShowCompletedCheckbox && widget.ShowCompletedCheckbox.get( 0 ).
+							checked === true ) {
+							_ToggleCompleted( false );
+							_ToggleCompleted( true );
+						}
 
 					});
 				},
@@ -75,42 +84,44 @@
 			});
 		};
 
-		var _CreateToolbar = function( widget ) {
+		var _ToggleCompleted = function(  doShow ) {
+			if ( doShow === true ) {
+			
+				widget.completedList = $( '<div id="completedList"></div>' );
+				
+				var data = widget.element.data( "data-list" );
+				ListItem.Index( {
+					successCallback: function( template, json, status, xhr, errors ) {
+						
+						$.each( json, function( index, listItem ) {
+							widget.completedList.append("<div>" + listItem.list_item.body + "</div>");
+						});
+						
+						
+						widget.wrapper.prepend( widget.completedList );
+					},
+					send: { show: "completed" },
+					lists: data.list.id
+				});
+			} else {
+				widget.completedList.remove();
+				widget.completedList = null;
+			}
+		}
+
+		var _CreateToolbar = function() {
 			// empty header
 			widget.header.html("");
 			
 			// build new header
-			var $showCompletedItems = $( '<input type="checkbox" id="showCompleted"/> <label for="showCompleted">Show Completed Items</label>' );
+			widget.ShowCompletedCheckbox = $( '<input type="checkbox" id="showCompleted"/> \
+				<label for="showCompleted">Show Completed Items</label>' );
 			
-			$showCompletedItems.bind( "change", function( e ){
-
-				if ( e.target.checked === true ) {
-				
-					widget.completedList = $( '<div id="completedList"></div>' );
-					
-					var data = widget.element.data( "data-list" );
-					ListItem.Index( {
-						successCallback: function( template, json, status, xhr, errors ) {
-							
-							$.each( json, function( index, listItem ) {
-								widget.completedList.append("<div>" + listItem.list_item.body + "</div>");
-							});
-							
-							
-							widget.wrapper.prepend( widget.completedList );
-						},
-						send: { show: "completed" },
-						lists: data.list.id
-					});
-				} else {
-					widget.completedList.remove();
-					widget.completedList = null;
-				}
-				
+			widget.ShowCompletedCheckbox.bind( "change", function( e ){
+				_ToggleCompleted( e.target.checked );
 			});
 			
-			
-			widget.header.append( $showCompletedItems );
+			widget.header.append( widget.ShowCompletedCheckbox );
 		};
 
 		return {
@@ -120,7 +131,7 @@
 			},
 
 			_create: function() {
-				var widget = this;
+				widget = this;
 
 				widget.wrapper = widget.element.find('div#list-item-wrapper');
 				widget.listItemList = $( '<div id="list-item-list"></div>');
@@ -135,19 +146,23 @@
 			},
 
 			OpenList: function( data ) {
-				var widget = this;
-
 				// remove all children
 				widget.listItemList.find("*").remove();
 				widget.element.data( "data-list", data );
+				
+				// remove "completed" list
+				if ( widget.completedList ) {
+					widget.completedList.remove();
+					widget.completedList = null;
+				}
 
 				ListItem.Index( {
 					successCallback: function( template, json, status, xhr, errors ) {
 						$.each( json, function( index, listItem ) {
-							_AddListItem( widget, listItem, template )
+							_AddListItem( listItem, template )
 						});
 						
-						_CreateToolbar( widget );
+						_CreateToolbar();
 					},
 					lists: data.list.id
 				} );

@@ -5,11 +5,11 @@ class ListItemsController < ApplicationController
   def index
     case params[ :show ]
     when "all"
-      @list_items = ListItem.where( "list_id = ?", params[ :list_id ] ).order( "created_at desc" )
+      @list_items = ListItem.where( "list_id = ?", params[ :list_id ] ).order( "updated_at desc" )
     when "completed"
-      @list_items = ListItem.where( "list_id = ? AND completed = ?", params[ :list_id ], true ).order( "created_at desc" )
+      @list_items = ListItem.where( "list_id = ? AND completed = ?", params[ :list_id ], true ).order( "updated_at desc" )
     else # uncompleted
-      @list_items = ListItem.where( "list_id = ? AND completed = ?", params[ :list_id ], false ).order( "created_at desc" )
+      @list_items = ListItem.where( "list_id = ? AND completed = ?", params[ :list_id ], false ).order( "updated_at desc" )
     end
     respond_with( @list_items )
   end

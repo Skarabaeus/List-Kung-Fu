@@ -101,7 +101,6 @@ button:hover, input[type=submit]:hover {
 /*--------------------*/
 
 .list-item-wrapper > .completed, .list-item-wrapper > .list-item-content {
-	float:left;
 	margin:0;
 }
 
@@ -112,6 +111,7 @@ button:hover, input[type=submit]:hover {
 	height:24px;
 	width:24px;
 	margin-right:10px;
+	float:left;
 }
 
 .list-item {
@@ -136,4 +136,20 @@ button:hover, input[type=submit]:hover {
 .header input {
 	vertical-align:middle;
 }
+
+#completedList {
+	margin: 0 0 20px 50px;
+	font-size:10pt;
+}
+
+#completedList > div {
+	padding:4px;
+	width:90%;
+	border-bottom:2px solid #ddd;
+}
+
+#completedList > div:nth-child(odd){
+	background-color:#eee;
+}
+
 /*--------------------*/

@@ -3,7 +3,7 @@ class ListsController < ApplicationController
   respond_to :xml
   
   def index
-    @lists = List.all
+    @lists = List.where.order( "updated_at desc" )
     respond_with(@lists)
   end
 
