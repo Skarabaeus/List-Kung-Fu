@@ -17,6 +17,60 @@
 				_MarkCompleted( $element, data );
 
 			});
+
+			newElement.find( ".delete" ).bind( 'click', { element: newElement }, function( e ) {
+				var data = e.data.element.data( "data" );
+				var $element = $( e.data.element );
+
+				_DeleteListItem( $element, data );
+			});
+
+			newElement.bind( 'focus', function(e){
+
+				// remove selection from all rows
+				widget.listItemList.find('.row').removeClass('selected-row');
+
+				// add it to the selected row.
+				$( e.target ).addClass('selected-row');
+
+				widget.selectedListItem = {
+					element: $( e.target ),
+					data: $( e.target ).data("data")
+				};
+			});
+
+			newElement.bind( 'keydown', 'down', function( e ){
+				e.preventDefault();
+				$( e.target ).nextAll( 'div:visible' ).first().focus();
+				return false;
+			});
+
+			newElement.bind( 'keydown', 'up', function( e ){
+				e.preventDefault();
+				$( e.target ).prevAll( 'div:visible' ).first().focus();
+				return false;
+			});
+
+			newElement.bind( 'keydown', 'space', function( e ){
+				if ( newElement.find( ".undo" ).length === 0 ) {
+					newElement.find( ".completed" ).trigger( "click" );
+				} else {
+					newElement.find( ".undo" ).trigger( "click" );
+				}
+			});
+
+		};
+
+		var _DeleteListItem = function( element, listItem ) {
+			ListItem.Destroy({
+				successCallback: function( template, json, status, xhr, errors ){
+					element.hide( "slow", function() {
+						$( this ).remove();
+					});
+				},
+				lists: listItem.list_item.list_id,
+				list_items: listItem.list_item.id
+			});
 		};
 
 		var _MarkCompleted = function( element, listItem ) {
@@ -32,6 +86,7 @@
 					// display the UNDO button.
 					element.find( ".list-item-wrapper" ).hide('slow', function(){
 						var $undo = $( '<div class="undo clickable"><img src="/images/undo-icon.gif"/>Undo</div>' );
+
 						$undo.bind( "click", function() {
 							_MarkUncompleted( element, listItem, queueName );
 						});
@@ -52,8 +107,8 @@
 							checked === true ) {
 							_ToggleCompleted( true );
 						}
-
 					});
+
 				},
 				lists: listItem.list_item.list_id,
 				list_items: listItem.list_item.id,
@@ -178,6 +233,9 @@
 						$.each( json, function( index, listItem ) {
 							_AddListItem( listItem, template )
 						});
+
+						// focus first list item
+						widget.listItemList.find( ".row" ).first().focus();
 
 						_CreateToolbar();
 					},

@@ -353,13 +353,36 @@
 			_triggerResize( widget );
 		};
 
-		var _RegisterGlobalKeyboardShortcuts = function( toolbar ) {
+		var _RegisterGlobalKeyboardShortcuts = function( w ) {
+			var widget = w;
 
+			// add new list
 			$(document).bind('keydown', 'ctrl+i', function(e){
-				toolbar.find( "#list-new" ).effect('puff', {}, 300, function(){
+				widget.toolbar.find( "#list-new" ).effect('puff', {}, 300, function(){
 					$(this).show();
 					$(this).trigger('click') });
 				return false;
+			});
+
+			// select list
+			$(document).bind( 'keydown', 'ctrl+l', function(e) {
+				var effect = "highlight";
+
+				if ( widget.selectedList ) {
+					widget.selectedList.element.effect( effect, {}, 300, function(){
+						$(this).show();
+						$(this).focus();
+					});
+				} else {
+					widget.listlist.find( '.row' ).first().effect( effect, {}, 300, function(){
+						$(this).show();
+						$(this).focus();
+					});
+				}
+			});
+
+			$(document).bind( 'keydown', 'ctrl+f', function(e){
+				widget.toolbar.find( "#search-list" ).focus();
 			});
 		};
 
@@ -432,7 +455,7 @@
 				} );
 
 				// register global keyboard shortcuts
-				_RegisterGlobalKeyboardShortcuts( widget.toolbar );
+				_RegisterGlobalKeyboardShortcuts( widget );
 			},
 
 			destroy: function() {

@@ -67,6 +67,10 @@ html, body {
 }
 
 #search-list {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border:2px solid #CDC3B7;
 	height:20px;
 	left:float;
 	margin:8px 5px 0;
@@ -75,7 +79,7 @@ html, body {
 }
 
 .selected-row {
-	border: 3px solid #009426;
+	border: 3px solid #009426 !important;
 }
 
 .row {
@@ -108,18 +112,39 @@ button:hover, input[type=submit]:hover {
 
 /*--------------------*/
 
-.list-item-wrapper > .completed, .list-item-wrapper > .list-item-content {
+.list-item-wrapper > .completed, .list-item-wrapper > .list-item-content, .list-items-tools > * {
 	margin:0;
 }
 
-.list-item-wrapper > .completed {
+.list-items-tools {
+	width: 30px;
+	float:left;
+}
+
+.list-items-tools {
+	cursor:pointer;
+}
+
+.list-items-tools > .completed {
 	background-image:url(/images/checked_green_grey_24.gif);
 	background-position: 0 -24px;
 	background-repeat: no-repeat;
 	height:24px;
 	width:24px;
 	margin-right:10px;
-	float:left;
+}
+
+.list-items-tools > .delete {
+	background-image:url(/images/destroy_small.gif);
+	background-position: 0 -24px;
+	background-repeat: no-repeat;
+	height:24px;
+	width:24px;
+	margin-right:10px;
+}
+
+.list-items-tools > .completed:hover, list-item-tools > .delete:hover {
+	background-position:0 0;
 }
 
 .list-item {
@@ -130,10 +155,6 @@ button:hover, input[type=submit]:hover {
 	vertical-align:middle;
 	margin:0 10px 0 0;
 	padding:0;
-}
-
-.list-item-wrapper > .completed:hover {
-	background-position:0 0;
 }
 
 .header label {
