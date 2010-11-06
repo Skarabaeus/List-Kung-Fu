@@ -246,13 +246,13 @@
 			/////////////////////////////
 			newElement.bind('keydown', 'down', function( e ){
 				e.preventDefault();
-				$( e.target ).next().focus();
+				$( e.target ).nextAll( 'div:visible' ).first().focus();
 				return false;
 			});
 
 			newElement.bind('keydown', 'up', function( e ){
 				e.preventDefault();
-				$( e.target ).prev().focus();
+				$( e.target ).prevAll( 'div:visible' ).first().focus();
 				return false;
 			});
 
