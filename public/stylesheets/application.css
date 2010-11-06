@@ -66,6 +66,14 @@ html, body {
 	float:left;
 }
 
+#search-list {
+	height:20px;
+	left:float;
+	margin:8px 5px 0;
+	padding:5px;
+	width:150px;
+}
+
 .selected-row {
 	border: 3px solid #009426;
 }

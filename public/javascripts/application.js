@@ -8,6 +8,14 @@ var ListKungFu = {
 	LayoutCenter: $("#mainlayout-center")
 };
 
+/*
+	Helpers
+*/
+
+
+jQuery.expr[':'].Contains = function(a,i,m){
+     return jQuery(a).text().toLowerCase().indexOf(m[3].toLowerCase())>=0;
+};
 
 /*
 	Main Layout

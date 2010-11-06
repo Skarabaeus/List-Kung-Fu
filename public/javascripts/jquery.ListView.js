@@ -58,6 +58,7 @@
 			var toolbar = $('<div id="list-toolbar"> \
 				<button id="list-new">Create</button> \
 				<button id="list-delete">Delete</button> \
+				<input type="text" id="search-list" /> \
 				</div>')
 
 			widget.element.find("div.header").append(toolbar);
@@ -210,6 +211,16 @@
 				return false;
 			});
 
+			toolbar.find("#search-list").bind( 'keyup', function ( e ) {
+				var filtervalue = $(this).val();
+
+        if (filtervalue === '') {
+					widget.listlist.find( ".row" ).show();
+        } else {
+					widget.listlist.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
+					widget.listlist.find( ".row:Contains('" + filtervalue + "')").show();
+        }
+			});
 			// return toolbar
 
 			return toolbar
