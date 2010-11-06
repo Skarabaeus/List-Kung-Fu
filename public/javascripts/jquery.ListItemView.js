@@ -1,6 +1,6 @@
 (function(){
 	var ListItemView = function(){
-		
+
 		var widget = null;
 
 		var _AddListItem = function( listItem, template ) {
@@ -46,11 +46,10 @@
 								element.remove();
 							});
 						}).dequeue( queueName );
-						
+
 						// in case completed items are displayed, update them:
 						if ( widget.ShowCompletedCheckbox && widget.ShowCompletedCheckbox.get( 0 ).
 							checked === true ) {
-							_ToggleCompleted( false );
 							_ToggleCompleted( true );
 						}
 
@@ -77,6 +76,12 @@
 						$( this ).remove();
 					});
 					element.find( ".list-item-wrapper" ).show('slow');
+
+					// in case completed items are displayed, update them:
+					if ( widget.ShowCompletedCheckbox && widget.ShowCompletedCheckbox.get( 0 ).
+						checked === true ) {
+						_ToggleCompleted( true );
+					}
 				},
 				lists: listItem.list_item.list_id,
 				list_items: listItem.list_item.id,
@@ -86,18 +91,23 @@
 
 		var _ToggleCompleted = function(  doShow ) {
 			if ( doShow === true ) {
-			
+
+				if ( widget.completedList ) {
+					widget.completedList.remove();
+					widget.completedList = null;
+				}
+
 				widget.completedList = $( '<div id="completedList"></div>' );
-				
+
 				var data = widget.element.data( "data-list" );
 				ListItem.Index( {
 					successCallback: function( template, json, status, xhr, errors ) {
-						
+
 						$.each( json, function( index, listItem ) {
 							widget.completedList.append("<div>" + listItem.list_item.body + "</div>");
 						});
-						
-						
+
+
 						widget.wrapper.prepend( widget.completedList );
 					},
 					send: { show: "completed" },
@@ -112,15 +122,15 @@
 		var _CreateToolbar = function() {
 			// empty header
 			widget.header.html("");
-			
+
 			// build new header
 			widget.ShowCompletedCheckbox = $( '<input type="checkbox" id="showCompleted"/> \
 				<label for="showCompleted">Show Completed Items</label>' );
-			
+
 			widget.ShowCompletedCheckbox.bind( "change", function( e ){
 				_ToggleCompleted( e.target.checked );
 			});
-			
+
 			widget.header.append( widget.ShowCompletedCheckbox );
 		};
 
@@ -136,7 +146,7 @@
 				widget.wrapper = widget.element.find('div#list-item-wrapper');
 				widget.listItemList = $( '<div id="list-item-list"></div>');
 				widget.header = widget.element.find( '.header' );
-				
+
 				widget.wrapper.append( widget.listItemList );
 
 			},
@@ -149,7 +159,7 @@
 				// remove all children
 				widget.listItemList.find("*").remove();
 				widget.element.data( "data-list", data );
-				
+
 				// remove "completed" list
 				if ( widget.completedList ) {
 					widget.completedList.remove();
@@ -161,7 +171,7 @@
 						$.each( json, function( index, listItem ) {
 							_AddListItem( listItem, template )
 						});
-						
+
 						_CreateToolbar();
 					},
 					lists: data.list.id
