@@ -74,9 +74,12 @@
 						var $form = $( template );
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
-						$form.show('slow');
+						$form.show('slow', function(){
+							$form.find( "textarea" ).markItUp( mySettings );
+							$form.find( "textarea" ).focus();
+						});
 
-						$form.find( "textarea" ).focus();
+
 
 						$form.find( "textarea" ).bind( "keydown", 'esc', function(){
 							$form.find( "#cancel-edit" ).trigger( "click" );

@@ -231,6 +231,9 @@ var Controller = function(spec, my) {
 		var send = setup.send;
 		var data = JSON.stringify( send );
 
+		// correct line breaks for firefox
+		data = data.replace( /\\u000a/g, "\\n");
+
 		$.ajax({
 			url: that.baseURL + route,
 			dataType: "xml",

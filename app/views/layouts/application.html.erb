@@ -3,7 +3,9 @@
 <head>
   <title>List Kung Fu</title>
 	<%= stylesheet_link_tag 'http://yui.yahooapis.com/2.8.1/build/reset/reset-min.css' %>
-  <%= stylesheet_link_tag 'application', 'scaffold', 'jquery-ui-1.8.5.custom', 'layout-default-latest' %>
+  <%= stylesheet_link_tag 'application', 'scaffold', 'jquery-ui-1.8.5.custom', 'layout-default-latest', 'textile' %>
+	<%= stylesheet_link_tag 'markitup/set_style.css' %>
+	<%= stylesheet_link_tag 'markitup/skin_style.css' %>
   <%= csrf_meta_tag %>
 </head>
 <body>
@@ -37,6 +39,7 @@
 <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js' %>
 <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' %>
 <%= javascript_include_tag 'jquery.SerializeForm' %>
+<%= javascript_include_tag 'markitup/jquery.markitup.js', 'markitup/sets/default/set.js' %>
 <%= javascript_include_tag 'jquery.layout.min-1.2.0', 'json2', 'mustache', 'jquery.hotkeys' %>
 <%= javascript_include_tag 'Controller', 'jquery.ListView', 'jquery.StatusBar', 'jquery.ListItemView' %>
 <%= javascript_include_tag 'application' %>

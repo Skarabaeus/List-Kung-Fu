@@ -183,12 +183,10 @@ button:hover, input[type=submit]:hover {
 
 #list_item_body {
 	height:150px;
-	width:90%;
-	float:left;
 }
 
 #list_item_submit, #cancel-edit {
-	height:75px;
+	height:35px;
 	margin:0;
 	width:50px;
 }
