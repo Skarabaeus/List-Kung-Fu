@@ -47,7 +47,8 @@
 					widget.selectedList.element.delay( delay ).fadeOut(function(){
 						$(this).remove();
 						nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
-					})
+					});
+					widget._trigger( "CloseList", 0, {} );
 				},
 				lists: widget.selectedList.data.list.id
 			});

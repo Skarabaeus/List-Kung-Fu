@@ -155,16 +155,23 @@
 
 			},
 
-			OpenList: function( data ) {
+			RemoveList: function() {
 				// remove all children
-				widget.listItemList.find("*").remove();
-				widget.element.data( "data-list", data );
+				if ( widget.listItemList ) {
+					widget.listItemList.find( "*" ).remove();
+				}
 
 				// remove "completed" list
 				if ( widget.completedList ) {
 					widget.completedList.remove();
 					widget.completedList = null;
 				}
+			},
+
+			OpenList: function( data ) {
+				widget.RemoveList();
+
+				widget.element.data( "data-list", data );
 
 				ListItem.Index( {
 					successCallback: function( template, json, status, xhr, errors ) {

@@ -54,6 +54,9 @@ $(document).ready(function () {
 		},
 		OpenList: function( event, data ) {
 			ListKungFu.LayoutCenter.ListItemView( "OpenList", data.selectedList );
+		},
+		CloseList: function( event, data ) {
+			ListKungFu.LayoutCenter.ListItemView( "RemoveList" );
 		}
 	});
 });
