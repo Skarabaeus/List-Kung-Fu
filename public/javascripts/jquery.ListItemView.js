@@ -27,16 +27,19 @@
 
 			newElement.bind( 'focus', function(e){
 
-				// remove selection from all rows
-				widget.listItemList.find('.row').removeClass('selected-row');
+				if ( $( e.target ).hasClass( 'row' ) ) {
 
-				// add it to the selected row.
-				$( e.target ).addClass('selected-row');
+					// remove selection from all rows
+					widget.listItemList.find('.row').removeClass('selected-row');
 
-				widget.selectedListItem = {
-					element: $( e.target ),
-					data: $( e.target ).data("data")
-				};
+					// add it to the selected row.
+					$( e.target ).addClass('selected-row');
+
+					widget.selectedListItem = {
+						element: $( e.target ),
+						data: $( e.target ).data("data")
+					};
+				}
 			});
 
 			newElement.bind( 'keydown', 'down', function( e ){
@@ -57,6 +60,60 @@
 				} else {
 					newElement.find( ".undo" ).trigger( "click" );
 				}
+			});
+
+			newElement.bind( 'keydown dblclick', 'return', function( e ){
+				// if we display already the form for this element,
+				// just exit.
+				if ( newElement.find( "form" ).length > 0 ) {
+					return false;
+				}
+
+				ListItem.Edit({
+					successCallback: function( template, json, status, xhr, errors ) {
+						var $form = $( template );
+						$form.hide();
+						widget.selectedListItem.element.prepend( $form );
+						$form.show('slow');
+
+						$form.find( "textarea" ).focus();
+
+						$form.find( "input[type=submit]" ).bind( "keydown click", 'return', function( e ) {
+							e.preventDefault();
+							var serializedForm = newElement.find("form").serializeForm();
+
+							ListItem.Update({
+								send: serializedForm,
+								successCallback: function( template, json, status, xhr, errors ){
+									$form.hide( 'slow', function( e ) {
+										$( this ).remove();
+										newElement.find( '.list-item-content' ).html( json.list_item.body_rendered );
+										newElement.focus();
+									});
+								},
+								lists: widget.selectedListItem.data.list_item.list_id,
+								list_items: widget.selectedListItem.data.list_item.id
+							});
+
+							return false;
+						});
+
+						$form.find( "#cancel-edit" ).bind( "keydown click", 'return', function( e ) {
+							e.preventDefault();
+
+							$form.hide( 'slow', function() {
+								$( this ).remove();
+								newElement.focus();
+							});
+
+							return false;
+						});
+
+						return false;
+					},
+					lists: widget.selectedListItem.data.list_item.list_id,
+					list_items: widget.selectedListItem.data.list_item.id
+				});
 			});
 
 		};
@@ -161,7 +218,6 @@
 						$.each( json, function( index, listItem ) {
 							widget.completedList.append("<div>" + listItem.list_item.body + "</div>");
 						});
-
 
 						widget.wrapper.prepend( widget.completedList );
 					},

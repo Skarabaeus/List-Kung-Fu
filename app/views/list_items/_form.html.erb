@@ -1,1 +1,23 @@
-form
+<%= form_for( list_item, :remote => true ) do |f| %>
+  <% if list_item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(list_item.errors.count, "error") %> prohibited this list item from being saved:</h2>
+
+      <ul>
+      <% list_item.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.text_area :body, :tabindex => 10001 %>
+  </div>
+  <div class="actions">
+    <%= f.submit :tabindex => 10003, :value => 'Save' %>
+		<br />
+		<button id="cancel-edit" tabindex="10004">X</button>
+  </div>
+	<div style="clear:both;"></div>
+<% end %>
