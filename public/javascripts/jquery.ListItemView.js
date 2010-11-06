@@ -78,6 +78,10 @@
 
 						$form.find( "textarea" ).focus();
 
+						$form.find( "textarea" ).bind( "keydown", 'esc', function(){
+							$form.find( "#cancel-edit" ).trigger( "click" );
+						});
+
 						$form.find( "input[type=submit]" ).bind( "keydown click", 'return', function( e ) {
 							e.preventDefault();
 							var serializedForm = newElement.find("form").serializeForm();
