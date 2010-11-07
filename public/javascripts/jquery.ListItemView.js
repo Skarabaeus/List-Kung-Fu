@@ -96,11 +96,11 @@
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
 						$form.find( "textarea" ).markItUp( mySettings );
-						
+
 						if ( !newElement.isFullsize ) {
 							_ToggleFullsize( newElement );
 						}
-						
+
 						$form.show('slow', function(){
 							$form.find( "textarea" ).focus();
 						});
@@ -152,14 +152,16 @@
 
 			_CorrectHeight( newElement );
 		};
-		
+
 		var _ToggleFullsize = function ( element ) {
 			if ( element.isFullsize ) {
 				_CorrectHeight( element, false );
 				element.isFullsize = false;
+				element.find( ".fullsize" ).css( "backgroundColor", "transparent" );
 			} else {
 				_CorrectHeight( element, true );
 				element.isFullsize = true;
+				element.find( ".fullsize" ).css( "backgroundColor", "#aaa" );
 			}
 		};
 
@@ -207,6 +209,8 @@
 
 						element.append( $undo );
 
+						_CorrectHeight( element );
+
 						// hide complete element after 5 seconds. In case the user
 						// clicks "undo", the queue will be cleared and the element
 						// won't be hidden.
@@ -244,7 +248,9 @@
 					element.find( ".undo" ).hide('slow', function(){
 						$( this ).remove();
 					});
-					element.find( ".list-item-wrapper" ).show('slow');
+					element.find( ".list-item-wrapper" ).show('slow', function(){
+						_CorrectHeight( element );
+					});
 
 					// in case completed items are displayed, update them:
 					if ( widget.ShowCompletedCheckbox && widget.ShowCompletedCheckbox.get( 0 ).
