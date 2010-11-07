@@ -96,8 +96,6 @@
 							$form.find( "textarea" ).focus();
 						});
 
-
-
 						$form.find( "textarea" ).bind( "keydown", 'esc', function(){
 							$form.find( "#cancel-edit" ).trigger( "click" );
 						});
@@ -112,6 +110,7 @@
 									$form.hide( 'slow', function( e ) {
 										$( this ).remove();
 										newElement.find( '.list-item-content' ).html( json.list_item.body_rendered );
+										_CorrectHeight( newElement );
 										newElement.focus();
 									});
 								},
@@ -140,6 +139,19 @@
 				});
 			});
 
+			_CorrectHeight( newElement );
+		};
+
+		var _CorrectHeight = function( element ) {
+			if ( element.height() > 300 ) {
+				element.height( 300 );
+				element.css( "overflow-x", "hidden" );
+				element.css( "overflow-y", "auto" );
+			} else {
+				element.height( "auto" );
+				element.css( "overflow-x", "hidden" );
+				element.css( "overflow-y", "auto" );
+			}
 		};
 
 		var _DeleteListItem = function( element, listItem ) {
