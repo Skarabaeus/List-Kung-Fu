@@ -18,6 +18,14 @@
 
 			});
 
+			newElement.bind( 'keydown', 'space', function( e ){
+				if ( newElement.find( ".undo" ).length === 0 ) {
+					newElement.find( ".completed" ).trigger( "click" );
+				} else {
+					newElement.find( ".undo" ).trigger( "click" );
+				}
+			});
+
 			newElement.find( ".delete" ).bind( 'click', { element: newElement }, function( e ) {
 				var data = e.data.element.data( "data" );
 				var $element = $( e.data.element );
@@ -35,6 +43,10 @@
 
 			newElement.bind( 'keydown', 'del', function(){
 				newElement.find( ".delete" ).trigger( 'click', { element: newElement } );
+			});
+
+			newElement.find( ".fullsize" ).bind( 'click', { element: newElement }, function( e ) {
+				_ToggleFullsize( newElement );
 			});
 
 			newElement.bind( 'focus', function(e){
@@ -66,14 +78,6 @@
 				return false;
 			});
 
-			newElement.bind( 'keydown', 'space', function( e ){
-				if ( newElement.find( ".undo" ).length === 0 ) {
-					newElement.find( ".completed" ).trigger( "click" );
-				} else {
-					newElement.find( ".undo" ).trigger( "click" );
-				}
-			});
-
 			newElement.bind( 'keydown dblclick', 'return', function( e ){
 				// if we display already the form for this element,
 				// just exit.
@@ -91,8 +95,13 @@
 						var $form = $( template );
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
+						$form.find( "textarea" ).markItUp( mySettings );
+						
+						if ( !newElement.isFullsize ) {
+							_ToggleFullsize( newElement );
+						}
+						
 						$form.show('slow', function(){
-							$form.find( "textarea" ).markItUp( mySettings );
 							$form.find( "textarea" ).focus();
 						});
 
@@ -110,7 +119,7 @@
 									$form.hide( 'slow', function( e ) {
 										$( this ).remove();
 										newElement.find( '.list-item-content' ).html( json.list_item.body_rendered );
-										_CorrectHeight( newElement );
+										_ToggleFullsize( newElement );
 										newElement.focus();
 									});
 								},
@@ -126,6 +135,7 @@
 
 							$form.hide( 'slow', function() {
 								$( this ).remove();
+								_ToggleFullsize( newElement );
 								newElement.focus();
 							});
 
@@ -139,12 +149,23 @@
 				});
 			});
 
+
 			_CorrectHeight( newElement );
 		};
+		
+		var _ToggleFullsize = function ( element ) {
+			if ( element.isFullsize ) {
+				_CorrectHeight( element, false );
+				element.isFullsize = false;
+			} else {
+				_CorrectHeight( element, true );
+				element.isFullsize = true;
+			}
+		};
 
-		var _CorrectHeight = function( element ) {
-			if ( element.height() > 300 ) {
-				element.height( 300 );
+		var _CorrectHeight = function( element, setToFullSize ) {
+			if ( element.height() > 150 && !setToFullSize ) {
+				element.height( 150 );
 				element.css( "overflow-x", "hidden" );
 				element.css( "overflow-y", "auto" );
 			} else {

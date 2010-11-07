@@ -143,7 +143,16 @@ button:hover, input[type=submit]:hover {
 	margin-right:10px;
 }
 
-.list-items-tools > .completed:hover, .list-items-tools > .delete:hover {
+.list-items-tools > .fullsize {
+	background-image:url(/images/show_small.gif);
+	background-position: 0 -24px;
+	background-repeat: no-repeat;
+	height:24px;
+	width:24px;
+	margin-right:10px;
+}
+
+.list-items-tools > .completed:hover, .list-items-tools > .delete:hover, .list-items-tools > .fullsize:hover {
 	background-position:0 0;
 }
 
