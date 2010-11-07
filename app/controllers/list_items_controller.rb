@@ -22,6 +22,8 @@ class ListItemsController < ApplicationController
   def new
     @list_item = ListItem.new
 
+    @list_item.list_id = params[ :list_id ]
+
     respond_with( @list_item ) do |format|
       format.js
     end
@@ -37,6 +39,8 @@ class ListItemsController < ApplicationController
 
   def create
     @list_item = ListItem.new(params[:list_item])
+
+    @list_item.list_id = params[ :list_id ]
 
     if @list_item.save
       flash[:notice] = 'List Item has been created.'

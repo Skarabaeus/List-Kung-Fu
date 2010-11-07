@@ -17,6 +17,6 @@ class ListItem < ActiveRecord::Base
   private
 
   def body_rendered
-    write_attribute( :body_rendered, RedCloth.new( self.body ).to_html )
+    write_attribute( :body_rendered, RedCloth.new( self.body ).to_html ) unless self.body.nil?
   end
 end

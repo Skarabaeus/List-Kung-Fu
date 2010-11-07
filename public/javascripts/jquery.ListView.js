@@ -140,9 +140,8 @@
 
 							widget.listForm.bind( "submit", function( e ){
 								e.preventDefault();
-								var data = json;
-								json.list.title = widget.listForm.find( "#list_title" ).val();
 
+								var data = json;
 								var serializedForm = $(this).find("form").serializeForm();
 								json.list = serializedForm.list;
 

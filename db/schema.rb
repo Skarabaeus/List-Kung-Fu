@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101002164505) do
+ActiveRecord::Schema.define(:version => 20101107200137) do
 
   create_table "filters", :force => true do |t|
     t.string   "name"
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(:version => 20101002164505) do
 
   create_table "list_items", :force => true do |t|
     t.text     "body"
-    t.boolean  "completed"
+    t.boolean  "completed",      :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "list_id"

@@ -3,12 +3,16 @@
 
 		var widget = null;
 
-		var _AddListItem = function( listItem, template ) {
+		var _AddListItem = function( listItem, template, isFirst ) {
 			var newElement = $( $.mustache( template, listItem.list_item ) );
 
 			newElement.data( "data", listItem );
 
-			widget.listItemList.append (newElement);
+			if ( isFirst ) {
+				widget.listItemList.prepend(newElement);
+			} else {
+				widget.listItemList.append(newElement);
+			}
 
 			newElement.find( ".completed" ).bind( 'click', { element: newElement }, function( e ){
 				var data = e.data.element.data( "data" );
@@ -221,7 +225,7 @@
 						}).dequeue( queueName );
 
 						// in case completed items are displayed, update them:
-						if ( widget.ShowCompletedCheckbox && widget.ShowCompletedCheckbox.get( 0 ).
+						if ( widget.toolbar && widget.toolbar.find( "#list-item-new" ).get( 0 ).
 							checked === true ) {
 							_ToggleCompleted( true );
 						}
@@ -253,7 +257,7 @@
 					});
 
 					// in case completed items are displayed, update them:
-					if ( widget.ShowCompletedCheckbox && widget.ShowCompletedCheckbox.get( 0 ).
+					if ( widget.toolbar && widget.toolbar.find( "#list-item-new" ).get( 0 ).
 						checked === true ) {
 						_ToggleCompleted( true );
 					}
@@ -298,14 +302,77 @@
 			widget.header.html("");
 
 			// build new header
-			widget.ShowCompletedCheckbox = $( '<input type="checkbox" id="showCompleted"/> \
-				<label for="showCompleted">Show Completed Items</label>' );
+			widget.toolbar = $( '<div id="list-item-toolbar"><button id="list-item-new">Create</button> \
+				<input type="checkbox" id="showCompleted"/> \
+				<label for="showCompleted">Show Completed Items</label></div>' );
 
-			widget.ShowCompletedCheckbox.bind( "change", function( e ){
+			widget.toolbar.bind( "change", function( e ){
 				_ToggleCompleted( e.target.checked );
 			});
 
-			widget.header.append( widget.ShowCompletedCheckbox );
+			widget.header.append( widget.toolbar );
+
+			widget.toolbar.find( "#list-item-new" ).button({
+				text: false,
+				icons: {
+					primary: 'ui-icon-plusthick'
+				}
+			});
+
+			widget.toolbar.find( "#list-item-new" ).bind( 'click', function( e ){
+				_AddNewListItem();
+			});
+
+			widget.listItemList.find( ".row" ).bind( 'keydown', 'shift+return', function( e ){
+				_AddNewListItem();
+			});
+		};
+
+		var _AddNewListItem = function() {
+			var data = widget.element.data( "data-list" );
+
+			ListItem.New( {
+				successCallback: function( template, json, status, xhr, errors ) {
+					widget.listItemList.prepend( $( template ) );
+					var $form = widget.listItemList.find( '#new_list_item' );
+					$form.find( "textarea" ).markItUp( mySettings ).focus();
+					widget.listItemList.find( '.row' ).hide();
+
+					$form.find( "#cancel-edit" ).bind( 'click', function( e ){
+						e.preventDefault();
+						$form.hide( 'slow', function(){
+							$( this ).remove();
+							widget.listItemList.find( '.row' ).show();
+							widget.listItemList.find( '.row' ).first().focus();
+						});
+					});
+
+					$form.find( "input[type=submit]" ).bind( 'click', function( e ) {
+						e.preventDefault();
+
+						var serializedForm = $form.serializeForm();
+						json.list_item = serializedForm.list_item;
+
+						ListItem.Create({
+							send: json,
+							successCallback: function( template, json, status, xhr, errors ) {
+								$form.hide( 'slow', function(){
+									_AddListItem( json, template, true );
+									$( this ).remove();
+									widget.listItemList.find( ".row" ).show();
+									widget.listItemList.find( ".row" ).first().focus();
+								});
+							},
+							lists: data.list.id
+						});
+					});
+
+					$form.find( "textarea" ).bind( 'keydown', 'esc', function( e ){
+						$form.find( "#cancel-edit" ).trigger( 'click' );
+					});
+				},
+				lists: data.list.id
+			} );
 		};
 
 		return {
