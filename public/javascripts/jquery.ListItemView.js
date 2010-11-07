@@ -69,6 +69,11 @@
 					return false;
 				}
 
+				// close all open forms
+				widget.listItemList.find( ".row" ).find( "form" ).hide( "slow", function() {
+					$( this ).remove();
+				});
+
 				ListItem.Edit({
 					successCallback: function( template, json, status, xhr, errors ) {
 						var $form = $( template );

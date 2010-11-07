@@ -117,12 +117,12 @@ button:hover, input[type=submit]:hover {
 }
 
 .list-items-tools {
-	width: 30px;
-	float:left;
+	cursor:pointer;
+	width: 100%;
 }
 
-.list-items-tools {
-	cursor:pointer;
+.list-items-tools > div {
+	float:left;
 }
 
 .list-items-tools > .completed {
@@ -143,7 +143,7 @@ button:hover, input[type=submit]:hover {
 	margin-right:10px;
 }
 
-.list-items-tools > .completed:hover, list-item-tools > .delete:hover {
+.list-items-tools > .completed:hover, .list-items-tools > .delete:hover {
 	background-position:0 0;
 }
 
@@ -179,10 +179,6 @@ button:hover, input[type=submit]:hover {
 
 #completedList > div:nth-child(odd){
 	background-color:#eee;
-}
-
-#list_item_body {
-	height:150px;
 }
 
 #list_item_submit, #cancel-edit {
