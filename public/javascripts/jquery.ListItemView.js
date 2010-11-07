@@ -22,7 +22,19 @@
 				var data = e.data.element.data( "data" );
 				var $element = $( e.data.element );
 
-				_DeleteListItem( $element, data );
+				if ( typeof( widget.deleteDialog ) === 'undefined' ) {
+					var deleteFunc = function() {
+						_DeleteListItem( $element, data );
+					};
+
+					widget.deleteDialog = $.confirmationDialog( "Delete List Item", deleteFunc, "Cancel", "Do you really want to delete?" );
+				}
+
+				widget.deleteDialog.dialog("open");
+			});
+
+			newElement.bind( 'keydown', 'del', function(){
+				newElement.find( ".delete" ).trigger( 'click', { element: newElement } );
 			});
 
 			newElement.bind( 'focus', function(e){

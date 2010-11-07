@@ -88,61 +88,20 @@
 
 
 					if ( typeof(widget.deleteDialog) === 'undefined' ) {
-						widget.deleteDialog = $('<div id="dialog-confirm"> \
-							<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"> \
-							</span>Do you really want to delete</div>').dialog({
+						var deleteFunc = function() {
+							if ( widget.listForm !== null ) {
+								widget.listForm.bind( "FormHidden", function() {
+									_DeleteList( widget, 1000 );
+								});
+								_HideForm( widget );
+							} else {
+								_DeleteList( widget );
+							}
+						}
 
-							resizable: false,
-							modal: true,
-							buttons: {
-								"Delete List": function() {
-									$( this ).dialog( "close" );
-
-									if ( widget.listForm !== null ) {
-										widget.listForm.bind( "FormHidden", function() {
-											_DeleteList( widget, 1000 );
-										});
-										_HideForm( widget );
-									} else {
-										_DeleteList( widget );
-									}
-								},
-								"Cancel": function() {
-									$( this ).dialog( "close" );
-								}
-							},
-							autoOpen:false
-						});
+						widget.deleteDialog = $.confirmationDialog( "Delete List", deleteFunc, "Cancel", "Do you really want to delete?" );
 					}
-
-					// make it possible to use arrow keys to navigate from one button to another
-					$( ".ui-dialog-buttonpane > button" ).bind('keydown', 'right', function(e) {
-						var $target = $( e.target );
-
-						if ( $target.next( 'button' ).length > 0 ) {
-							$target.blur();
-							$target.next( 'button' ).focus();
-						}
-						return false;
-					});
-
-					$( ".ui-dialog-buttonpane > button" ).bind('keydown', 'left', function(e) {
-						var $target = $( e.target );
-
-						if ( $target.prev( 'button' ).length > 0 ) {
-							$target.blur();
-							$target.prev( 'button' ).focus();
-						}
-						return false;
-					});
-
-
 					widget.deleteDialog.dialog("open");
-
-					// focus first button (which is the "delete button")
-					// is there no other way to do this?
-					$( ".ui-dialog-buttonpane > button" ).first().focus();
-
 				} else {
 					$("#notice").text("Select the list which you want to delete").fadeIn().delay(5000).fadeOut();
 				}
