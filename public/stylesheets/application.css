@@ -52,8 +52,8 @@ html, body {
 
 /*--------------------*/
 #list-toolbar {
-	height:50px;
-	max-height:50px;
+	height:100px;
+	max-height:100px;
 }
 
 #list-toolbar > div {

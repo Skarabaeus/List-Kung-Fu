@@ -58,6 +58,7 @@
 			var toolbar = $('<div id="list-toolbar"> \
 				<button id="list-new">Create</button> \
 				<button id="list-delete">Delete</button> \
+				<button id="list-edit">Edit</button> \
 				<input type="text" id="search-list" /> \
 				</div>')
 
@@ -76,6 +77,13 @@
 				text: false,
 				icons: {
 					primary: 'ui-icon-trash'
+				}
+			});
+
+			toolbar.find( "#list-edit" ).button({
+				text: false,
+				icons: {
+					primary: 'ui-icon-pencil'
 				}
 			});
 
@@ -130,9 +138,11 @@
 					List.New({
 						successCallback: function( template, json, status, xhr, errors ) {
 							widget.listForm.append( template );
-							widget.listForm.show('slide', { direction: 'right' }, 'slow', function(){
+							widget.listForm.show('slide', { direction: 'left' }, 'slow', function(){
 								widget.listForm.find('#list_title').first().focus();
 							});
+
+							widget._trigger( "CloseList", 0, {} );
 
 							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
 								_HideForm( widget );
@@ -183,6 +193,67 @@
 					widget.listlist.find( ".row:Contains('" + filtervalue + "')").show();
         }
 			});
+
+			toolbar.find( "#list-edit" ).bind( 'click', { widget: widget }, function( e ) {
+				var widget = e.data.widget;
+
+				widget.listlist.hide('slide', { direction: 'left'}, 'slow', function(){
+
+					// remove eventual old occurances
+					if ( widget.listForm != null ) {
+						widget.listForm.remove();
+						widget.listForm = null;
+					}
+
+					// create fresh form
+					widget.listForm = $('<div class="ui-layout-content" id="list-form"></div>');
+					widget.wrapper.append( widget.listForm );
+
+					// triggers /lists/id/edit and calls this.DisplayForm with the
+					// HTML of the form.
+					List.Edit({
+						successCallback: function( template, json, status, xhr, errors ) {
+							widget.listForm.append( template );
+							widget.listForm.show('slide', { direction: 'left' }, 'slow', function(){
+								widget.listForm.find( '#list_title' ).first().focus();
+							});
+
+							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
+								_HideForm( widget );
+							});
+
+							widget.listForm.find( '#list_title' ).bind( 'keydown', 'esc', function( e ) {
+								_HideForm( widget );
+							});
+
+							widget.listForm.bind( "submit", function(e){
+								e.preventDefault();
+
+								var serializedForm = $(this).find("form").serializeForm();
+
+								List.Update({
+
+									send: serializedForm,
+									successCallback: function( template, json, status, xhr, errors ){
+										_ClearFormErrors( widget.listForm );
+
+										if ( errors === false ) {
+											_HideForm( widget, json, template );
+										} else {
+											_HighlightFormErrors( widget.listForm, errors );
+										}
+									},
+									lists: widget.selectedList.data.list.id
+								});
+
+								return false;
+							});
+						},
+						lists: widget.selectedList.data.list.id
+					});
+				});
+			});
+
 			// return toolbar
 
 			return toolbar
@@ -255,61 +326,10 @@
 			});
 
 			newElement.bind('keydown', 'space', function(){
-				widget.listlist.hide('slide', { direction: 'left'}, 'slow', function(){
-
-					// remove eventual old occurances
-					if ( widget.listForm != null ) {
-						widget.listForm.remove();
-						widget.listForm = null;
-					}
-
-					// create fresh form
-					widget.listForm = $('<div class="ui-layout-content" id="list-form"></div>');
-					widget.wrapper.append( widget.listForm );
-
-					// triggers /lists/id/edit and calls this.DisplayForm with the
-					// HTML of the form.
-					List.Edit({
-						successCallback: function( template, json, status, xhr, errors ) {
-							widget.listForm.append( template );
-							widget.listForm.show('slide', { direction: 'right' }, 'slow', function(){
-								widget.listForm.find( '#list_title' ).first().focus();
-							});
-
-							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
-								_HideForm( widget );
-							});
-
-							widget.listForm.find( '#list_title' ).bind( 'keydown', 'esc', function( e ) {
-								_HideForm( widget );
-							});
-
-							widget.listForm.bind( "submit", function(e){
-								e.preventDefault();
-
-								var serializedForm = $(this).find("form").serializeForm();
-
-								List.Update({
-
-									send: serializedForm,
-									successCallback: function( template, json, status, xhr, errors ){
-										_ClearFormErrors( widget.listForm );
-
-										if ( errors === false ) {
-											_HideForm( widget, json, template );
-										} else {
-											_HighlightFormErrors( widget.listForm, errors );
-										}
-									},
-									lists: widget.selectedList.data.list.id
-								});
-
-								return false;
-							});
-						},
-						lists: widget.selectedList.data.list.id
-					});
-				});
+				widget.toolbar.find( "#list-edit" ).effect('puff', {}, 300, function(){
+					$(this).show();
+					$(this).trigger('click') });
+				return false;
 			});
 
 			return newElement;
@@ -362,7 +382,7 @@
 
 		var _ShowListView = function( widget, updatedElement, template ) {
 
-			widget.listlist.show('slide', { direction: 'right'}, 'slow', function(){
+			widget.listlist.show('slide', { direction: 'left'}, 'slow', function(){
 				if ( updatedElement ) {
 
 					var newElement = _GetListElement( widget, updatedElement, template );

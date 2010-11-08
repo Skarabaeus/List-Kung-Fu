@@ -14,6 +14,12 @@ class ListItem < ActiveRecord::Base
 
   attr_accessible :body, :completed
 
+  # public functions
+
+  def saved?
+    !self.id.nil?
+  end
+
   private
 
   def body_rendered

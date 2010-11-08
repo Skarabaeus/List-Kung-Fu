@@ -427,6 +427,10 @@
 						widget.listItemList.find( ".row" ).first().focus();
 
 						_CreateToolbar();
+
+						if ( widget.listItemList.find( '.row' ).length === 0 ) {
+							_AddNewListItem();
+						}
 					},
 					lists: data.list.id
 				});
