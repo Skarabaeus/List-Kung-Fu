@@ -109,6 +109,10 @@ button:hover, input[type=submit]:hover {
 	background-color: #aaa;
 }
 
+button:focus, input[type=submit]:focus {
+	background-color: #aaa;
+}
+
 
 /*--------------------*/
 

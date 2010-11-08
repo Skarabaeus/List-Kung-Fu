@@ -131,10 +131,14 @@
 						successCallback: function( template, json, status, xhr, errors ) {
 							widget.listForm.append( template );
 							widget.listForm.show('slide', { direction: 'right' }, 'slow', function(){
-								widget.listForm.find('input').first().focus();
+								widget.listForm.find('#list_title').first().focus();
 							});
 
 							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
+								_HideForm( widget );
+							});
+
+							widget.listForm.find( '#list_title' ).bind( 'keydown', 'esc', function( e ) {
 								_HideForm( widget );
 							});
 
@@ -229,8 +233,19 @@
 				};
 			});
 
-			newElement.bind( 'keydown dblclick', 'return', function(e){
-				widget._trigger("OpenList", 0, { selectedList: $(e.target).data("data") } );
+			newElement.bind( 'keydown dblclick', 'return', function( e ){
+				widget._trigger( "OpenList", 0, { selectedList: $(e.target).data("data") } );
+			});
+
+			newElement.bind( 'keydown', 'right', function( e ){
+				widget._trigger( "SelectListItem", 0, {} );
+			});
+
+			newElement.bind( 'keydown', 'shift+return', function( e ){
+				widget.toolbar.find( "#list-new" ).effect('puff', {}, 300, function(){
+					$(this).show();
+					$(this).trigger('click') });
+				return false;
 			});
 
 			newElement.bind('keydown', 'del', function(e){
@@ -239,7 +254,7 @@
 				}).trigger('click');
 			});
 
-			newElement.bind('keydown', 'right', function(){
+			newElement.bind('keydown', 'space', function(){
 				widget.listlist.hide('slide', { direction: 'left'}, 'slow', function(){
 
 					// remove eventual old occurances
@@ -258,10 +273,14 @@
 						successCallback: function( template, json, status, xhr, errors ) {
 							widget.listForm.append( template );
 							widget.listForm.show('slide', { direction: 'right' }, 'slow', function(){
-								widget.listForm.find('input').first().focus();
+								widget.listForm.find( '#list_title' ).first().focus();
 							});
 
 							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
+								_HideForm( widget );
+							});
+
+							widget.listForm.find( '#list_title' ).bind( 'keydown', 'esc', function( e ) {
 								_HideForm( widget );
 							});
 
@@ -311,32 +330,29 @@
 			_triggerResize( widget );
 		};
 
+		var _SelectLastList = function( widget ) {
+			var effect = "highlight";
+
+			if ( widget.selectedList ) {
+				widget.selectedList.element.effect( effect, {}, 300, function(){
+					$(this).show();
+					$(this).focus();
+				});
+			} else {
+				widget.listlist.find( '.row' ).first().effect( effect, {}, 300, function(){
+					$(this).show();
+					$(this).focus();
+				});
+			}
+
+		};
+
 		var _RegisterGlobalKeyboardShortcuts = function( w ) {
 			var widget = w;
 
-			// add new list
-			$(document).bind('keydown', 'ctrl+i', function(e){
-				widget.toolbar.find( "#list-new" ).effect('puff', {}, 300, function(){
-					$(this).show();
-					$(this).trigger('click') });
-				return false;
-			});
-
 			// select list
 			$(document).bind( 'keydown', 'ctrl+l', function(e) {
-				var effect = "highlight";
-
-				if ( widget.selectedList ) {
-					widget.selectedList.element.effect( effect, {}, 300, function(){
-						$(this).show();
-						$(this).focus();
-					});
-				} else {
-					widget.listlist.find( '.row' ).first().effect( effect, {}, 300, function(){
-						$(this).show();
-						$(this).focus();
-					});
-				}
+				_SelectLastList( w );
 			});
 
 			$(document).bind( 'keydown', 'ctrl+f', function(e){
@@ -374,6 +390,11 @@
 			widget.listForm.hide('slide', { direction: 'left' }, 'slow', function(){
 				_ShowListView( widget, updatedElement, template );
 				widget.listForm.trigger( "FormHidden" );
+				if ( widget.selectedList ) {
+					widget.selectedList.element.focus();
+				} else {
+					widget.listlist.find( '.row' ).first().focus();
+				}
 				widget.listForm.remove();
 				widget.listForm = null;
 			});
@@ -409,11 +430,18 @@
 
 						// add newly received Lists to DOM
 						_AddListToDOM( widget, json, template );
+
+						// focus first list
+						widget.listlist.find( '.row' ).first().focus();
 					}
 				} );
 
 				// register global keyboard shortcuts
 				_RegisterGlobalKeyboardShortcuts( widget );
+			},
+
+			SelectList: function() {
+				_SelectLastList( this );
 			},
 
 			destroy: function() {

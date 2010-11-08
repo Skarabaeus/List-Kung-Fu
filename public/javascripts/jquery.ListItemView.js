@@ -153,6 +153,9 @@
 				});
 			});
 
+			newElement.bind( 'keydown', 'left', function( e ){
+				widget._trigger( "SelectLastList", 0, {} );
+			});
 
 			_CorrectHeight( newElement );
 		};
@@ -426,7 +429,24 @@
 						_CreateToolbar();
 					},
 					lists: data.list.id
-				} );
+				});
+			},
+
+			SelectListItem: function() {
+				var effect = "highlight";
+
+				if ( widget.selectedListItem ) {
+					widget.selectedListItem.element.effect( effect, {}, 300, function(){
+						$( this ).show();
+						$( this ).focus();
+					});
+				} else {
+					widget.listItemList.find( '.row' ).first().effect( effect, {}, 300, function(){
+						$( this ).show();
+						$( this ).focus();
+					});
+				}
+
 			}
 		};
 	}();

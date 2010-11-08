@@ -53,7 +53,9 @@ $(document).ready(function () {
 	ListKungFu.LayoutSouth.StatusBar();
 
 	ListKungFu.LayoutCenter.ListItemView({
-		OpenList: function() {}
+		SelectLastList: function( event, data ) {
+			ListKungFu.LayoutWest.ListView( "SelectList" );
+		}
 	});
 
 	ListKungFu.LayoutWest.ListView({
@@ -65,6 +67,9 @@ $(document).ready(function () {
 		},
 		CloseList: function( event, data ) {
 			ListKungFu.LayoutCenter.ListItemView( "RemoveList" );
+		},
+		SelectListItem: function( event, data ) {
+			ListKungFu.LayoutCenter.ListItemView( "SelectListItem" );
 		}
 	});
 });
