@@ -117,48 +117,8 @@ button:focus, input[type=submit]:focus {
 
 /*--------------------*/
 
-.list-item-wrapper > .completed, .list-item-wrapper > .list-item-content, .list-items-tools > * {
+.list-item-wrapper > .completed, .list-item-wrapper > .list-item-content {
 	margin:0;
-}
-
-.list-items-tools {
-	cursor:pointer;
-	width: 100%;
-}
-
-.list-items-tools > div {
-	float:left;
-}
-
-.list-items-tools > .completed {
-	background-image:url(/images/checked_green_grey_24.gif);
-	background-position: 0 -24px;
-	background-repeat: no-repeat;
-	height:24px;
-	width:24px;
-	margin-right:10px;
-}
-
-.list-items-tools > .delete {
-	background-image:url(/images/destroy_small.gif);
-	background-position: 0 -24px;
-	background-repeat: no-repeat;
-	height:24px;
-	width:24px;
-	margin-right:10px;
-}
-
-.list-items-tools > .fullsize {
-	background-image:url(/images/show_small.gif);
-	background-position: 0 -24px;
-	background-repeat: no-repeat;
-	height:24px;
-	width:24px;
-	margin-right:10px;
-}
-
-.list-items-tools > .completed:hover, .list-items-tools > .delete:hover, .list-items-tools > .fullsize:hover {
-	background-position:0 0;
 }
 
 .list-item {

@@ -21,43 +21,16 @@
 				widget.listItemList.append(newElement);
 			}
 
-			newElement.find( ".completed" ).bind( 'click', { element: newElement }, function( e ){
-				var data = e.data.element.data( "data" );
-				var $element = $( e.data.element );
-
-				_MarkCompleted( $element, data );
-
-			});
-
 			newElement.bind( 'keydown', 'space', function( e ){
 				if ( newElement.find( ".undo" ).length === 0 ) {
-					newElement.find( ".completed" ).trigger( "click" );
+					widget.toolbar.find( "#list-item-completed" ).trigger( "click" );
 				} else {
 					newElement.find( ".undo" ).trigger( "click" );
 				}
 			});
 
-			newElement.find( ".delete" ).bind( 'click', { element: newElement }, function( e ) {
-				var data = e.data.element.data( "data" );
-				var $element = $( e.data.element );
-
-				if ( typeof( widget.deleteDialog ) === 'undefined' ) {
-					var deleteFunc = function() {
-						_DeleteListItem( $element, data );
-					};
-
-					widget.deleteDialog = $.confirmationDialog( "Delete List Item", deleteFunc, "Cancel", "Do you really want to delete?" );
-				}
-
-				widget.deleteDialog.dialog("open");
-			});
-
 			newElement.bind( 'keydown', 'del', function(){
-				newElement.find( ".delete" ).trigger( 'click', { element: newElement } );
-			});
-
-			newElement.find( ".fullsize" ).bind( 'click', { element: newElement }, function( e ) {
-				_ToggleFullsize( newElement );
+				widget.toolbar.find( "#list-item-delete" ).trigger( 'click' );
 			});
 
 			newElement.bind( 'focus', function(e){
@@ -72,7 +45,15 @@
 
 					var data = $( e.target ).data( "data" );
 
-					_SetSelectedListItem( newElement, newElement.data( "data" ) );
+					if ( widget.toolbar ) {
+						if ( $( e.target ).data("isFullsize") === true ) {
+							widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons", { primary:'ui-icon-zoomout' } );
+						} else {
+							widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons", { primary:'ui-icon-zoomin' } );
+						}
+					}
+
+					_SetSelectedListItem( $( e.target ), $( e.target ).data( "data" ) );
 				}
 			});
 
@@ -169,18 +150,22 @@
 				_AddNewListItem();
 			});
 
+			newElement.bind( 'keydown', 'f', function( e ) {
+				widget.toolbar.find( '#list-item-fullsize' ).trigger( 'click' );
+			});
+
 			_CorrectHeight( newElement );
 		};
 
 		var _ToggleFullsize = function ( element ) {
-			if ( element.isFullsize ) {
+			if ( element.data( "isFullsize" ) === true ) {
 				_CorrectHeight( element, false );
-				element.isFullsize = false;
-				element.find( ".fullsize" ).css( "backgroundColor", "transparent" );
+				element.data( "isFullsize", false );
+				widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons", { primary:'ui-icon-zoomin' } );
 			} else {
 				_CorrectHeight( element, true );
-				element.isFullsize = true;
-				element.find( ".fullsize" ).css( "backgroundColor", "#aaa" );
+				element.data( "isFullsize", true );
+				widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons", { primary:'ui-icon-zoomout' } );
 			}
 		};
 
@@ -200,7 +185,14 @@
 			ListItem.Destroy({
 				successCallback: function( template, json, status, xhr, errors ){
 					element.hide( "slow", function() {
-						$( this ).remove();
+						var item = element.next( ".row" );
+						if ( item.length > 0 ) {
+							item.focus();
+						} else {
+							item = element.prev( ".row" );
+							item.focus();
+						}
+						element.remove();
 					});
 				},
 				lists: listItem.list_item.list_id,
@@ -244,6 +236,9 @@
 							checked === true ) {
 							_ToggleCompleted( true );
 						}
+
+						// select list item
+						element.focus();
 					});
 
 				},
@@ -301,6 +296,10 @@
 							widget.completedList.append("<div>" + listItem.list_item.body_rendered + "</div>");
 						});
 
+						if ( json.length === 0 ) {
+							widget.completedList.append("<div>No completed items</div>")
+						}
+
 						widget.wrapper.prepend( widget.completedList );
 					},
 					send: { show: "completed" },
@@ -317,15 +316,15 @@
 			widget.header.html("");
 
 			// build new header
-			widget.toolbar = $( '<div id="list-item-toolbar"><button id="list-item-new">Create</button> \
+			widget.toolbar = $( '<div id="list-item-toolbar"><button id="list-item-completed">Completed</button> \
+				<button id="list-item-new">Create</button> \
+				<button id="list-item-delete">Delete</button> \
+				<button id="list-item-edit">Edit</button> \
+				<button id="list-item-fullsize">Fullsize</button> \
 				<input type="checkbox" id="showCompleted"/> \
 				<label for="showCompleted">Show Completed Items</label></div>' );
 
-			widget.toolbar.bind( "change", function( e ){
-				_ToggleCompleted( e.target.checked );
-			});
-
-			widget.header.append( widget.toolbar );
+			// create buttons
 
 			widget.toolbar.find( "#list-item-new" ).button({
 				text: false,
@@ -334,9 +333,70 @@
 				}
 			});
 
+			widget.toolbar.find( "#list-item-edit" ).button({
+				text: false,
+				icons: {
+					primary: 'ui-icon-pencil'
+				}
+			});
+
+			widget.toolbar.find( "#list-item-completed" ).button({
+				text: false,
+				icons: {
+					primary: 'ui-icon-check'
+				}
+			});
+
+			widget.toolbar.find( "#list-item-delete" ).button({
+				text: false,
+				icons: {
+					primary: 'ui-icon-closethick'
+				}
+			});
+
+			widget.toolbar.find( "#list-item-fullsize" ).button({
+				text: false,
+				icons: {
+					primary: 'ui-icon-zoomin'
+				}
+			});
+
+			// bind events
+
 			widget.toolbar.find( "#list-item-new" ).bind( 'click', function( e ){
 				_AddNewListItem();
 			});
+
+			widget.toolbar.find( "#showCompleted" ).bind( "change", function( e ){
+				_ToggleCompleted( e.target.checked );
+				widget.selectedListItem.element.focus();
+			});
+
+			widget.toolbar.find( "#list-item-completed" ).bind( 'click', function( e ) {
+				var data = widget.selectedListItem.data;
+				var $element = widget.selectedListItem.element;
+
+				_MarkCompleted( $element, data );
+			});
+
+			widget.toolbar.find( "#list-item-delete" ).bind( 'click', function( e ) {
+
+				var deleteFunc = function() {
+					_DeleteListItem( widget.selectedListItem.element, widget.selectedListItem.data );
+				};
+
+				if ( typeof( widget.deleteDialog ) === 'undefined' ) {
+					widget.deleteDialog = $.confirmationDialog( "Delete List Item", deleteFunc, "Cancel", "Do you really want to delete?" );
+				}
+
+				widget.deleteDialog.dialog("open");
+			});
+
+			widget.toolbar.find( "#list-item-fullsize" ).bind( 'click', function( e ) {
+				_ToggleFullsize( widget.selectedListItem.element );
+			});
+
+			widget.header.append( widget.toolbar );
 
 		};
 
