@@ -3,6 +3,13 @@
 
 		var widget = null;
 
+		_SetSelectedListItem = function( elem, obj ) {
+			widget.selectedListItem = {
+				element: elem,
+				data: obj
+			};
+		};
+
 		var _AddListItem = function( listItem, template, isFirst ) {
 			var newElement = $( $.mustache( template, listItem.list_item ) );
 
@@ -63,10 +70,9 @@
 					// add it to the selected row.
 					$( e.target ).addClass('selected-row');
 
-					widget.selectedListItem = {
-						element: $( e.target ),
-						data: $( e.target ).data("data")
-					};
+					var data = $( e.target ).data( "data" );
+
+					_SetSelectedListItem( newElement, newElement.data( "data" ) );
 				}
 			});
 
@@ -124,6 +130,8 @@
 										$( this ).remove();
 										newElement.find( '.list-item-content' ).html( json.list_item.body_rendered );
 										_ToggleFullsize( newElement );
+										_SetSelectedListItem( newElement, json );
+										newElement.data( "data", json );
 										newElement.focus();
 									});
 								},
@@ -232,7 +240,7 @@
 						}).dequeue( queueName );
 
 						// in case completed items are displayed, update them:
-						if ( widget.toolbar && widget.toolbar.find( "#list-item-new" ).get( 0 ).
+						if ( widget.toolbar && widget.toolbar.find( "#showCompleted" ).get( 0 ).
 							checked === true ) {
 							_ToggleCompleted( true );
 						}
