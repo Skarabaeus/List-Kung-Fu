@@ -166,6 +166,9 @@
 
 										if ( errors === false ) {
 											_HideForm( widget, json, template );
+
+											// clear searchfield
+											widget.toolbar.find( '#search-list' ).trigger( 'ClearValue' );
 										} else {
 											_HighlightFormErrors( widget.listForm, errors );
 										}
@@ -192,6 +195,11 @@
 					widget.listlist.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
 					widget.listlist.find( ".row:Contains('" + filtervalue + "')").show();
         }
+			});
+
+			toolbar.find("#search-list").bind( 'ClearValue', function( e ){
+				$( e.target ).val("");
+				widget.listlist.find( ".row" ).show();
 			});
 
 			toolbar.find( "#list-edit" ).bind( 'click', { widget: widget }, function( e ) {
