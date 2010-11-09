@@ -1,6 +1,8 @@
-.list-item-content p {
-	margin-bottom:5px;
-}
+/*
+
+REGULAR
+
+*/
 
 .list-item-content ul > li {
 	list-style-type: disc;
@@ -78,7 +80,7 @@
 
 .list-item-content p {
 	text-align:justify;
-	margin:5px 0 10px;
+	margin:3px 0 5px;
 }
 
 .list-item-content strong {
@@ -97,5 +99,111 @@
 }
 
 .list-item-content del {
+	text-decoration:line-through;
+}
+
+/*
+
+COMPLETED
+
+
+*/
+
+
+#completedList ul > li {
+	list-style-type: disc;
+	margin-left:60px;
+}
+
+
+#completedList ol > li {
+	list-style-type: decimal;
+	margin-left:60px;
+}
+
+#completedList ul > li > ul > li {
+	list-style-type: circle;
+	margin-left:30px;
+}
+
+#completedList ol > li > ol > li {
+	list-style-type: upper-roman;
+	margin-left:30px;
+}
+
+
+#completedList ul > li > ul > li > ul > li {
+	list-style-type: square;
+	margin-left:30px;
+}
+
+#completedList ol > li > ol > li > ol > li {
+	list-style-type: lower-roman;
+	margin-left:30px;
+}
+
+#completedList h1 {
+	font-size:22pt;
+	font-weight:bold;
+	text-decoration:underline;
+	margin-bottom:10px;
+}
+
+#completedList h2 {
+	font-size:20pt;
+	font-weight:bold;
+	text-decoration:underline;
+	margin-bottom:10px;
+}
+
+#completedList h3 {
+	font-size:18pt;
+	font-weight:bold;
+	text-decoration:underline;
+	margin-bottom:10px;
+}
+
+#completedList h4 {
+	font-size:16pt;
+	font-weight:bold;
+	text-decoration:underline;
+	margin-bottom:10px;
+}
+
+#completedList h5 {
+	font-size:14pt;
+	font-weight:bold;
+	text-decoration:underline;
+	margin-bottom:10px;
+}
+
+#completedList h6 {
+	font-size:12pt;
+	font-weight:bold;
+	text-decoration:underline;
+	margin-bottom:10px;
+}
+
+#completedList p {
+	text-align:justify;
+	margin:3px 0 5px;
+}
+
+#completedList strong {
+	font-weight:bold;
+}
+
+#completedList em {
+	font-style:italic;
+}
+
+#completedList code {
+	border:1px solid #555;
+	background-color:#fff;
+	padding:5px;
+	margin:5px;
+}
+
+#completedList del {
 	text-decoration:line-through;
 }

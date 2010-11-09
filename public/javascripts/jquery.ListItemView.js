@@ -157,6 +157,10 @@
 				widget._trigger( "SelectLastList", 0, {} );
 			});
 
+			newElement.bind( 'keydown', 'shift+return', function( e ){
+				_AddNewListItem();
+			});
+
 			_CorrectHeight( newElement );
 		};
 
@@ -286,7 +290,7 @@
 					successCallback: function( template, json, status, xhr, errors ) {
 
 						$.each( json, function( index, listItem ) {
-							widget.completedList.append("<div>" + listItem.list_item.body + "</div>");
+							widget.completedList.append("<div>" + listItem.list_item.body_rendered + "</div>");
 						});
 
 						widget.wrapper.prepend( widget.completedList );
@@ -326,9 +330,6 @@
 				_AddNewListItem();
 			});
 
-			widget.listItemList.find( ".row" ).bind( 'keydown', 'shift+return', function( e ){
-				_AddNewListItem();
-			});
 		};
 
 		var _AddNewListItem = function() {
