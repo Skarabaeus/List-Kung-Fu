@@ -1,7 +1,11 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  
+
+  layout :layout_by_login
+
   after_filter :add_flash_to_header
+
+  private
 
   def add_flash_to_header
     # only run this in case it's an Ajax request.
@@ -15,5 +19,13 @@ class ApplicationController < ActionController::Base
 
     # make sure flash does not appear on the next page
     flash.discard
+  end
+
+  def layout_by_login
+    if user_signed_in?
+      "application_signed_in"
+    else
+      "application_guest"
+    end
   end
 end

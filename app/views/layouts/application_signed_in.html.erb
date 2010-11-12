@@ -33,15 +33,16 @@
 		<div class="header"></div>
 		<div class="ui-layout-content" id="list-item-wrapper">
 			<%= yield :center %>
+				<%= user_signed_in? ? "signed in" : "signed out" %>
 		</div>
 	</div>
 
-<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js' %>
-<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' %>
-<%= javascript_include_tag 'jquery.SerializeForm', 'jquery.ConfirmationDialog' %>
-<%= javascript_include_tag 'markitup/jquery.markitup.js', 'markitup/sets/default/set.js' %>
-<%= javascript_include_tag 'jquery.layout.min-1.2.0', 'json2', 'mustache', 'jquery.hotkeys' %>
-<%= javascript_include_tag 'Controller', 'jquery.ListView', 'jquery.StatusBar', 'jquery.ListItemView' %>
-<%= javascript_include_tag 'application' %>
+	<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js' %>
+	<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' %>
+	<%= javascript_include_tag 'jquery.SerializeForm', 'jquery.ConfirmationDialog' %>
+	<%= javascript_include_tag 'markitup/jquery.markitup.js', 'markitup/sets/default/set.js' %>
+	<%= javascript_include_tag 'jquery.layout.min-1.2.0', 'json2', 'mustache', 'jquery.hotkeys' %>
+	<%= javascript_include_tag 'Controller', 'jquery.ListView', 'jquery.StatusBar', 'jquery.ListItemView' %>
+	<%= javascript_include_tag 'application' %>
 </body>
 </html>

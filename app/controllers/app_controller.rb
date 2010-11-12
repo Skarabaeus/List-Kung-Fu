@@ -1,6 +1,11 @@
 class AppController < ApplicationController
-  def index
-    
+
+	before_filter :authenticate_user!, :except => [ :welcome ]
+
+  def main
+  end
+
+  def welcome
   end
 
 end

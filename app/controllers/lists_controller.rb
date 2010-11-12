@@ -1,5 +1,7 @@
 class ListsController < ApplicationController
 
+	before_filter :authenticate_user!
+
   respond_to :xml
   
   def index
