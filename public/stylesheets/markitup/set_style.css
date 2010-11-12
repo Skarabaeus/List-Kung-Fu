@@ -4,13 +4,17 @@
 // ------------------------------------------------------------------*/
 .markItUp .markItUpButton1 a {
 	background-image:url(/images/markitup_images/h1.png); 
+	width:63px !important;
 }
 .markItUp .markItUpButton2 a {
 	background-image:url(/images/markitup_images/h2.png); 
+	width:63px !important;
 }
 .markItUp .markItUpButton3 a {
 	background-image:url(/images/markitup_images/h3.png); 
+	width:63px !important;
 }
+/*
 .markItUp .markItUpButton4 a {
 	background-image:url(/images/markitup_images/h4.png); 
 }
@@ -20,41 +24,45 @@
 .markItUp .markItUpButton6 a {
 	background-image:url(/images/markitup_images/h6.png); 
 }
-.markItUp .markItUpButton7 a {
+*/
+.markItUp .markItUpButton4 a {
 	background-image:url(/images/markitup_images/paragraph.png); 
 }
 
-.markItUp .markItUpButton8 a {
+.markItUp .markItUpButton5 a {
 	background-image:url(/images/markitup_images/bold.png);
 }
-.markItUp .markItUpButton9 a {
+.markItUp .markItUpButton6 a {
 	background-image:url(/images/markitup_images/italic.png);
 }
-.markItUp .markItUpButton10 a {
+.markItUp .markItUpButton7 a {
 	background-image:url(/images/markitup_images/stroke.png);
 }
 
-.markItUp .markItUpButton11 a {
+.markItUp .markItUpButton8 a {
 	background-image:url(/images/markitup_images/list-bullet.png);
 }
-.markItUp .markItUpButton12 a {
+.markItUp .markItUpButton9 a {
 	background-image:url(/images/markitup_images/list-numeric.png);
 }
-
+/*
 .markItUp .markItUpButton13 a {
 	background-image:url(/images/markitup_images/picture.png); 
 }
-.markItUp .markItUpButton14 a {
+*/
+.markItUp .markItUpButton10 a {
 	background-image:url(/images/markitup_images/link.png);
 }
-
+/*
 .markItUp .markItUpButton15 a	{
 	background-image:url(/images/markitup_images/quotes.png);
 }
-.markItUp .markItUpButton16 a	{
+*/
+.markItUp .markItUpButton11 a	{
 	background-image:url(/images/markitup_images/code.png);
 }
-
+/*
 .markItUp .preview a {
 	background-image:url(/images/markitup_images/preview.png);
 }
+*/
