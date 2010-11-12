@@ -67,7 +67,7 @@ html, body {
 	float:left;
 }
 
-#search-list {
+#search-list, #list-item-search {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
@@ -116,6 +116,21 @@ button:focus, input[type=submit]:focus {
 
 
 /*--------------------*/
+
+#list-item-toolbar {
+	height:80px;
+	max-height:80px;
+}
+
+#list-item-toolbar > div {
+	display:inline !important;
+	float:left;
+}
+
+#list-item-toolbar > button {
+	display:inline;
+	float:left;
+}
 
 .list-item-wrapper > .completed, .list-item-wrapper > .list-item-content {
 	margin:0;

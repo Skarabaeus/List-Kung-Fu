@@ -56,9 +56,9 @@
 
 		var _CreateToolbar = function( widget ) {
 			var toolbar = $('<div id="list-toolbar"> \
-				<button id="list-new">Create</button> \
-				<button id="list-delete">Delete</button> \
-				<button id="list-edit">Edit</button> \
+				<button id="list-new">Create [shift+return]</button> \
+				<button id="list-delete">Delete [del]</button> \
+				<button id="list-edit">Edit [space]</button> \
 				<input type="text" id="search-list" /> \
 				</div>')
 
