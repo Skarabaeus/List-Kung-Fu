@@ -1,0 +1,18 @@
+<%= form_for(resource, :as => "user", :url => registration_path("user")) do |f| %>
+  <p><%= f.label :email %><br />
+  <%= f.text_field :email %></p>
+
+  <p><%= f.label :password %><br />
+  <%= f.password_field :password %></p>
+
+  <p><%= f.label :password_confirmation %><br />
+  <%= f.password_field :password_confirmation %></p>
+
+  <p><%= f.submit "Sign up" %></p>
+
+	<p>
+		Already signed up? 
+		
+		<%= link_to 'Sign In here!', new_user_session_url, :remote => true %>
+	</p>
+<% end %>

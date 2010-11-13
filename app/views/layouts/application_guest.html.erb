@@ -3,12 +3,15 @@
 <head>
   <title>List Kung Fu</title>
 	<%= stylesheet_link_tag 'http://yui.yahooapis.com/2.8.1/build/reset/reset-min.css' %>
-  <%= stylesheet_link_tag 'application', 'scaffold', 'jquery-ui-1.8.5.custom', 'layout-default-latest', 'textile' %>
-	<%= stylesheet_link_tag 'markitup/set_style.css' %>
-	<%= stylesheet_link_tag 'markitup/skin_style.css' %>
+	<%= stylesheet_link_tag 'guest/application' %>
   <%= csrf_meta_tag %>
 </head>
 <body>
-	<%= yield %>
+	<div id="wrapper">
+		<%= yield %>
+	</div>
+	<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js' %>
+	<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' %>
+	<%= javascript_include_tag 'guest/application', 'jquery-rails.js' %>
 </body>
 </html>

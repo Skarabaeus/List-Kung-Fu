@@ -1,5 +1,5 @@
 ListKungFu::Application.routes.draw do
-  root :to => "app#main"
+  root :to => "app#welcome"
 
   resources :lists do
     resources :list_items
