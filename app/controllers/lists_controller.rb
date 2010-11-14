@@ -5,12 +5,12 @@ class ListsController < ApplicationController
   respond_to :xml
   
   def index
-    @lists = List.where( "owner_id = :user_id", { :user_id => current_user.id } ).order( "created_at desc" )
+    @lists = current_user.lists.where.order( "created_at desc" )
     respond_with(@lists)
   end
 
   def show
-    @list = List.where( "owner_id = :user_id and list_id = :id", { :user_id => current_user.id, :id => params[:id] } )
+    @list = current_user.lists.find( params[:id] )
     respond_with(@list)
   end
 
@@ -23,7 +23,7 @@ class ListsController < ApplicationController
   end
 
   def edit
-    @list = List.find(params[:id])
+    @list = current_user.lists.find( params[:id] )
 
     respond_with( @list ) do |format|
       format.js
@@ -42,7 +42,7 @@ class ListsController < ApplicationController
   end
 
   def update
-    @list = List.find(params[:id])
+    @list = current_user.lists.find( params[:id] )
     if @list.update_attributes(params[:list])
       flash[:notice] = 'List has been updated.'
     end
@@ -51,7 +51,7 @@ class ListsController < ApplicationController
   end
 
   def destroy
-    @list = List.find( params[:id] )
+    @list = current_user.lists.find( params[:id] )
     @list.destroy
     
     respond_with( @list )
