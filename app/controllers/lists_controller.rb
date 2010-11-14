@@ -5,12 +5,12 @@ class ListsController < ApplicationController
   respond_to :xml
   
   def index
-    @lists = List.where.order( "created_at desc" )
+    @lists = List.where( "owner_id = :user_id", { :user_id => current_user.id } ).order( "created_at desc" )
     respond_with(@lists)
   end
 
   def show
-    @list = List.find(params[:id])
+    @list = List.where( "owner_id = :user_id and list_id = :id", { :user_id => current_user.id, :id => params[:id] } )
     respond_with(@list)
   end
 
@@ -32,7 +32,7 @@ class ListsController < ApplicationController
 
   def create
     @list = List.new(params[:list])
-    @list.owner = User.first #obviously this is just temporary.
+    @list.owner = current_user
 
     if @list.save
       flash[:notice] = 'List has been created.'
