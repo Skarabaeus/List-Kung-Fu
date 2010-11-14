@@ -11,6 +11,11 @@
 <body>
 	<div class="ui-layout-north" id="mainlayout-north">
 		<%= image_tag 'listkungfu_header.png', :id => 'header-image' %>
+		<div id="flash_container">
+	      <%- flash.each do |name, msg| -%>
+	          <%= content_tag :div, msg, :id => "flash_#{name}" %>
+	      <%- end -%>
+	  </div>
 		<%= yield :north %>
 	</div>
 

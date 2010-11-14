@@ -11,7 +11,6 @@ html, body {
 
 #wrapper {
 	width:700px;
-	height:400px;
 	margin: 0 auto;
 	border:15px solid #eee;
 	background-color:#fff;
@@ -56,9 +55,10 @@ p {
 	margin:10px 0 2px;
 }
 
-#left {
+#left, #right {
 	height:100%;
 	float:left;
+	width:50%;
 }
 
 h1 {
@@ -93,4 +93,15 @@ a {
 
 a:hover {
 	text-decoration:underline;
+}
+
+#flash_alert {
+	margin:0;
+	padding:5px;
+	background-color:#f99;
+	border:2px solid #f00;
+}
+
+form {
+	margin:0 10px;
 }

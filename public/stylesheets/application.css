@@ -1,4 +1,7 @@
-html, body {
+margin:0;
+padding:5px;
+background-color:#f99;
+border:2px solid #f00;html, body {
 	margin:0;
 	height:0;
 	width:100%;
@@ -32,6 +35,20 @@ html, body {
 
 .header {
 	padding:10px;
+}
+
+#flash_alert {
+	margin:0;
+	padding:5px;
+	background-color:#9f9;
+	border:2px solid #0f0;
+}
+
+#flash_notice {
+	margin:0;
+	padding:5px;
+	background-color:#f99;
+	border:2px solid #f00;
 }
 
 #header-image {
