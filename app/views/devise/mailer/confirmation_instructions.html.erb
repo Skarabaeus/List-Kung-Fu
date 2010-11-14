@@ -1,5 +1,11 @@
-<p>Welcome <%= @resource.email %>!</p>
+<h3>Welcome to List Kung Fu <%= @resource.email %>!</h3>
 
-<p>You can confirm your account through the link below:</p>
+<p>In order to complete your registration, you need to confirm your account through the link below:</p>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %></p>
+<p><%= link_to 'Confirm Account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %></p>
+
+<p>
+Cheers,<br/>
+<br />
+<em>Your List Kung Fu Team</em>
+</p>
