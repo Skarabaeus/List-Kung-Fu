@@ -33,18 +33,25 @@ border:2px solid #f00;html, body {
 	padding:0;
 }
 
+#main-menu {
+	position:absolute;
+	right:0;
+	top:0;
+}
+
 .header {
 	padding:10px;
 }
 
-#flash_alert {
+
+#flash_notice {
 	margin:0;
 	padding:5px;
 	background-color:#9f9;
 	border:2px solid #0f0;
 }
 
-#flash_notice {
+#flash_alert {
 	margin:0;
 	padding:5px;
 	background-color:#f99;

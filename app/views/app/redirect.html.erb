@@ -1,0 +1,11 @@
+<% content_for :additional_javascript do %>
+	<script type="text/javascript">
+		$( document ).ready(function(){
+			$( document ).delay( 3000, "redirect-queue" ).queue( "redirect-queue", function(){
+				window.location = "/app/main";
+			}).dequeue( "redirect-queue" );
+		});
+	</script>
+<% end %>
+
+<p>You will be redirected soon ... or click <%= link_to 'here', app_main_url %></p>

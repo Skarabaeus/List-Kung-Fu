@@ -1,9 +1,17 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  layout :layout_by_login
+  layout "application_guest"
 
   after_filter :add_flash_to_header
+
+  def after_sign_in_path_for(resource_or_scope)
+    if resource_or_scope.is_a?(User)
+      app_redirect_url
+    else
+      super
+    end
+  end
 
   private
 
@@ -19,13 +27,5 @@ class ApplicationController < ActionController::Base
 
     # make sure flash does not appear on the next page
     flash.discard
-  end
-
-  def layout_by_login
-    if user_signed_in?
-      "application_signed_in"
-    else
-      "application_guest"
-    end
   end
 end

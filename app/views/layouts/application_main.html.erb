@@ -16,6 +16,12 @@
 	          <%= content_tag :div, msg, :id => "flash_#{name}" %>
 	      <%- end -%>
 	  </div>
+		<div id="main-menu">
+			<% if user_signed_in? %>
+				<%= link_to 'Logout', destroy_user_session_url %>
+			<% end %>
+			
+		</div>
 		<%= yield :north %>
 	</div>
 
@@ -40,7 +46,7 @@
 			<%= yield :center %>
 		</div>
 	</div>
-
+	
 	<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js' %>
 	<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' %>
 	<%= javascript_include_tag 'jquery.SerializeForm', 'jquery.ConfirmationDialog' %>

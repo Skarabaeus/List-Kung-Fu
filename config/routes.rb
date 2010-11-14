@@ -11,5 +11,6 @@ ListKungFu::Application.routes.draw do
   
   get "app/main"
   get "app/welcome"
+  get "app/redirect"
 
 end
