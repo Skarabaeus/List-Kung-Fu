@@ -2,8 +2,13 @@ class ListItem < ActiveRecord::Base
   # ASSOCIATIONS
 
   belongs_to :list
-  belongs_to :parent_item, :class_name => 'ListItem'
-  has_many :children_items, :class_name => 'ListItem', :foreign_key => 'parent_item_id', :dependent => :destroy
+  
+  # for now not supporting this, because I'm not yet pursuated that
+  # this feature is really needed. simple todo lists are more likely
+  # to be actually used.
+  # keeping the parent_id field in the DB for now, might drop that later.
+  #belongs_to :parent_item, :class_name => 'ListItem'
+  #has_many :children_items, :class_name => 'ListItem', :foreign_key => 'parent_item_id', :dependent => :destroy
 
   # VALIDATIONS
 

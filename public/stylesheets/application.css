@@ -37,6 +37,16 @@ border:2px solid #f00;html, body {
 	position:absolute;
 	right:0;
 	top:0;
+	margin:10px;
+}
+
+#main-menu a {
+	text-decoration:none;
+	color: #333;
+}
+
+#main-menu a:hover {
+	text-decoration:underline;
 }
 
 .header {
