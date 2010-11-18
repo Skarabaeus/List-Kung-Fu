@@ -35,20 +35,26 @@ class ListItem < ActiveRecord::Base
   def body_rendered
 
     unless self.body.nil?
-      # matches URLs
-      regex = /(\s|>)((https?|ftp):(\/\/)+([\w\d:\/\#@%;$()~_?\+-=\\\&][^<]*))(\s|<)/
+      regex_url = /(\s|>)((https?|ftp):(\/\/)+([\w\d:\/\#@%;$()~_?\+-=\\\&][^<]*))(\s|<)/
+      regex_links = /((<a)(.)*(\/a>))/
 
       # generate HTML from textile
       html = RedCloth.new( self.body ).to_html
+      html_without_links = String.new( html )
 
-      # match URLs
-      matches = html.scan(regex).collect{ |match| match.second }
+      # remove all existing links from the html:
+      matched_link = html_without_links.scan( regex_links ).collect { |match| match.first }
+      matched_link.uniq!
+      matched_link.each do |match|
+        html_without_links.gsub!(match, '')
+      end
+
+      # match URLs and replace them with real links
+      matches = html_without_links.scan( regex_url ).collect{ |match| match.second }
       matches.uniq!
-
       matches.each do |match|
         html.gsub!(match, %Q-<a href="#{match}" target="_blank">#{match}</a>-)
       end
-
 
       write_attribute( :body_rendered, html )
     end
