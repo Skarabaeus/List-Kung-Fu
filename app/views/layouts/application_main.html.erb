@@ -18,6 +18,7 @@
 	  </div>
 		<div id="main-menu">
 			<% if user_signed_in? %>
+				<%= link_to 'Profile', edit_user_registration_url %> |
 				<%= link_to 'Logout', destroy_user_session_url %>
 			<% end %>
 			

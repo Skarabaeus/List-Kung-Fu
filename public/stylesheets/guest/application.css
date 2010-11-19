@@ -112,3 +112,26 @@ a:hover {
 form {
 	margin:0 10px;
 }
+
+#cancel-account h6 {
+	font-size:12pt;
+	color:#f00;
+	font-weight:bold;
+	margin: 20px 10px 10px 10px;
+}
+
+#cancel-account {
+	border:2px solid #f00;
+	margin:40px 0 10px;
+	background-color:#fee;
+}
+
+#cancel-account p {
+	margin:20px;
+}
+
+#username {
+	font-size:12pt;
+	font-weight:bold;
+	color:#666;
+}

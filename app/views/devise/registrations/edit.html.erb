@@ -1,9 +1,9 @@
-<h2>Update your profile!</h2>
+<h3>Update your profile!</h3>
 
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
   <%= devise_error_messages! %>
 
-	<p>Username: <%= resource.username %></p>
+	<p id="username">Username: <%= resource.username %></p>
 
   <p><%= f.label :email %><br />
   <%= f.text_field :email %></p>
@@ -20,8 +20,13 @@
   <p><%= f.submit "Update" %></p>
 <% end %>
 
-<h3>Cancel my account</h3>
+<div id="cancel-account">
+	<h6>Cancel my account</h6>
 
-<p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete %>.</p>
+	<p>
+		Unhappy? You may cancel your account at any time. All data will be deleted permanently.<br /><br />
+		<%= link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you really sure?", :method => :delete %>.
+	</p>
+</div>
 
-<%= link_to "Back", :back %>
+<%= link_to 'Back To Application', app_main_url %>
