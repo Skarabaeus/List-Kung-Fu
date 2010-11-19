@@ -24,7 +24,8 @@ jQuery.expr[':'].Contains = function(a,i,m){
 $(document).ready(function () {
 	ListKungFu.MainLayout = $('body').layout({
 		defaults: {
-
+			contentSelector: ".ui-layout-content",
+			contentIgnoreSelector: ".ui-layout-ignore"
 		},
 
 		north: {
@@ -43,6 +44,10 @@ $(document).ready(function () {
 		east: {
 			minSize: 100,
 			initClosed: true
+		},
+
+		center: {
+			minSize: 300
 		}
 	});
 
@@ -55,6 +60,9 @@ $(document).ready(function () {
 	ListKungFu.LayoutCenter.ListItemView({
 		SelectLastList: function( event, data ) {
 			ListKungFu.LayoutWest.ListView( "SelectList" );
+		},
+		ContentDimensionsChanged: function(){
+			ListKungFu.MainLayout.resizeContent("center");
 		}
 	});
 

@@ -3,7 +3,11 @@
 
 		var widget = null;
 
-		_SetSelectedListItem = function( elem, obj ) {
+		var _TriggerResize = function() {
+			widget._trigger("ContentDimensionsChanged", 0, {} );
+		};
+
+		var _SetSelectedListItem = function( elem, obj ) {
 			widget.selectedListItem = {
 				element: elem,
 				data: obj
@@ -200,6 +204,7 @@
 				element.css( "overflow-x", "hidden" );
 				element.css( "overflow-y", "auto" );
 			}
+			_TriggerResize();
 		};
 
 		var _DeleteListItem = function( element, listItem ) {
@@ -551,14 +556,14 @@
 
 				ListItem.Index( {
 					successCallback: function( template, json, status, xhr, errors ) {
+						_CreateToolbar();
+
 						$.each( json, function( index, listItem ) {
 							_AddListItem( listItem, template )
 						});
 
 						// focus first list item
 						widget.listItemList.find( ".row" ).first().focus();
-
-						_CreateToolbar();
 
 						if ( widget.listItemList.find( '.row' ).length === 0 ) {
 							_AddNewListItem();
