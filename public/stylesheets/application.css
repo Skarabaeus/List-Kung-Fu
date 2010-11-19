@@ -152,8 +152,15 @@ button:focus, input[type=submit]:focus {
 /*--------------------*/
 
 #list-item-toolbar {
-	height:80px;
-	max-height:80px;
+	height:70px;
+	max-height:70px;
+}
+
+#list-name {
+	text-decoration:underline;
+	font-weight:bold;
+	color:#666;
+	margin: 0 10px;
 }
 
 #list-item-toolbar > div {

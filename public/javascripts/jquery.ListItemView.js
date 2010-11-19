@@ -344,17 +344,19 @@
 
 			// build new header
 			widget.toolbar = $( '<div id="list-item-toolbar"> \
+				<div id="list-name"></div><br /> \
 				<button id="list-item-completed">Completed [space]</button> \
 				<button id="list-item-new">Create [shift+return]</button> \
 				<button id="list-item-delete">Delete [del]</button> \
 				<button id="list-item-edit">Edit [return]</button> \
 				<button id="list-item-fullsize">Fullsize [l]</button> \
-				<input type="input" id="list-item-search"/><br /><br /> \
+				<input type="input" id="list-item-search"/> \
 				<input type="checkbox" id="showCompleted"/> \
 				<label for="showCompleted">Show Completed Items</label></div>' );
 
-			// create buttons
+			widget.listName = widget.toolbar.find( "#list-name" );
 
+			// create buttons
 			widget.toolbar.find( "#list-item-new" ).button({
 				text: false,
 				icons: {
@@ -568,6 +570,9 @@
 						if ( widget.listItemList.find( '.row' ).length === 0 ) {
 							_AddNewListItem();
 						}
+
+						// set list name
+						widget.listName.text( data.list.title );
 					},
 					lists: data.list.id
 				});
