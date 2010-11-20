@@ -5,7 +5,7 @@
 		// select all elements with a name attribute that contains a closing square bracket.
 		// this takes advantage of Rails' conventions that set the name to something like
 		// list[title]
-		var fields = $( this ).find( "*[name*=]]" );
+		var fields = $( this ).find( '*[name*="]"]' );
 		
 		var objects = {};
 		
