@@ -8,7 +8,7 @@ class ListItemsController < ApplicationController
   def index
     case params[ :show ]
     when "all"
-      @list_items = @list.list_items.all.order( "created_at desc" )
+      @list_items = @list.list_items.order( "created_at desc" )
     when "completed"
       @list_items = @list.list_items.where( "completed = ?", true ).order( "created_at desc" )
     else # uncompleted

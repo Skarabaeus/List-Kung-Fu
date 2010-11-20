@@ -5,7 +5,7 @@ class ListsController < ApplicationController
   respond_to :xml
   
   def index
-    @lists = current_user.lists.where.order( "created_at desc" )
+    @lists = current_user.lists.order( "created_at desc" )
     respond_with(@lists)
   end
 

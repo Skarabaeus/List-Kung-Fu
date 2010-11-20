@@ -25,11 +25,6 @@ class ListItem < ActiveRecord::Base
     !self.id.nil?
   end
 
-  def stefan
-    0
-  end
-
-
   private
 
   def body_rendered
