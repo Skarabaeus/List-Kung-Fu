@@ -424,6 +424,10 @@
 				widget.deleteDialog.dialog("open");
 			});
 
+			widget.toolbar.find( "#list-item-edit" ).bind( 'click', function( e ) {
+				widget.selectedListItem.element.trigger( 'dblclick' );
+			});
+
 			widget.toolbar.find( "#list-item-fullsize" ).bind( 'click', function( e ) {
 				_ToggleFullsize( widget.selectedListItem.element );
 			});
