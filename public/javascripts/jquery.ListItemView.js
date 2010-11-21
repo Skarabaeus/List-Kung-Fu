@@ -553,6 +553,11 @@
 					widget.completedList.remove();
 					widget.completedList = null;
 				}
+
+				// remove toolbar
+				if ( widget.toolbar ) {
+					widget.toolbar.html("");
+				}
 			},
 
 			OpenList: function( data ) {
