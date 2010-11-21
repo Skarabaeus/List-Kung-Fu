@@ -104,7 +104,7 @@
 						widget.selectedListItem.element.prepend( $form );
 						$form.find( "textarea" ).markItUp( mySettings );
 
-						if ( !newElement.isFullsize ) {
+						if ( newElement.data( "isFullsize", false ) ) {
 							_ToggleFullsize( newElement );
 						}
 
