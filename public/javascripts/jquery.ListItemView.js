@@ -103,8 +103,9 @@
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
 						$form.find( "textarea" ).markItUp( mySettings );
+						var elementAlreadyFullsize = newElement.data( "isFullsize" ) || false;
 
-						if ( newElement.data( "isFullsize", false ) ) {
+						if ( elementAlreadyFullsize == false ) {
 							_ToggleFullsize( newElement );
 						}
 
@@ -144,7 +145,9 @@
 
 							$form.hide( 'slow', function() {
 								$( this ).remove();
-								_ToggleFullsize( newElement );
+								if ( elementAlreadyFullsize == false ) {
+									_ToggleFullsize( newElement );
+								}
 								newElement.focus();
 							});
 
