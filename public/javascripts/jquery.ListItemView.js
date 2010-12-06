@@ -460,9 +460,11 @@
 
 			ListItem.New( {
 				successCallback: function( template, json, status, xhr, errors ) {
-					widget.listItemList.prepend( $( template ) );
-					var $form = widget.listItemList.find( '#new_list_item' );
-					$form.find( "textarea" ).markItUp( mySettings ).focus();
+					var $form = $( template );
+					widget.listItemList.prepend( $form );
+					$form.find( "textarea" ).markItUp( mySettings );
+
+					// hide existing rows when adding new item
 					widget.listItemList.find( '.row' ).hide();
 
 					$form.find( "#cancel-edit" ).bind( 'click', function( e ){
@@ -476,12 +478,15 @@
 
 					$form.find( "input[type=submit]" ).bind( 'click', function( e ) {
 						e.preventDefault();
-
 						var serializedForm = $form.serializeForm();
-						json.list_item = serializedForm.list_item;
+
+						// hacky hack hack. no idea why I have to do this
+						// when creating an list item.
+						// When editing an item, line breaks are sent correctly.
+						serializedForm.list_item.body = serializedForm.list_item.body.replace(/\n/g, "\n\n");
 
 						ListItem.Create({
-							send: json,
+							send: serializedForm,
 							successCallback: function( template, json, status, xhr, errors ) {
 								$form.hide( 'slow', function(){
 									_AddListItem( json, template, true );
