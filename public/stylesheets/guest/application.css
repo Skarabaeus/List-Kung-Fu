@@ -15,6 +15,8 @@ html, body {
 	border:15px solid #eee;
 	background-color:#fff;
 	padding:20px;
+	overflow-x:none;
+	overflow-y:auto;
 }
 
 input[type=text], input[type=password] {
