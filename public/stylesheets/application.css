@@ -148,6 +148,14 @@ button:focus, input[type=submit]:focus {
 	background-color: #aaa;
 }
 
+.fake-drop {
+	background-color: #ddd;
+	font-size:0.8em !important;
+	padding:5px;
+	margin:10px;
+	border: 1px dashed #999;
+}
+
 
 /*--------------------*/
 

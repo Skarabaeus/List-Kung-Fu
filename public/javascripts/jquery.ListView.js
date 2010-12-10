@@ -340,6 +340,25 @@
 				return false;
 			});
 
+			newElement.droppable( {
+				activeClass: "ui-state-default",
+				hoverClass: "ui-state-hover",
+				accept: ".list-item",
+				drop: function( event, ui ) {
+					$(event.target).find(".fake-drop").remove();
+					alert("dropped");
+				},
+				over: function(event, ui) {
+					var wrapper = $('<div class="fake-drop">vk</div>');
+					wrapper.text( ui.helper.text() );
+					$(event.target).append( wrapper );
+				},
+				out: function( event, ui ) {
+					$(event.target).find(".fake-drop").remove();
+				}
+
+			} );
+
 			return newElement;
 		};
 

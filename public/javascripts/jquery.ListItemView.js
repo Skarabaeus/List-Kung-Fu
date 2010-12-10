@@ -180,6 +180,16 @@
 				return false;
 			});
 
+
+			newElement.draggable( {
+				helper: function(){ return $('<div style="font-size:0.8em !important;">'+newElement.find(".list-item-content").text().substring(0, 30)+' . . .'+'</div>').get(0) },
+				appendTo: "#mainlayout-center",
+				revert: "invalid",
+				handle: ".handle",
+				cursorAt: { top: -5, left: -5 }
+			});
+
+
 			_CorrectHeight( newElement );
 		};
 
