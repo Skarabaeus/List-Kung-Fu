@@ -297,7 +297,7 @@
 					});
 
 					// in case completed items are displayed, update them:
-					if ( widget.toolbar && widget.toolbar.find( "#list-item-new" ).get( 0 ).
+					if ( widget.toolbar && widget.toolbar.find( "#showCompleted" ).get( 0 ).
 						checked === true ) {
 						_ToggleCompleted( true );
 					}
