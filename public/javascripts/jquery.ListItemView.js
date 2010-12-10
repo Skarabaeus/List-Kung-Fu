@@ -347,7 +347,7 @@
 
 			// build new header
 			widget.toolbar = $( '<div id="list-item-toolbar"> \
-				<div id="list-name"></div><br /> \
+				<div id="list-name"></div><div id="list-item-toolbar-buttons"> \
 				<button id="list-item-completed">Completed [space]</button> \
 				<button id="list-item-new">Create [shift+return]</button> \
 				<button id="list-item-delete">Delete [del]</button> \
@@ -355,7 +355,7 @@
 				<button id="list-item-fullsize">Fullsize [l]</button> \
 				<input type="input" id="list-item-search"/> \
 				<input type="checkbox" id="showCompleted"/> \
-				<label for="showCompleted">Show Completed Items</label></div>' );
+				<label for="showCompleted">Show Completed Items</label></div></div>' );
 
 			widget.listName = widget.toolbar.find( "#list-name" );
 
@@ -463,6 +463,7 @@
 					var $form = $( template );
 					widget.listItemList.prepend( $form );
 					$form.find( "textarea" ).markItUp( mySettings );
+					$form.find( "textarea" ).focus();
 
 					// hide existing rows when adding new item
 					widget.listItemList.find( '.row' ).hide();

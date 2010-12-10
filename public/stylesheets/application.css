@@ -163,8 +163,8 @@ button:focus, input[type=submit]:focus {
 	margin: 0 10px;
 }
 
-#list-item-toolbar > div {
-	display:inline !important;
+#list-item-toolbar-buttons > button {
+	display:inline;
 	float:left;
 }
 
