@@ -349,8 +349,8 @@
 					alert("dropped");
 				},
 				over: function(event, ui) {
-					var wrapper = $('<div class="fake-drop">vk</div>');
-					wrapper.text( ui.helper.text() );
+					var wrapper = $('<div class="fake-drop"></div>');
+					wrapper.html( '<p>' + ui.helper.text() + '</p>' );
 					$(event.target).append( wrapper );
 				},
 				out: function( event, ui ) {

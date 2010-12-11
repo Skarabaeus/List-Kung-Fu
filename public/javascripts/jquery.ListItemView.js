@@ -25,6 +25,8 @@
 				widget.listItemList.append(newElement);
 			}
 
+			newElement.find( ".handle" ).height( newElement.height() );
+
 			newElement.bind( 'keydown', 'space', function( e ){
 				widget.toolbar.find( "#list-item-completed" ).effect('puff', {}, 300, function(){
 					$( this ).show();
@@ -127,6 +129,7 @@
 									$form.hide( 'slow', function( e ) {
 										$( this ).remove();
 										newElement.find( '.list-item-content' ).html( json.list_item.body_rendered );
+										newElement.find( ".handle" ).height( newElement.find( '.list-item-content' ).height() );
 										_ToggleFullsize( newElement );
 										_SetSelectedListItem( newElement, json );
 										newElement.data( "data", json );
@@ -180,14 +183,15 @@
 				return false;
 			});
 
-
-			newElement.draggable( {
-				helper: function(){ return $('<div style="font-size:0.8em !important;">'+newElement.find(".list-item-content").text().substring(0, 30)+' . . .'+'</div>').get(0) },
-				appendTo: "#mainlayout-center",
-				revert: "invalid",
-				handle: ".handle",
-				cursorAt: { top: -5, left: -5 }
-			});
+			if ( ListKungFu && ListKungFu.LayoutCenter ) {
+				newElement.draggable( {
+					helper: function(){ return $('<div class="list-item-drag-helper">'+newElement.find(".list-item-content").text().substring(0, 20)+' . . .'+'</div>').get(0) },
+					appendTo: ListKungFu.LayoutCenter,
+					revert: "invalid",
+					handle: ".handle",
+					cursorAt: { top: 10, left: 10 }
+				});
+			}
 
 
 			_CorrectHeight( newElement );
@@ -505,6 +509,7 @@
 									widget.toolbar.find( "#list-item-search" ).trigger( "ClearValue" );
 									widget.listItemList.find( ".row" ).show();
 									widget.listItemList.find( ".row" ).first().focus();
+									widget.listItemList.find( ".row" ).first().find( ".handle" ).height( widget.listItemList.find( ".row" ).first().find( ".list-item-content" ).height() );
 								});
 							},
 							lists: data.list.id

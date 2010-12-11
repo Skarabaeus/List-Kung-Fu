@@ -149,11 +149,19 @@ button:focus, input[type=submit]:focus {
 }
 
 .fake-drop {
-	background-color: #ddd;
+	background-image:url(/images/drop-background.jpg);
+	background-repeat:no-repeat;
+	background-color:#fff;
 	font-size:0.8em !important;
-	padding:5px;
+	height:30px;
 	margin:10px;
 	border: 1px dashed #999;
+	padding-left:35px;
+	vertical-align:middle;
+}
+
+.fake-drop p {
+	margin-top:5px;
 }
 
 
@@ -224,4 +232,24 @@ button:focus, input[type=submit]:focus {
 	margin:0;
 	width:50px;
 }
+
+.list-item-drag-helper {
+	font-size:0.8em !important;
+	padding:5px;
+	margin:10px;
+	border: 1px dashed #999;
+	background-color:#fff;
+}
+
+.handle {
+	background-image:url(/images/handle.gif);
+	background-repeat:no-repeat;
+	width:20px;
+	height:20px;
+	position:relative;
+	left:-4px;
+	top:-6px;
+	float:left;
+}
+
 /*--------------------*/
