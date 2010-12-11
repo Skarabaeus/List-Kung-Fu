@@ -345,8 +345,26 @@
 				hoverClass: "ui-state-hover",
 				accept: ".list-item",
 				drop: function( event, ui ) {
-					$(event.target).find(".fake-drop").remove();
-					alert("dropped");
+					var originalListItem = ui.draggable.data( "data" );
+					var dropList = $( this ).data( "data" );
+
+					var data = {
+						list_item: {
+							body: originalListItem.list_item.body.replace(/\n/g, "\n\n")
+						}
+					};
+
+					ListItem.Create({
+						send: data,
+						successCallback: function( template, json, status, xhr, errors ) {
+
+							$( event.target ).find(".fake-drop").hide( 'slow', function() {
+								$(this).remove();
+								newElement.effect( 'highlight', {}, 3000 );
+							});
+						},
+						lists: dropList.list.id
+					});
 				},
 				over: function(event, ui) {
 					var wrapper = $('<div class="fake-drop"></div>');
