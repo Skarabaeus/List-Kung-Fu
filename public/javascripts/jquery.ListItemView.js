@@ -203,7 +203,16 @@
 					appendTo: ListKungFu.LayoutCenter,
 					revert: "invalid",
 					handle: ".handle",
-					cursorAt: { top: 10, left: 10 }
+					cursorAt: { top: 10, left: 10 },
+					iframeFix: true,
+					start: function( event, ui ) {
+						// disable the ability to select text.
+						// this is a hack for chrome and safari.
+						document.onselectstart = function () { return false; };
+					},
+					stop: function ( event, ui ) {
+						document.onselectstart = null;
+					}
 				});
 			}
 
