@@ -111,6 +111,9 @@
 							_ToggleFullsize( newElement );
 						}
 
+						// hide drag and drop handle
+						widget.selectedListItem.element.find( ".handle" ).hide();
+
 						$form.show('slow', function(){
 							$form.find( "textarea" ).focus();
 						});
@@ -128,8 +131,16 @@
 								successCallback: function( template, json, status, xhr, errors ){
 									$form.hide( 'slow', function( e ) {
 										$( this ).remove();
+
+										// show drag and drop handle
+										widget.selectedListItem.element.find( ".handle" ).show();
+
+										// update list item content
 										newElement.find( '.list-item-content' ).html( json.list_item.body_rendered );
+
+										// correct height of drag and drop handle
 										newElement.find( ".handle" ).height( newElement.find( '.list-item-content' ).height() );
+
 										_ToggleFullsize( newElement );
 										_SetSelectedListItem( newElement, json );
 										newElement.data( "data", json );
@@ -145,6 +156,9 @@
 
 						$form.find( "#cancel-edit" ).bind( "keydown click", 'return', function( e ) {
 							e.preventDefault();
+
+							// show drag and drop handle
+							widget.selectedListItem.element.find( ".handle" ).show();
 
 							$form.hide( 'slow', function() {
 								$( this ).remove();
