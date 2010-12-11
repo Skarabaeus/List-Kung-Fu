@@ -60,6 +60,7 @@
 				<button id="list-delete">Delete [del]</button> \
 				<button id="list-edit">Edit [space]</button> \
 				<input type="text" id="search-list" /> \
+				<div id="list-search-cancel">&nbsp;</div> \
 				</div>')
 
 			widget.element.find("div.header").append(toolbar);
@@ -195,6 +196,10 @@
 					widget.listlist.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
 					widget.listlist.find( ".row:Contains('" + filtervalue + "')").show();
         }
+			});
+
+			toolbar.find( "#list-search-cancel" ).bind( 'click', function() {
+				toolbar.find( "#search-list" ).val("").trigger( "keyup" );
 			});
 
 			toolbar.find("#search-list").bind( 'ClearValue', function( e ){

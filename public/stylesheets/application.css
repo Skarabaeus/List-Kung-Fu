@@ -164,6 +164,16 @@ button:focus, input[type=submit]:focus {
 	margin-top:5px;
 }
 
+#list-search-cancel {
+	background-image:url(/images/cancel.gif);
+	background-repeat:no-repeat;
+	width:15px;
+	height:15px;
+	position:relative;
+	left:160px;
+	top:17px;
+}
+
 
 /*--------------------*/
 
@@ -250,6 +260,16 @@ button:focus, input[type=submit]:focus {
 	left:-4px;
 	top:-6px;
 	float:left;
+}
+
+ #list-item-search-cancel {
+	background-image:url(/images/cancel.gif);
+	background-repeat:no-repeat;
+	width:15px;
+	height:15px;
+	position:relative;
+	left:390px;
+	top:-23px;
 }
 
 /*--------------------*/

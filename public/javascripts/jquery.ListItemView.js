@@ -392,7 +392,9 @@
 				<button id="list-item-fullsize">Fullsize [l]</button> \
 				<input type="input" id="list-item-search"/> \
 				<input type="checkbox" id="showCompleted"/> \
-				<label for="showCompleted">Show Completed Items</label></div></div>' );
+				<label for="showCompleted">Show Completed Items</label> \
+				<div id="list-item-search-cancel">&nbsp;</div> \
+				</div></div>' );
 
 			widget.listName = widget.toolbar.find( "#list-name" );
 
@@ -481,6 +483,10 @@
 					widget.listItemList.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
 					widget.listItemList.find( ".row:Contains('" + filtervalue + "')").show();
         }
+			});
+
+			widget.toolbar.find( "#list-item-search-cancel" ).bind( 'click', function(){
+				widget.toolbar.find("#list-item-search").val("").trigger('keyup');
 			});
 
 			widget.toolbar.find( "#list-item-search" ).bind( 'ClearValue', function( e ){
