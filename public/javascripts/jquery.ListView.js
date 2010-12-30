@@ -428,6 +428,13 @@
 			$(document).bind( 'keydown', 'ctrl+f', function(e){
 				widget.toolbar.find( "#search-list" ).focus();
 			});
+
+			// since ctrl+f does not work in MS windows, adding shift+f as additional
+			// keyboard shortcut
+			$(document).bind( 'keydown', 'shift+f', function(e) {
+				widget.toolbar.find( "#search-list" ).focus();
+				return false;
+			})
 		};
 
 		var _ShowListView = function( widget, updatedElement, template ) {
