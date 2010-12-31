@@ -9,6 +9,9 @@
   <p><%= f.label :email %><br />
   <%= f.text_field :email %></p>
 
+	<p><%= f.label :time_zone %><br />
+	<%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all %></p>
+
   <p><%= f.label :password %><br />
   <%= f.password_field :password %></p>
 

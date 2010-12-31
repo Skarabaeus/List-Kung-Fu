@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   layout "application_guest"
 
   after_filter :add_flash_to_header
+  before_filter :set_timezone
 
   def after_sign_in_path_for(resource_or_scope)
     if resource_or_scope.is_a?(User)
@@ -14,6 +15,11 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+
+  def set_timezone
+    Time.zone = current_user.time_zone if user_signed_in?
+  end
 
   def add_flash_to_header
     # only run this in case it's an Ajax request.
