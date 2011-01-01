@@ -20,16 +20,13 @@
   <p><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
   <%= f.password_field :current_password %></p>
 
-  <p><%= f.submit "Update" %></p>
+  <p><%= f.submit "Update" %> - <%= link_to 'Back To Application', app_main_url %></p>
 <% end %>
 
 <div id="cancel-account">
 	<h6>Cancel my account</h6>
-
 	<p>
 		Unhappy? You may cancel your account at any time. All data will be deleted permanently.<br /><br />
 		<%= link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you really sure?", :method => :delete %>.
 	</p>
 </div>
-
-<%= link_to 'Back To Application', app_main_url %>
