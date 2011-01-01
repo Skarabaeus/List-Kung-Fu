@@ -18,6 +18,7 @@
 			var newElement = $( $.mustache( template, listItem.list_item ) );
 
 			newElement.data( "data", listItem );
+			newElement.data( "isFullsize", false );
 
 			if ( isFirst ) {
 				widget.listItemList.prepend(newElement);
@@ -105,9 +106,10 @@
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
 						$form.find( "textarea" ).markItUp( mySettings );
-						var elementAlreadyFullsize = newElement.data( "isFullsize" ) || false;
+						var elementAlreadyFullsize = newElement.data( "isFullsize" );
 
-						if ( elementAlreadyFullsize == false ) {
+						// only toggleFullsize if not already fullsize (when opening the editing dialog)
+						if ( elementAlreadyFullsize === false ) {
 							_ToggleFullsize( newElement );
 						}
 
@@ -141,7 +143,11 @@
 										// correct height of drag and drop handle
 										newElement.find( ".handle" ).height( newElement.find( '.list-item-content' ).height() );
 
-										_ToggleFullsize( newElement );
+										// only toggleFullsize if not already fullsize (when saving item)
+										if ( elementAlreadyFullsize === false ) {
+											_ToggleFullsize( newElement );
+										}
+
 										_SetSelectedListItem( newElement, json );
 										newElement.data( "data", json );
 										newElement.focus();
@@ -162,7 +168,9 @@
 
 							$form.hide( 'slow', function() {
 								$( this ).remove();
-								if ( elementAlreadyFullsize == false ) {
+
+								// only toggleFullsize if not already fullsize (when canceling edit)
+								if ( elementAlreadyFullsize === false ) {
 									_ToggleFullsize( newElement );
 								}
 								newElement.focus();
