@@ -114,16 +114,14 @@ border:2px solid #f00;html, body {
 }
 
 .selected-row {
-	border: 3px solid #009426 !important;
+	border: 5px solid #009426 !important;
 }
 
 .row {
 	margin:0px;
 	padding:7px;
-}
-
-.row:nth-child(odd){
-	background-color:#F6F0D2;
+	background-image:url(/images/item_background.gif);
+	background-repeat: repeat-x;
 }
 
 #list-form form, #list-form input[type=text] {
@@ -177,6 +175,7 @@ button:focus, input[type=submit]:focus {
 
 /*--------------------*/
 
+
 #list-item-toolbar {
 	height:70px;
 	max-height:70px;
@@ -203,8 +202,8 @@ button:focus, input[type=submit]:focus {
 	margin:0;
 }
 
-.list-item {
-	border-bottom: 3px solid #ddd;
+.list-item, .list {
+	border-bottom: 3px solid #efefef;
 }
 
 .undo > img {
@@ -240,7 +239,7 @@ button:focus, input[type=submit]:focus {
 #list_item_submit, #cancel-edit {
 	height:35px;
 	margin:0;
-	width:50px;
+	width:60px;
 }
 
 .list-item-drag-helper {

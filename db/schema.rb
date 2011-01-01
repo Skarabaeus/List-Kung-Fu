@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101231135629) do
+ActiveRecord::Schema.define(:version => 20110101130304) do
 
   create_table "filters", :force => true do |t|
     t.string    "name"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(:version => 20101231135629) do
     t.timestamp "updated_at"
     t.integer   "list_id"
     t.integer   "parent_item_id"
+    t.datetime  "deadline"
   end
 
   create_table "lists", :force => true do |t|
