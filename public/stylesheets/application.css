@@ -1,7 +1,4 @@
-margin:0;
-padding:5px;
-background-color:#f99;
-border:2px solid #f00;html, body {
+html, body {
 	margin:0;
 	height:0;
 	width:100%;
@@ -115,6 +112,8 @@ border:2px solid #f00;html, body {
 
 .selected-row {
 	border: 1px solid #009426 !important;
+	overflow-y:auto !important;
+	overflow-x:hidden !important;
 }
 
 .row {
@@ -122,6 +121,7 @@ border:2px solid #f00;html, body {
 	padding:7px;
 	background-image:url(/images/item_background.gif);
 	background-repeat: repeat-x;
+	overflow:hidden;
 }
 
 #list-form form, #list-form input[type=text] {
@@ -267,7 +267,7 @@ button:focus, input[type=submit]:focus {
 	width:15px;
 	height:15px;
 	position:relative;
-	left:390px;
+	left:355px;
 	top:-23px;
 }
 

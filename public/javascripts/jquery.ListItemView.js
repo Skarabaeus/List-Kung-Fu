@@ -245,12 +245,8 @@
 		var _CorrectHeight = function( element, setToFullSize ) {
 			if ( element.height() > 150 && !setToFullSize ) {
 				element.height( 150 );
-				element.css( "overflow-x", "hidden" );
-				element.css( "overflow-y", "auto" );
 			} else {
 				element.height( "auto" );
-				element.css( "overflow-x", "hidden" );
-				element.css( "overflow-y", "auto" );
 			}
 			_TriggerResize();
 		};
