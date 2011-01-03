@@ -124,9 +124,12 @@
 							$form.find( "#cancel-edit" ).trigger( "click" );
 						});
 
-						$form.find( "input[type=submit]" ).bind( "keydown click", 'return', function( e ) {
+						$form.find( ".deadline-button" ).bind( "keydown click", 'return', function( e ) {
 							e.preventDefault();
 							var serializedForm = newElement.find("form").serializeForm();
+
+							// add deadline indicator based on deadline type
+							serializedForm.list_item.deadlineType = $( e.target ).attr( 'data-deadline' );
 
 							ListItem.Update({
 								send: serializedForm,
@@ -524,7 +527,7 @@
 						});
 					});
 
-					$form.find( "input[type=submit]" ).bind( 'click', function( e ) {
+					$form.find( ".deadline-button" ).bind( 'click', function( e ) {
 						e.preventDefault();
 						var serializedForm = $form.serializeForm();
 
@@ -532,6 +535,9 @@
 						// when creating an list item.
 						// When editing an item, line breaks are sent correctly.
 						serializedForm.list_item.body = serializedForm.list_item.body.replace(/\n/g, "\n\n");
+
+						// add deadline indicator based on deadline type
+						serializedForm.list_item.deadlineType = $( e.target ).attr( 'data-deadline' );
 
 						ListItem.Create({
 							send: serializedForm,
@@ -547,6 +553,7 @@
 							},
 							lists: data.list.id
 						});
+						return false;
 					});
 
 					$form.find( "textarea" ).bind( 'keydown', 'esc', function( e ){

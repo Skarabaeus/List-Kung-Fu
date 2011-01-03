@@ -34,6 +34,7 @@ class ListItemsController < ApplicationController
   def edit
     @list_item = @list.list_items.find( params[ :id ] )
 
+
     respond_with( @list_item ) do |format|
       format.js
     end
@@ -42,6 +43,7 @@ class ListItemsController < ApplicationController
   def create
     @list_item = ListItem.new( params[ :list_item ] )
     @list_item.list_id = @list.id
+    @list_item.deadline = get_deadline
 
     if @list_item.save
       flash[:notice] = 'List Item has been created.'
@@ -53,7 +55,11 @@ class ListItemsController < ApplicationController
   def update
     @list_item = @list.list_items.find( params[ :id ] )
 
-    if @list_item.update_attributes(params[:list_item])
+    @list_item.body = params[ :list_item ][ :body ]
+    @list_item.completed = params[ :list_item ][ :completed ] unless params[ :list_item ][ :completed ].nil?
+    @list_item.deadline = get_deadline
+
+    if @list_item.save
       flash[:notice] = 'List Item has been updated.'
     end
 
@@ -71,5 +77,20 @@ class ListItemsController < ApplicationController
 
   def load_list
     @list = current_user.lists.find( params[ :list_id ] )
+  end
+
+  def get_deadline
+    case params[ :list_item ][ :deadlineType ]
+    when 'today'
+      Time.zone.now
+    when 'tomorrow'
+      Time.zone.now + 1.day
+    when 'nextweek'
+      Time.zone.now + 1.week
+    when 'keepit'
+      @list_item.deadline
+    else
+      nil
+    end
   end
 end

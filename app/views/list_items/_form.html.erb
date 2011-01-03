@@ -14,12 +14,31 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="field" id="markituparea">
     <%= f.text_area :body, :tabindex => 10001 %>
-  </div>
-  <div class="actions">
-    <%= f.submit :tabindex => 10003, :value => 'Save' %>
-		<button id="cancel-edit" tabindex="10004">Cancel</button>
-  </div>
-	<div style="clear:both;"></div>
+	  <div class="actions">
+			<% if list_item.saved? %>
+				<button id="cancel-edit" tabindex="10100">Don't change anything</button>
+			<% else %>
+				<button id="cancel-edit" tabindex="10100">Don't create this item</button>
+			<% end %>
+	  </div>
+	</div>
+	<div class="settings">
+		<h6>Due to:</h6>
+		<div id="deadline-settings">
+			<% if list_item.saved? %>
+				<button id="keepit" class="deadline-button" tabindex="10002" data-deadline="keepit">Keep Current Deadline</button>
+			<% end %>
+			<button id="whenever" class="deadline-button" tabindex="10005" data-deadline="whenever">Whenever</button>
+			<button id="today" class="deadline-button" tabindex="10010" data-deadline="today">Today</button>
+			<button id="tomorrow" class="deadline-button" tabindex="10020" data-deadline="tomorrow">Tomorrow</button>
+			<button id="nextweek" class="deadline-button" tabindex="10030" data-deadline="nextweek">Next Week</button>
+		</div>
+		<div id="deadline">
+			<%= list_item.deadline || 'whenever' %>
+		</div>
+		<div style="clear:both">&nbsp;</div>
+	</div>
+	<div style="clear:both">&nbsp;</div>
 <% end %>

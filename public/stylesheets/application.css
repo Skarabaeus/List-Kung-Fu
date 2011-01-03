@@ -175,6 +175,39 @@ button:focus, input[type=submit]:focus {
 
 /*--------------------*/
 
+.settings {
+	float:left;
+	margin-top:10px;
+}
+
+.settings > h6 {
+	font-size:1.1em;
+	font-weight:bold;
+	color:#787878;
+	margin-bottom:10px;
+}
+
+#deadline-settings {
+	float:left;
+	width:100px;
+	height:170px;
+}
+
+#deadline {
+	background-image:url(/images/clock_icon.gif);
+	background-repeat:no-repeat;
+	text-align:center;
+	font-size:1.5em;
+	color:#333;
+	float:left;
+	width:100px;
+	height:100px;
+}
+
+#markituparea {
+	width:600px;
+	float:left;
+}
 
 #list-item-toolbar {
 	height:70px;
@@ -236,10 +269,16 @@ button:focus, input[type=submit]:focus {
 	background-color:#eee;
 }
 
-#list_item_submit, #cancel-edit {
+#cancel-edit {
 	height:35px;
 	margin:0;
-	width:60px;
+	width:200px;
+}
+
+.deadline-button {
+	margin:3px;
+	width:80px;
+	padding:0;
 }
 
 .list-item-drag-helper {

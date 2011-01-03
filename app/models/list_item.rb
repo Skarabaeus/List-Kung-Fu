@@ -17,7 +17,7 @@ class ListItem < ActiveRecord::Base
   # CALLBACKS
   after_initialize :body_rendered
 
-  attr_accessible :body, :completed
+  attr_accessible :body, :completed, :deadline
 
   # public functions
 
