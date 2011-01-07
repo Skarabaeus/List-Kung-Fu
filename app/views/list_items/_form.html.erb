@@ -16,29 +16,31 @@
 
   <div class="field" id="markituparea">
     <%= f.text_area :body, :tabindex => 10001 %>
-	  <div class="actions">
-			<% if list_item.saved? %>
-				<button id="cancel-edit" tabindex="10100">Don't change anything</button>
-			<% else %>
-				<button id="cancel-edit" tabindex="10100">Don't create this item</button>
-			<% end %>
-	  </div>
 	</div>
-	<div class="settings">
-		<h6>Due to:</h6>
+	<div class="actions">
+		<button id="save-whenever" class="deadline-button" tabindex="10002" data-deadline="whenever">Save Without Deadline</button>
+		<% if list_item.saved? %>
+			<button id="keepit" class="deadline-button" tabindex="10005" data-deadline="keepit">Keep Current Deadline</button>
+		<% end %>
+		<button id="save-deadline" tabindex="10010">Save With Deadline</button>
+		<% if list_item.saved? %>
+			<button id="cancel-edit" tabindex="10100">Don't change anything</button>
+		<% else %>
+			<button id="cancel-edit" tabindex="10100">Don't create this item</button>
+		<% end %>
+  </div>
+
+	<div id="deadline-settings-wrapper">
 		<div id="deadline-settings">
-			<% if list_item.saved? %>
-				<button id="keepit" class="deadline-button" tabindex="10002" data-deadline="keepit">Keep Current Deadline</button>
-			<% end %>
-			<button id="whenever" class="deadline-button" tabindex="10005" data-deadline="whenever">Whenever</button>
-			<button id="today" class="deadline-button" tabindex="10010" data-deadline="today">Today</button>
-			<button id="tomorrow" class="deadline-button" tabindex="10020" data-deadline="tomorrow">Tomorrow</button>
-			<button id="nextweek" class="deadline-button" tabindex="10030" data-deadline="nextweek">Next Week</button>
+			<button id="today" class="deadline-button" tabindex="10020" data-deadline="today">Today</button>
+			<button id="tomorrow" class="deadline-button" tabindex="10030" data-deadline="tomorrow">Tomorrow</button>
+			<button id="nextweek" class="deadline-button" tabindex="10040" data-deadline="nextweek">Next Week</button>
 		</div>
+
 		<div id="deadline">
 			<%= list_item.deadline || 'whenever' %>
 		</div>
-		<div style="clear:both">&nbsp;</div>
+			<div style="clear:both">&nbsp;</div>
 	</div>
 	<div style="clear:both">&nbsp;</div>
 <% end %>

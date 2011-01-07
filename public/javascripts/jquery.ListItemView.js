@@ -103,10 +103,35 @@
 				ListItem.Edit({
 					successCallback: function( template, json, status, xhr, errors ) {
 						var $form = $( template );
+						var elementAlreadyFullsize = newElement.data( "isFullsize" );
+						var deadlineSettings = $form.find( "#deadline-settings-wrapper" );
+						var saveDeadlineButton = $form.find( "#save-deadline" );
+
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
 						$form.find( "textarea" ).markItUp( mySettings );
-						var elementAlreadyFullsize = newElement.data( "isFullsize" );
+
+						// prevent default for save-deadline button
+						saveDeadlineButton.bind( 'click keydown', 'return', function( e ){
+							if ( !saveDeadlineButton.data( 'settings-visible') ) {
+								deadlineSettings.show( 'fast', function(){
+									deadlineSettings.find( '.deadline-button' ).first().focus();
+									saveDeadlineButton.data( 'settings-visible', true );
+								});
+							} else {
+								deadlineSettings.hide( 'fast', function(){
+									deadlineSettings.find( '.deadline-button' ).first();
+									saveDeadlineButton.data( 'settings-visible', false );
+								});
+							}
+
+
+							return false;
+						});
+
+
+
+
 
 						// only toggleFullsize if not already fullsize (when opening the editing dialog)
 						if ( elementAlreadyFullsize === false ) {
@@ -208,6 +233,8 @@
 				return false;
 			});
 
+
+			// code for drag and drop of item to new list.
 			if ( ListKungFu && ListKungFu.LayoutCenter ) {
 				newElement.draggable( {
 					helper: function(){ return $('<div class="list-item-drag-helper">'+newElement.find(".list-item-content").text().substring(0, 20)+' . . .'+'</div>').get(0) },
