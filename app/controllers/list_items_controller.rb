@@ -86,7 +86,7 @@ class ListItemsController < ApplicationController
     when 'tomorrow'
       Time.zone.now + 1.day
     when 'nextweek'
-      Time.zone.now + 1.week
+      (Time.zone.now + 1.week).beginning_of_week
     when 'keepit'
       @list_item.deadline
     else
