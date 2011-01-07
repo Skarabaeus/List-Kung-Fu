@@ -124,14 +124,8 @@
 									saveDeadlineButton.data( 'settings-visible', false );
 								});
 							}
-
-
 							return false;
 						});
-
-
-
-
 
 						// only toggleFullsize if not already fullsize (when opening the editing dialog)
 						if ( elementAlreadyFullsize === false ) {
