@@ -183,21 +183,19 @@ button:focus, input[type=submit]:focus {
 
 #deadline {
 	float:left;
-	width:100px;
+	width:150px;
 	height:100px;
 	font-size:1.5em;
 	color:#787878;
 	text-align:center;
 	vertical-align:middle;
+	background-image:url(/images/clock_icon.gif);
+	background-repeat:no-repeat;
+	background-position:25px;
 }
 
 #deadline-settings-wrapper {
 	display:none;
-}
-
-#deadline {
-	background-image:url(/images/clock_icon.gif);
-	background-repeat:no-repeat;
 }
 
 #list-item-toolbar {

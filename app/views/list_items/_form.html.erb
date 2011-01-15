@@ -38,7 +38,8 @@
 		</div>
 
 		<div id="deadline">
-			<%= list_item.deadline || 'whenever' %>
+			<%= list_item.deadline_in_words %><br />
+			<%= list_item.deadline.strftime('%Y-%m-%d') unless list_item.nil? %>
 		</div>
 			<div style="clear:both">&nbsp;</div>
 	</div>
