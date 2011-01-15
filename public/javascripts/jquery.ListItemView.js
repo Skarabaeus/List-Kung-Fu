@@ -166,6 +166,9 @@
 										// update list item content
 										newElement.find( '.list-item-content' ).html( json.list_item.body_rendered );
 
+										// update deadline
+										newElement.find( '.list-item-deadline' ).html( json.list_item.deadline_in_words );
+
 										// correct height of drag and drop handle
 										newElement.find( ".handle" ).height( newElement.find( '.list-item-content' ).height() );
 

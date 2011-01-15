@@ -16,6 +16,7 @@ class ListItem < ActiveRecord::Base
 
   # CALLBACKS
   after_initialize :init_body_rendered, :init_deadline_in_words
+  after_save :init_body_rendered, :init_deadline_in_words
 
   attr_accessible :body, :completed, :deadline
 
@@ -59,9 +60,11 @@ class ListItem < ActiveRecord::Base
     word = ''
 
     case self.deadline
-    when Time.zone.now.tomorrow.beginning_of_day..Time.zone.now.tomorrow.end_of_day
+    when Time.zone.now.beginning_of_day...Time.zone.now.end_of_day
+      word = 'today'
+    when Time.zone.now.tomorrow.beginning_of_day...Time.zone.now.tomorrow.end_of_day
       word = 'tomorrow'
-    when (Time.zone.now + 1.week).beginning_of_week..(Time.zone.now + 1.week).end_of_week
+    when (Time.zone.now + 1.week).beginning_of_week...(Time.zone.now + 1.week).end_of_week
       word = 'next week'
     else
       word = self.deadline.nil? ? 'whenever' : self.deadline.strftime('%Y-%m-%d')
