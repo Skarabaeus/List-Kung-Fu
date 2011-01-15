@@ -223,6 +223,7 @@ button:focus, input[type=submit]:focus {
 .list-item-wrapper > .completed, .list-item-wrapper > .list-item-content {
 	margin:0;
 	float:left;
+	width:600px;
 }
 
 .list-item-info {
