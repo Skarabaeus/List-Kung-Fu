@@ -15,7 +15,7 @@ class ListItem < ActiveRecord::Base
   validates_presence_of :list
 
   # CALLBACKS
-  after_initialize :body_rendered
+  after_initialize :init_body_rendered, :init_deadline_in_words
 
   attr_accessible :body, :completed, :deadline
 
@@ -27,7 +27,7 @@ class ListItem < ActiveRecord::Base
 
   private
 
-  def body_rendered
+  def init_body_rendered
 
     unless self.body.nil?
       regex_url = /(\s|>)((https?|ftp):(\/\/)+([\w\d:\/\#@%;$()~_?\+-=\\\&][^<]*))(\s|<)/
@@ -53,5 +53,20 @@ class ListItem < ActiveRecord::Base
 
       write_attribute( :body_rendered, html )
     end
+  end
+
+  def init_deadline_in_words
+    word = ''
+
+    case self.deadline
+    when Time.zone.now.tomorrow.beginning_of_day..Time.zone.now.tomorrow.end_of_day
+      word = 'tomorrow'
+    when (Time.zone.now + 1.week).beginning_of_week..(Time.zone.now + 1.week).end_of_week
+      word = 'next week'
+    else
+      word = self.deadline.nil? ? 'whenever' : self.deadline.strftime('%Y-%m-%d')
+    end
+
+    write_attribute( :deadline_in_words, word)
   end
 end

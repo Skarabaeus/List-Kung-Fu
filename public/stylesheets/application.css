@@ -224,6 +224,18 @@ button:focus, input[type=submit]:focus {
 
 .list-item-wrapper > .completed, .list-item-wrapper > .list-item-content {
 	margin:0;
+	float:left;
+}
+
+.list-item-info {
+	float:right;
+	width:120px;
+	text-align:right;
+}
+
+.list-item-deadline {
+	font-color:#888;
+	font-size:0.8em;
 }
 
 .list-item, .list {
