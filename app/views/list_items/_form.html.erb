@@ -39,7 +39,7 @@
 
 		<div id="deadline">
 			<%= list_item.deadline_in_words %><br />
-			<%= list_item.deadline.strftime('%Y-%m-%d') if list_item.saved? and !list_item.nil?%>
+			<%= list_item.deadline.strftime('%Y-%m-%d') unless list_item.deadline.nil? %>
 		</div>
 			<div style="clear:both">&nbsp;</div>
 	</div>
