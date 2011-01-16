@@ -3,12 +3,9 @@
 
 		var widget = null;
 
-
-		var _myPrivateFunction = function() {
+		var _TriggerResize = function() {
+			widget._trigger("ContentDimensionsChanged", 0, {} );
 		};
-
-		// put all private functions in here
-		// that improves minification. See http://blog.project-sierra.de/archives/1622
 
 		return {
 			// default options
@@ -17,12 +14,18 @@
 			},
 
 			Show: function() {
-				widget.test = $("<div>Dashboard</div>");
-				widget.element.append(widget.test);
+				widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
+				widget.element.append(widget.wrapper);
+
+				widget.wrapper.text( "Dashboard - to be implemented soon" );
+
+				_TriggerResize();
 			},
 
 			Hide: function() {
-				widget.test.remove();
+				if ( widget.wrapper ) {
+					widget.wrapper.remove();
+				}
 			},
 
 			// required function. Automatically called when widget is created

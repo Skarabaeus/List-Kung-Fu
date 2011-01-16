@@ -82,13 +82,21 @@ $(document).ready(function () {
 		}
 	});
 
-	ListKungFu.LayoutCenter.Dashboard( {} );
+	ListKungFu.LayoutCenter.Dashboard( {
+		ContentDimensionsChanged: function(){
+			ListKungFu.MainLayout.resizeContent("center");
+		}
+	});
 
+	// bind "Dashboard"-link
 	$( "#dashboard" ).bind( "click", function() {
 		ListKungFu.LayoutCenter.ListItemView( "RemoveList" );
 		ListKungFu.LayoutCenter.Dashboard( "Show" );
 		return false;
 	});
+
+	// show Dashboard by default after login
+	$( "#dashboard" ).trigger( "click" );
 });
 
 
