@@ -71,6 +71,7 @@ $(document).ready(function () {
 			ListKungFu.MainLayout.resizeContent( "west" );
 		},
 		OpenList: function( event, data ) {
+			ListKungFu.LayoutCenter.Dashboard( "Hide" );
 			ListKungFu.LayoutCenter.ListItemView( "OpenList", data.selectedList );
 		},
 		CloseList: function( event, data ) {
@@ -79,6 +80,14 @@ $(document).ready(function () {
 		SelectListItem: function( event, data ) {
 			ListKungFu.LayoutCenter.ListItemView( "SelectListItem" );
 		}
+	});
+
+	ListKungFu.LayoutCenter.Dashboard( {} );
+
+	$( "#dashboard" ).bind( "click", function() {
+		ListKungFu.LayoutCenter.ListItemView( "RemoveList" );
+		ListKungFu.LayoutCenter.Dashboard( "Show" );
+		return false;
 	});
 });
 

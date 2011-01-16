@@ -18,6 +18,7 @@
 	  </div>
 		<div id="main-menu">
 			<% if user_signed_in? %>
+				<a href="#" id="dashboard">Dashboard</a> |
 				<%= link_to 'Profile', edit_user_registration_url %> |
 				<%= link_to 'Logout', destroy_user_session_url %>
 			<% end %>
@@ -42,10 +43,6 @@
 	</div>
 -->
 	<div class="ui-layout-center" id="mainlayout-center">
-		<div class="header"></div>
-		<div class="ui-layout-content" id="list-item-wrapper">
-			<%= yield :center %>
-		</div>
 	</div>
 	
 	<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js' %>
@@ -53,7 +50,7 @@
 	<%= javascript_include_tag 'jquery.SerializeForm', 'jquery.ConfirmationDialog' %>
 	<%= javascript_include_tag 'markitup/jquery.markitup.js', 'markitup/sets/default/set.js' %>
 	<%= javascript_include_tag 'jquery.layout.min-1.2.0', 'json2', 'mustache', 'jquery.hotkeys' %>
-	<%= javascript_include_tag 'Controller', 'jquery.ListView', 'jquery.StatusBar', 'jquery.ListItemView' %>
+	<%= javascript_include_tag 'Controller', 'jquery.ListView', 'jquery.StatusBar', 'jquery.ListItemView', 'jquery.Dashboard' %>
 	<%= javascript_include_tag 'application' %>
 	<%- javascript_tag do -%>
       try {

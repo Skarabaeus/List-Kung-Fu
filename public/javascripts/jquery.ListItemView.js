@@ -604,11 +604,15 @@
 			_create: function() {
 				widget = this;
 
-				widget.wrapper = widget.element.find('div#list-item-wrapper');
+				widget.wrapper = $( '<div class="ui-layout-content" id="list-item-wrapper"></div>' );
 				widget.listItemList = $( '<div id="list-item-list"></div>');
-				widget.header = widget.element.find( '.header' );
+				widget.header = $( '<div class="header"></div>' );
 
+				widget.element.append( widget.header );
+				widget.element.append( widget.wrapper );
 				widget.wrapper.append( widget.listItemList );
+
+				_TriggerResize();
 
 				// bind global events
 
@@ -634,29 +638,28 @@
 			},
 
 			destroy: function() {
+				// remove elements
+				widget.wrapper.remove();
+				widget.header.remove();
 
+				// unbind global events
+				$( document ).unbind( "keydown" , "c" );
+				$( document ).unbind( "keyup", "f" );
 			},
 
 			RemoveList: function() {
-				// remove all children
-				if ( widget.listItemList ) {
-					widget.listItemList.find( "*" ).remove();
-				}
+				// remove elements
+				widget.wrapper.remove();
+				widget.header.remove();
 
-				// remove "completed" list
-				if ( widget.completedList ) {
-					widget.completedList.remove();
-					widget.completedList = null;
-				}
-
-				// remove toolbar
-				if ( widget.toolbar ) {
-					widget.toolbar.html("");
-				}
+				// unbind global events
+				$( document ).unbind( "keydown" , "c" );
+				$( document ).unbind( "keyup", "f" );
 			},
 
 			OpenList: function( data ) {
 				widget.RemoveList();
+				widget._create();
 
 				widget.element.data( "data-list", data );
 
