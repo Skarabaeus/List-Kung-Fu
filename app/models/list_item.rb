@@ -10,13 +10,32 @@ class ListItem < ActiveRecord::Base
   #belongs_to :parent_item, :class_name => 'ListItem'
   #has_many :children_items, :class_name => 'ListItem', :foreign_key => 'parent_item_id', :dependent => :destroy
 
+  scope( :all_scheduled_uncompleted, lambda { |user_id|
+    joins( :list ).
+    where( "lists.owner_id=? AND list_items.completed=? AND not list_items.deadline is ?", user_id, false, nil).
+    order( "list_items.created_at desc" )
+  })
+
+  scope( :all_list, lambda { |user_id, list_id|
+    joins( :list ).
+    where( "lists.owner_id=? AND list_id=?", user_id, list_id ).
+    order( "list_items.created_at desc" )
+  })
+
+  scope( :all_list_completed, lambda { |user_id, list_id|
+    all_list( user_id, list_id ).where( "completed=?", true )
+  })
+
+  scope( :all_list_uncompleted, lambda { |user_id, list_id|
+    all_list( user_id, list_id ).where( "completed=?", false )
+  })
   # VALIDATIONS
 
   validates_presence_of :list
 
   # CALLBACKS
-  after_initialize :init_body_rendered, :init_deadline_in_words
-  after_save :init_body_rendered, :init_deadline_in_words
+  after_initialize :init_body_rendered, :init_deadline_in_words, :init_deadline_category
+  after_save :init_body_rendered, :init_deadline_in_words, :init_deadline_category
 
   attr_accessible :body, :completed, :deadline
 
@@ -57,19 +76,29 @@ class ListItem < ActiveRecord::Base
   end
 
   def init_deadline_in_words
-    word = ''
+    word = get_deadline_category
+    write_attribute( :deadline_in_words, word)
+  end
+
+  def init_deadline_category
+    cat = get_deadline_category
+    write_attribute( :deadline_category, cat )
+  end
+
+  def get_deadline_category
+    cat = ''
 
     case self.deadline
     when Time.zone.now.beginning_of_day...Time.zone.now.end_of_day
-      word = 'today'
+      cat = 'today'
     when Time.zone.now.tomorrow.beginning_of_day...Time.zone.now.tomorrow.end_of_day
-      word = 'tomorrow'
+      cat = 'tomorrow'
     when (Time.zone.now + 1.week).beginning_of_week...(Time.zone.now + 1.week).end_of_week
-      word = 'next week'
+      cat = 'next week'
     else
-      word = self.deadline.nil? ? 'whenever' : self.deadline.strftime('%Y-%m-%d')
+      cat = self.deadline.nil? ? 'whenever' : self.deadline.strftime('%Y-%m-%d')
     end
 
-    write_attribute( :deadline_in_words, word)
+    cat
   end
 end

@@ -1,18 +1,20 @@
 class ListItemsController < ApplicationController
 
-  before_filter :load_list
+  before_filter :load_list, :except => :index
 	before_filter :authenticate_user!
 
   respond_to :xml
 
   def index
     case params[ :show ]
+    when "dashboard"
+      @list_items = ListItem.all_scheduled_uncompleted( current_user.id )
     when "all"
-      @list_items = @list.list_items.order( "created_at desc" )
+      @list_items = ListItem.all_list( current_user.id, params[ :list_id ] )
     when "completed"
-      @list_items = @list.list_items.where( "completed = ?", true ).order( "created_at desc" )
+      @list_items = ListItem.all_list_completed( current_user.id, params[ :list_id ] )
     else # uncompleted
-      @list_items = @list.list_items.where( "completed = ?", false ).order( "created_at desc" )
+      @list_items = ListItem.all_list_uncompleted( current_user.id, params[ :list_id ] )
     end
     respond_with( @list_items )
   end
