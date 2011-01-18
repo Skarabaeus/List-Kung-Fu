@@ -14,6 +14,7 @@ class ListItem < ActiveRecord::Base
 
   scope( :all_scheduled_uncompleted, lambda { |user_id|
     joins( :list ).
+    where( "list_items.deadline > ?", Time.zone.now.yesterday.end_of_day).
     where( "lists.owner_id=? AND list_items.completed=? AND not list_items.deadline is ?", user_id, false, nil).
     order( "list_items.created_at desc" )
   })

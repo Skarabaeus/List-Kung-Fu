@@ -359,7 +359,7 @@
 						}
 					};
 
-					ListItem.Create({
+					ListListItem.Create({
 						send: data,
 						successCallback: function( template, json, status, xhr, errors ) {
 

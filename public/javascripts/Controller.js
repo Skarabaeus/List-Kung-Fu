@@ -289,8 +289,16 @@ var List = Controller({
 	}
 });
 
-var ListItem = Controller({
+var ListListItem = Controller({
 	route: [ "lists", "list_items" ],
+	onFlashUpdate: function( notice, error, warning, message ) {
+		ListKungFu.LayoutSouth.StatusBar( "SetAlert", error );
+		ListKungFu.LayoutSouth.StatusBar( "SetNotice", notice );
+	}
+});
+
+var ListItem = Controller({
+	route: [ "list_items" ],
 	onFlashUpdate: function( notice, error, warning, message ) {
 		ListKungFu.LayoutSouth.StatusBar( "SetAlert", error );
 		ListKungFu.LayoutSouth.StatusBar( "SetNotice", notice );

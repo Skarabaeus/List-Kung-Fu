@@ -121,7 +121,7 @@
 					$( this ).remove();
 				});
 
-				ListItem.Edit({
+				ListListItem.Edit({
 					successCallback: function( template, json, status, xhr, errors ) {
 						var $form = $( template );
 						var elementAlreadyFullsize = newElement.data( "isFullsize" );
@@ -154,7 +154,7 @@
 							// add deadline indicator based on deadline type
 							serializedForm.list_item.deadlineType = $( e.target ).attr( 'data-deadline' );
 
-							ListItem.Update({
+							ListListItem.Update({
 								send: serializedForm,
 								successCallback: function( template, json, status, xhr, errors ){
 									$form.hide( 'slow', function( e ) {
@@ -283,7 +283,7 @@
 		};
 
 		var _DeleteListItem = function( element, listItem ) {
-			ListItem.Destroy({
+			ListListItem.Destroy({
 				successCallback: function( template, json, status, xhr, errors ){
 					element.hide( "slow", function() {
 						var item = element.next( ".row" );
@@ -307,7 +307,7 @@
 			listItem.list_item.completed = true;
 
 			// update item server side
-			ListItem.Update({
+			ListListItem.Update({
 				successCallback: function(){
 					var queueName = "list-item-undo-" + listItem.list_item.id;
 
@@ -359,7 +359,7 @@
 			listItem.list_item.completed = false;
 
 			// update item server side
-			ListItem.Update({
+			ListListItem.Update({
 				successCallback: function(){
 					element.find( ".undo" ).hide('slow', function(){
 						$( this ).remove();
@@ -391,7 +391,7 @@
 				widget.completedList = $( '<div id="completedList"></div>' );
 
 				var data = widget.element.data( "data-list" );
-				ListItem.Index( {
+				ListListItem.Index( {
 					successCallback: function( template, json, status, xhr, errors ) {
 
 						$.each( json, function( index, listItem ) {
@@ -536,7 +536,7 @@
 		var _AddNewListItem = function() {
 			var data = widget.element.data( "data-list" );
 
-			ListItem.New( {
+			ListListItem.New( {
 				successCallback: function( template, json, status, xhr, errors ) {
 					var $form = $( template );
 					widget.listItemList.prepend( $form );
@@ -570,7 +570,7 @@
 						// add deadline indicator based on deadline type
 						serializedForm.list_item.deadlineType = $( e.target ).attr( 'data-deadline' );
 
-						ListItem.Create({
+						ListListItem.Create({
 							send: serializedForm,
 							successCallback: function( template, json, status, xhr, errors ) {
 								$form.hide( 'slow', function(){
@@ -663,7 +663,7 @@
 
 				widget.element.data( "data-list", data );
 
-				ListItem.Index( {
+				ListListItem.Index( {
 					successCallback: function( template, json, status, xhr, errors ) {
 						_CreateToolbar();
 
