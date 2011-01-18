@@ -10,6 +10,8 @@ class ListItem < ActiveRecord::Base
   #belongs_to :parent_item, :class_name => 'ListItem'
   #has_many :children_items, :class_name => 'ListItem', :foreign_key => 'parent_item_id', :dependent => :destroy
 
+  # SCOPES
+
   scope( :all_scheduled_uncompleted, lambda { |user_id|
     joins( :list ).
     where( "lists.owner_id=? AND list_items.completed=? AND not list_items.deadline is ?", user_id, false, nil).
@@ -29,8 +31,8 @@ class ListItem < ActiveRecord::Base
   scope( :all_list_uncompleted, lambda { |user_id, list_id|
     all_list( user_id, list_id ).where( "completed=?", false )
   })
-  # VALIDATIONS
 
+  # VALIDATIONS
   validates_presence_of :list
 
   # CALLBACKS
