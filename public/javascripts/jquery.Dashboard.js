@@ -37,7 +37,7 @@
 
 						$.each( json, function( index, listItem ) {
 							$listItemHtml = $( '<div class="dashboard-list-item list-item-content">' + listItem.list_item.body_rendered + '</div>' );
-							$listItemHtml.append( '<div class="dashboard-list-item-title">(' + listItem.list_item.list.title + ')</div>' );
+							$listItemHtml.append( '<div class="dashboard-list-item-title">In &quot;' + listItem.list_item.list.title + '&quot;</div>' );
 
 							switch( listItem.list_item.deadline_category ) {
 								case 'today':
@@ -50,6 +50,8 @@
 									widget.nextweek.append( $listItemHtml );
 									break;
 								default:
+									$title = $listItemHtml.find( '.dashboard-list-item-title' );
+									$title.html( $title.html() + '<br />@' + listItem.list_item.deadline_in_words );
 									widget.later.append( $listItemHtml );
 									break;
 							}
