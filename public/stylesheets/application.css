@@ -306,6 +306,17 @@ button:focus, input[type=submit]:focus {
 	top:-23px;
 }
 
+#custom-deadline {
+	position:relative;
+	top:-45px;
+	left:115px;
+}
+
+#custom-deadline-display {
+	margin:10px;
+	width:95px;
+}
+
 /*--------------------*/
 
 /* DASHBOARD */

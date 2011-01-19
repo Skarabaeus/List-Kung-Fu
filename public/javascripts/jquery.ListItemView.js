@@ -35,6 +35,21 @@
 			});
 		}
 
+		var _SetupCustomDeadlinePicker = function() {
+			var altFormat = 'yy,mm,dd';
+			var dateFormat = 'dd.mm.yy';
+
+			$( "#custom-deadline-display" ).datepicker( {
+					minDate: new Date(), // choosing deadline in the past wouldn't make much sense
+					altField: '#custom-deadline-value',
+					altFormat: altFormat,
+					dateFormat: dateFormat
+			});
+
+			$( '#custom-deadline-value' ).val( $.datepicker.formatDate( altFormat, new Date() ) );
+			$( '#custom-deadline-display' ).val( $.datepicker.formatDate( dateFormat, new Date() ) );
+		}
+
 		var _AddListItem = function( listItem, template, isFirst ) {
 			var newElement = $( $.mustache( template, listItem.list_item ) );
 
@@ -130,6 +145,7 @@
 						widget.selectedListItem.element.prepend( $form );
 						$form.find( "textarea" ).markItUp( mySettings );
 						_SetupDeadlineButton( $form );
+						_SetupCustomDeadlinePicker();
 
 						// only toggleFullsize if not already fullsize (when opening the editing dialog)
 						if ( elementAlreadyFullsize === false ) {
@@ -153,6 +169,7 @@
 
 							// add deadline indicator based on deadline type
 							serializedForm.list_item.deadlineType = $( e.target ).attr( 'data-deadline' );
+							serializedForm.list_item.customDeadlineValue = $( '#custom-deadline-value' ).val();
 
 							ListListItem.Update({
 								send: serializedForm,
@@ -542,6 +559,7 @@
 					widget.listItemList.prepend( $form );
 
 					_SetupDeadlineButton( $form );
+					_SetupCustomDeadlinePicker();
 					$form.find( "textarea" ).markItUp( mySettings );
 					$form.find( "textarea" ).focus();
 
@@ -569,6 +587,7 @@
 
 						// add deadline indicator based on deadline type
 						serializedForm.list_item.deadlineType = $( e.target ).attr( 'data-deadline' );
+						serializedForm.list_item.customDeadlineValue = $( '#custom-deadline-value' ).val();
 
 						ListListItem.Create({
 							send: serializedForm,
