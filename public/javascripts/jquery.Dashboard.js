@@ -36,19 +36,21 @@
 					successCallback: function( template, json, status, xhr, errors ) {
 
 						$.each( json, function( index, listItem ) {
-							listItemHtml = "<div>" + listItem.list_item.body_rendered + "(" + listItem.list_item.list.title + ")</div>";
+							$listItemHtml = $( '<div class="dashboard-list-item list-item-content">' + listItem.list_item.body_rendered + '</div>' );
+							$listItemHtml.append( '<div class="dashboard-list-item-title">(' + listItem.list_item.list.title + ')</div>' );
+
 							switch( listItem.list_item.deadline_category ) {
 								case 'today':
-									widget.today.append( listItemHtml );
+									widget.today.append( $listItemHtml );
 									break;
 								case 'tomorrow':
-									widget.tomorrow.append( listItemHtml );
+									widget.tomorrow.append( $listItemHtml );
 									break;
 								case 'next week':
-									widget.nextweek.append( listItemHtml );
+									widget.nextweek.append( $listItemHtml );
 									break;
 								default:
-									widget.later.append( listItemHtml );
+									widget.later.append( $listItemHtml );
 									break;
 							}
 

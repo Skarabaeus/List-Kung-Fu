@@ -18,11 +18,19 @@
     <%= f.text_area :body, :tabindex => 10001 %>
 	</div>
 	<div class="actions">
-		<button id="save-whenever" class="deadline-button" tabindex="10002" data-deadline="whenever">Save Without Deadline</button>
 		<% if list_item.saved? %>
-			<button id="keepit" class="deadline-button" tabindex="10005" data-deadline="keepit">Keep Current Deadline</button>
+			<button id="keepit" class="deadline-button" tabindex="10005" data-deadline="keepit">Save</button>
+		<% else %>
+			<button id="save-whenever" class="deadline-button" tabindex="10002" data-deadline="whenever">Save Without Deadline</button>
 		<% end %>
-		<button id="save-deadline" tabindex="10010">Save With Deadline</button>
+		<% if list_item.saved? %>
+			<button id="save-deadline" tabindex="10010">Save With New Deadline</button>
+		<% else %>
+			<button id="save-deadline" tabindex="10010">Save With Deadline</button>
+		<% end %>
+		<% if list_item.saved? and !list_item.deadline.nil? %>
+			<button id="save-whenever" class="deadline-button" tabindex="10011" data-deadline="whenever">Whenever</button>
+		<% end %>
 		<% if list_item.saved? %>
 			<button id="cancel-edit" tabindex="10100">Don't change anything</button>
 		<% else %>
@@ -37,7 +45,7 @@
 			<button id="nextweek" class="deadline-button" tabindex="10040" data-deadline="nextweek">Next Week</button>
 			<input type="text" id="custom-deadline-display" tabindex="10050" />
 			<input type="hidden" id="custom-deadline-value" value=""/>
-			<button id="custom-deadline" class="deadline-button" tabindex="10060" data-deadline="customdeadline">Custom </button>
+			<button id="custom-deadline" class="deadline-button" tabindex="10060" data-deadline="customdeadline">Save</button>
 		</div>
 
 		<div id="deadline">
