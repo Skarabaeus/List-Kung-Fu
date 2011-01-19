@@ -14,6 +14,8 @@
 			},
 
 			Show: function() {
+				widget.Hide();
+
 				widget.header = $( '<div id="dashboard-header" class="header">Dashboard</div>')
 				widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
 				widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1></div>' );
