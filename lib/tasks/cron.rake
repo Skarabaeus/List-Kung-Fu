@@ -11,7 +11,7 @@ def move_all_list_items_to_future
       
 
   ListItem.find_each( :batch_size => 100, 
-    :conditions => ["not deadline is ? and deadline < ?", nil, Time.zone.now.beginning_of_day],
+    :conditions => ["not deadline is ? and deadline < ?", nil, Time.zone.now],
     :include => [ :list => :owner ] ) do |list_item|
 
     # leave items with deadline "today" untouched
