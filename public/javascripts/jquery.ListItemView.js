@@ -7,6 +7,10 @@
 			widget._trigger("ContentDimensionsChanged", 0, {} );
 		};
 
+		var _TriggerReinitOfPanes = function() {
+			widget._trigger("ReinitPanes", 0, {} );
+		};
+
 		var _SetSelectedListItem = function( elem, obj ) {
 			widget.selectedListItem = {
 				element: elem,
@@ -702,6 +706,8 @@
 					},
 					lists: data.list.id
 				});
+
+				_TriggerReinitOfPanes();
 			},
 
 			SelectListItem: function() {

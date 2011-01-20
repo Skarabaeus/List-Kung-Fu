@@ -98,7 +98,7 @@ html, body {
 	float:left;
 }
 
-#search-list, #list-item-search {
+#search-list, #list-item-search, #dashboard-search {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
@@ -325,6 +325,7 @@ button:focus, input[type=submit]:focus {
 	float:left;
 	border-right:3px solid #dedede;
 	padding:15px;
+	width:20%;
 }
 
 .schedule-column > h1 {
@@ -333,7 +334,7 @@ button:focus, input[type=submit]:focus {
 	color:#ababab;
 }
 
-#dashboard-header {
+#dashboard-header > h1 {
 	font-size:2em;
 	font-weight:bold;
 	color:#666666;
@@ -349,6 +350,17 @@ button:focus, input[type=submit]:focus {
 	font-size:0.7em;
 	color:#aaa;
 }
+
+#dashboard-search-cancel {
+	background-image:url(/images/cancel.gif);
+	background-repeat:no-repeat;
+	width:15px;
+	height:15px;
+	position:relative;
+	left:195px;
+	top:-24px;
+}
+
 
 /*--------------------*/
 

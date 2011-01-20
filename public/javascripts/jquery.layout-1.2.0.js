@@ -2492,6 +2492,7 @@ $.fn.layout = function (opts) {
 	,	show:			show			// method - ditto
 	,	resizeContent:	sizeContent		// method - ditto
 	,	sizePane:		sizePane		// method - pass a 'pane' AND a 'size' in pixels
+	, reinitPane: initPanes
 	,	resizeAll:		resizeAll		// method - no parameters
 	,	addToggleBtn:	addToggleBtn	// utility - pass element selector and 'pane'
 	,	addOpenBtn:		addOpenBtn		// utility - ditto

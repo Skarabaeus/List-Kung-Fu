@@ -63,6 +63,9 @@ $(document).ready(function () {
 		},
 		ContentDimensionsChanged: function(){
 			ListKungFu.MainLayout.resizeContent("center");
+		},
+		ReinitPanes: function(){
+			ListKungFu.MainLayout.reinitPane();
 		}
 	});
 
@@ -85,6 +88,9 @@ $(document).ready(function () {
 	ListKungFu.LayoutCenter.Dashboard( {
 		ContentDimensionsChanged: function(){
 			ListKungFu.MainLayout.resizeContent("center");
+		},
+		ReinitPanes: function(){
+			ListKungFu.MainLayout.reinitPane();
 		}
 	});
 
