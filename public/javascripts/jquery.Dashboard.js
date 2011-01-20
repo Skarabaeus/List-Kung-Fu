@@ -21,7 +21,7 @@
 				widget.Hide();
 
 				widget.header = $( '<div id="dashboard-header" class="header"><h1>Dashboard</h1></div>')
-				widget.toolbar = $( '<div id="dashboard-toolbar"><label for="dashboard-search">Search: </label><input type="text" id="dashboard-search" value=""/></div>');
+				widget.toolbar = $( '<div id="dashboard-toolbar"><input type="text" id="dashboard-search" value=""/></div>');
 				widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
 				widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1></div>' );
 				widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1></div>' );
@@ -59,11 +59,15 @@
 									widget.nextweek.append( $listItemHtml );
 									break;
 								default:
-									$title = $listItemHtml.find( '.dashboard-list-item-title' );
-									$title.html( $title.html() + '<br />@' + listItem.list_item.deadline_in_words );
+									$listItemHtml.append( '<div class="dashboard-list-item-deadline">@' + listItem.list_item.deadline_in_words + '</div>')
 									widget.later.append( $listItemHtml );
 									break;
 							}
+
+							// bind events
+							$listItemHtml.find( '.dashboard-list-item-title' ).bind( 'click', function( e ){
+								widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
+							});
 
 						});
 						_TriggerReinitOfPanes();

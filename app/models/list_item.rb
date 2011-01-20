@@ -17,7 +17,7 @@ class ListItem < ActiveRecord::Base
     includes( :list ).
     where( "list_items.deadline > ?", Time.zone.now.yesterday.end_of_day).
     where( "lists.owner_id=? AND list_items.completed=? AND not list_items.deadline is ?", user_id, false, nil).
-    order( "list_items.created_at desc" )
+    order( "list_items.deadline asc" )
   })
 
   scope( :all_list, lambda { |user_id, list_id|

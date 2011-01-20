@@ -170,6 +170,7 @@ button:focus, input[type=submit]:focus {
 	position:relative;
 	left:160px;
 	top:17px;
+	cursor:pointer;
 }
 
 
@@ -304,6 +305,7 @@ button:focus, input[type=submit]:focus {
 	position:relative;
 	left:355px;
 	top:-23px;
+	cursor:pointer;
 }
 
 #custom-deadline {
@@ -346,9 +348,10 @@ button:focus, input[type=submit]:focus {
 	margin:5px;
 }
 
-.dashboard-list-item-title {
+.dashboard-list-item-title, .dashboard-list-item-deadline {
 	font-size:0.7em;
 	color:#aaa;
+	cursor:pointer;
 }
 
 #dashboard-search-cancel {
@@ -357,8 +360,9 @@ button:focus, input[type=submit]:focus {
 	width:15px;
 	height:15px;
 	position:relative;
-	left:195px;
+	left:145px;
 	top:-24px;
+	cursor:pointer;
 }
 
 

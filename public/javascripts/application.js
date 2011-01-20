@@ -91,6 +91,10 @@ $(document).ready(function () {
 		},
 		ReinitPanes: function(){
 			ListKungFu.MainLayout.reinitPane();
+		},
+		OpenList: function( event, data ) {
+			ListKungFu.LayoutCenter.Dashboard( "Hide" );
+			ListKungFu.LayoutCenter.ListItemView( "OpenList", data.selectedList );
 		}
 	});
 
