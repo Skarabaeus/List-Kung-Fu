@@ -694,8 +694,23 @@
 							_AddListItem( listItem, template )
 						});
 
-						// focus first list item
-						widget.listItemList.find( ".row" ).first().focus();
+						// if we have a list_item id, select the list item with that id
+						// otherwise just select the first.
+						if ( data.id ) {
+							widget.listItemList.find( ".row" ).each(function() {
+								var tempListItem = $( this );
+								var d = tempListItem.data( "data" );
+
+								if ( d.list_item.id === data.id ) {
+									tempListItem.focus();
+
+									// if item found, return false in order to exit the loop
+									return false;
+								}
+							});
+						} else {
+							widget.listItemList.find( ".row" ).first().focus();
+						}
 
 						if ( widget.listItemList.find( '.row' ).length === 0 ) {
 							_AddNewListItem();
