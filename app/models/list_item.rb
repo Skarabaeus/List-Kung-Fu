@@ -46,13 +46,30 @@ class ListItem < ActiveRecord::Base
   end
 
   def body_rendered
+    get_body_html self.body.length
+  end
 
+  def body_shortend
+    get_body_html 60
+  end
+
+  def deadline_in_words
+    get_deadline_category
+  end
+
+  def deadline_category
+    get_deadline_category
+  end
+
+  private
+
+  def get_body_html( length )
     unless self.body.nil?
       regex_url = /(\s|>)((https?|ftp):(\/\/)+([\w\d:\/\#@%;$()~_?\+-=\\\&][^<]*))(\s|<)/
       regex_links = /((<a)(.)*(\/a>))/
 
       # generate HTML from textile
-      html = RedCloth.new( self.body ).to_html
+      html = RedCloth.new( self.body[ 0..length ] ).to_html
       html_without_links = String.new( html )
 
       # remove all existing links from the html:
@@ -69,19 +86,14 @@ class ListItem < ActiveRecord::Base
         html.gsub!(match, %Q-<a href="#{match}" target="_blank">#{match}</a>-)
       end
 
+      if length < self.body.length
+        html << "<span class=""dashboard-item-more"">[#{ self.body.length - length } characters more]</span>"
+      end
+
+
       html
     end
   end
-
-  def deadline_in_words
-    get_deadline_category
-  end
-
-  def deadline_category
-    get_deadline_category
-  end
-
-  private
 
   def get_deadline_category
     cat = ''

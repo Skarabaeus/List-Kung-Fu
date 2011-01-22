@@ -351,7 +351,7 @@ button:focus, input[type=submit]:focus {
 	font-size:0.7em;
 	color:#aaa;
 	cursor:pointer;
-	padding:3px;
+	padding: 0 3px 0;
 }
 
 #dashboard-search-cancel {
@@ -363,6 +363,11 @@ button:focus, input[type=submit]:focus {
 	left:145px;
 	top:-24px;
 	cursor:pointer;
+}
+
+.dashboard-item-more {
+	font-size:0.7em;
+	color:#aaa;
 }
 
 /*--------------------*/
