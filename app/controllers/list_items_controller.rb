@@ -8,14 +8,11 @@ class ListItemsController < ApplicationController
   def index
     case params[ :show ]
     when "dashboard"
-      @list_items = ListItem.all_scheduled_uncompleted( current_user.id )
-    when "all"
-      @list_items = ListItem.all_list( current_user.id, params[ :list_id ] )
-    when "completed"
-      @list_items = ListItem.all_list_completed( current_user.id, params[ :list_id ] )
-    else # uncompleted
-      @list_items = ListItem.all_list_uncompleted( current_user.id, params[ :list_id ] )
+      @presenter = ListItemPresenters::Dashboard.new( current_user.id )
+    else
+      @presenter = ListItemPresenters::ListItemView.new( current_user.id, params[ :list_id ], params[ :show ] )
     end
+
     respond_with( @list_items )
   end
 
