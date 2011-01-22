@@ -37,10 +37,6 @@ class ListItem < ActiveRecord::Base
   # VALIDATIONS
   validates_presence_of :list
 
-  # CALLBACKS
-  after_initialize :init_body_rendered, :init_deadline_in_words, :init_deadline_category
-  after_save :init_body_rendered, :init_deadline_in_words, :init_deadline_category
-
   attr_accessible :body, :completed, :deadline
 
   # public functions
@@ -49,9 +45,7 @@ class ListItem < ActiveRecord::Base
     !self.id.nil?
   end
 
-  private
-
-  def init_body_rendered
+  def body_rendered
 
     unless self.body.nil?
       regex_url = /(\s|>)((https?|ftp):(\/\/)+([\w\d:\/\#@%;$()~_?\+-=\\\&][^<]*))(\s|<)/
@@ -75,19 +69,19 @@ class ListItem < ActiveRecord::Base
         html.gsub!(match, %Q-<a href="#{match}" target="_blank">#{match}</a>-)
       end
 
-      write_attribute( :body_rendered, html )
+      html
     end
   end
 
-  def init_deadline_in_words
-    word = get_deadline_category
-    write_attribute( :deadline_in_words, word)
+  def deadline_in_words
+    get_deadline_category
   end
 
-  def init_deadline_category
-    cat = get_deadline_category
-    write_attribute( :deadline_category, cat )
+  def deadline_category
+    get_deadline_category
   end
+
+  private
 
   def get_deadline_category
     cat = ''

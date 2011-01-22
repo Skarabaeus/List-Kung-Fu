@@ -18,7 +18,7 @@
 	  </div>
 		<div id="main-menu">
 			<% if user_signed_in? %>
-				<a href="#" id="dashboard">Dashboard</a> |
+				<a href="#" id="dashboard" accesskey="D">Dashboard</a> |
 				<%= link_to 'Profile', edit_user_registration_url %> |
 				<%= link_to 'Logout', destroy_user_session_url %>
 			<% end %>
