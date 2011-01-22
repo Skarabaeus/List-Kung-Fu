@@ -1,1 +1,7 @@
-<div></div>
+<div class="dashboard-item">
+	<div class="dashboard-list-item list-item-content">{{{body_rendered}}}</div>
+{{#list}}
+	<div class="dashboard-list-item-title">In &quot;{{title}}&quot;</div>
+{{/list}}
+	<div class="dashboard-list-item-deadline">@{{deadline_in_words}}</div>
+</div>

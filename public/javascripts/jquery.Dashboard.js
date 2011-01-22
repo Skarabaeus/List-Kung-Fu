@@ -45,8 +45,7 @@
 					successCallback: function( template, json, status, xhr, errors ) {
 
 						$.each( json, function( index, listItem ) {
-							$listItemHtml = $( '<div class="dashboard-list-item list-item-content">' + listItem.list_item.body_rendered + '</div>' );
-							$listItemHtml.append( '<div class="dashboard-list-item-title">In &quot;' + listItem.list_item.list.title + '&quot;</div>' );
+							var $listItemHtml = $( $.mustache( template, listItem.list_item ) );
 
 							switch( listItem.list_item.deadline_category ) {
 								case 'today':
@@ -59,7 +58,6 @@
 									widget.nextweek.append( $listItemHtml );
 									break;
 								default:
-									$listItemHtml.append( '<div class="dashboard-list-item-deadline">@' + listItem.list_item.deadline_in_words + '</div>')
 									widget.later.append( $listItemHtml );
 									break;
 							}
@@ -82,10 +80,10 @@
 					var filtervalue = $( this ).val();
 
 	        if ( filtervalue === '' ) {
-						widget.wrapper.find( ".dashboard-list-item" ).show();
+						widget.wrapper.find( ".dashboard-item" ).show();
 	        } else {
-						widget.wrapper.find( ".dashboard-list-item:not(:Contains('" + filtervalue + "'))").hide();
-						widget.wrapper.find( ".dashboard-list-item:Contains('" + filtervalue + "')").show();
+						widget.wrapper.find( ".dashboard-item:not(:Contains('" + filtervalue + "'))").hide();
+						widget.wrapper.find( ".dashboard-item:Contains('" + filtervalue + "')").show();
 	        }
 				});
 

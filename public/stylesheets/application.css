@@ -345,13 +345,13 @@ button:focus, input[type=submit]:focus {
 .dashboard-list-item {
 	border-top:1px solid #bbb;
 	padding:3px;
-	margin:5px;
 }
 
 .dashboard-list-item-title, .dashboard-list-item-deadline {
 	font-size:0.7em;
 	color:#aaa;
 	cursor:pointer;
+	padding:3px;
 }
 
 #dashboard-search-cancel {
@@ -364,7 +364,6 @@ button:focus, input[type=submit]:focus {
 	top:-24px;
 	cursor:pointer;
 }
-
 
 /*--------------------*/
 
