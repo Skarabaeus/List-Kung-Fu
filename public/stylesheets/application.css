@@ -370,5 +370,18 @@ button:focus, input[type=submit]:focus {
 	color:#aaa;
 }
 
+.dashboard-item-completed {
+	background-image:url(/images/checked_green_grey_12.gif);
+	background-repeat:no-repeat;
+	background-position: 0 -12px;
+	height:12px;
+	width:12px;
+	cursor:pointer;
+}
+
+.dashboard-item-completed:hover {
+	background-position: 0 0;
+}
+
 /*--------------------*/
 
