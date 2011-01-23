@@ -354,6 +354,10 @@ button:focus, input[type=submit]:focus {
 	padding: 0 3px 0;
 }
 
+.dashboard-list-item-title:hover, .dashboard-list-item-deadline:hover {
+	text-decoration:underline;
+}
+
 #dashboard-search-cancel {
 	background-image:url(/images/cancel.gif);
 	background-repeat:no-repeat;
@@ -377,10 +381,20 @@ button:focus, input[type=submit]:focus {
 	height:12px;
 	width:12px;
 	cursor:pointer;
+	margin: 3px 0 3px 0;
 }
 
 .dashboard-item-completed:hover {
 	background-position: 0 0;
+}
+
+.confirmation-completed {
+	font-size:0.7em;
+	color:#777;
+}
+
+.yes:hover, .no:hover {
+	text-decoration:underline;
 }
 
 /*--------------------*/

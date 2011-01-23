@@ -2,22 +2,9 @@
 	<div class="dashboard-list-item list-item-content">
 		{{{body_shortend}}}
 	</div>
-
-	<table>
-		<tr>
-			<td>
-				{{#list}}
-					<div class="dashboard-list-item-title">In &quot;{{title}}&quot;</div>
-				{{/list}}
-			</td>
-			<td>
-				<div class="dashboard-item-completed"></div>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<div class="dashboard-list-item-deadline">@{{deadline_in_words}}</div>
-			</td>
-			<td></td>
-		</tr>
+	{{#list}}
+		<div class="dashboard-list-item-title">In &quot;{{title}}&quot;</div>
+	{{/list}}
+	<div class="dashboard-list-item-deadline">@{{deadline_date}}</div>
+	<div class="dashboard-item-completed"></div>
 </div>

@@ -66,6 +66,49 @@
 							$listItemHtml.find( '.dashboard-list-item-title' ).bind( 'click', function( e ){
 								widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
 							});
+							$listItemHtml.find( '.dashboard-item-completed' ).bind( 'click', function( e ){
+								$that = $( this );
+								// remove existing confirmation divs
+								$that.find( '.confirmation-completed' ).remove();
+
+								// add new confirmation div
+								var $confirmationHtml = $( '<div class="confirmation-completed">Completed? \
+									<span class="yes">Yes</span> / <span class="no">NO</span></div>' );
+								$that.append( $confirmationHtml );
+								$that.animate( { width: '100%', paddingLeft: '14px' }, 200 );
+
+								// bind event for "yes"
+								$confirmationHtml.find( '.yes' ).bind( 'click', function(){
+
+									// set item completed
+									listItem.list_item.completed = true;
+
+									// update item server side
+									ListListItem.Update({
+										successCallback: function(){
+											$listItemHtml.stop( true, true ).hide( 'slow', function(){
+												$listItemHtml.remove();
+											});
+										},
+										lists: listItem.list_item.list_id,
+										list_items: listItem.list_item.id,
+										send: listItem
+									});
+
+									// close the confirmation
+									$confirmationHtml.find( '.no' ).trigger( 'click' );
+
+									return false; // prevent bubbling
+								});
+
+								// bind event for "no"
+								$confirmationHtml.find( '.no' ).bind( 'click', function(){
+									$that.animate( { width: '12px', paddingLeft: '0' }, 200, function(){
+										$confirmationHtml.remove();
+									});
+									return false; // prevent bubbling
+								});
+							});
 
 						});
 						_TriggerReinitOfPanes();

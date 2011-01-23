@@ -46,7 +46,9 @@ class ListItem < ActiveRecord::Base
   end
 
   def body_rendered
-    get_body_html self.body.length
+    unless self.body.nil?
+      get_body_html self.body.length
+    end
   end
 
   def body_shortend
@@ -59,6 +61,14 @@ class ListItem < ActiveRecord::Base
 
   def deadline_category
     get_deadline_category
+  end
+
+  def deadline_date
+    if self.deadline.nil?
+      ''
+    else
+      self.deadline.strftime('%Y-%m-%d')
+    end
   end
 
   private
