@@ -662,8 +662,7 @@
 
 			destroy: function() {
 				// remove elements
-				widget.wrapper.remove();
-				widget.header.remove();
+				widget.children().remove();
 
 				// unbind global events
 				$( document ).unbind( "keydown" , "c" );
