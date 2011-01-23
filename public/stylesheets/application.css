@@ -336,6 +336,16 @@ button:focus, input[type=submit]:focus {
 	color:#ababab;
 }
 
+#later {
+	margin-top:20px;
+}
+
+#later > h1 {
+	font-size:1.5em;
+	font-weight:bold;
+	color:#ababab;
+}
+
 #dashboard-header > h1 {
 	font-size:2em;
 	font-weight:bold;
@@ -412,6 +422,15 @@ button:focus, input[type=submit]:focus {
 	width:250px;
 	height: 150px;
 }
+
+.nothing-todo {
+	font-style:italic;
+	color:#aaa;
+	font-size:1.1em;
+	font-family:Times sarif;
+	padding:10px;
+}
+
 
 /*--------------------*/
 

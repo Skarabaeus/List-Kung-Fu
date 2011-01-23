@@ -113,6 +113,8 @@ class ListItem < ActiveRecord::Base
       cat = 'today'
     when Time.zone.now.tomorrow.beginning_of_day...Time.zone.now.tomorrow.end_of_day
       cat = 'tomorrow'
+    when (Time.zone.now.tomorrow + 1.day).beginning_of_day...(Time.zone.now + 1.week - 1.day).end_of_day
+      cat = 'this week'
     when (Time.zone.now + 1.week).beginning_of_week...(Time.zone.now + 1.week).end_of_week
       cat = 'next week'
     else

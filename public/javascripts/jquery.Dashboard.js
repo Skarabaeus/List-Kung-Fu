@@ -23,10 +23,11 @@
 				widget.header = $( '<div id="dashboard-header" class="header"><h1>Dashboard</h1></div>')
 				widget.toolbar = $( '<div id="dashboard-toolbar"><input type="text" id="dashboard-search" value=""/></div>');
 				widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
-				widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1></div>' );
-				widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1></div>' );
-				widget.nextweek = $( '<div id="nextweek" class="schedule-column"><h1>Next Week</h1></div>' );
-				widget.later = $( '<div id="later" class="schedule-column"><h1>Later</h1></div>' );
+				widget.today = $( '<div id="today" class="schedule-column" data-type="scheduleColumn"><h1>Today</h1></div>' );
+				widget.tomorrow = $( '<div id="tomorrow" class="schedule-column" data-type="scheduleColumn"><h1>Tomorrow</h1></div>' );
+				widget.thisweek = $( '<div id="thisweek" class="schedule-column" data-type="scheduleColumn"><h1>This Week</h1></div>' );
+				widget.nextweek = $( '<div id="nextweek" class="schedule-column" data-type="scheduleColumn"><h1>Next Week</h1></div>' );
+				widget.later = $( '<div id="later" data-type="scheduleColumn"><h1>Later</h1></div>' );
 
 				widget.element.append( widget.header );
 				widget.header.append( widget.toolbar );
@@ -34,8 +35,9 @@
 
 				widget.wrapper.append( widget.today );
 				widget.wrapper.append( widget.tomorrow );
+				widget.wrapper.append( widget.thisweek );
 				widget.wrapper.append( widget.nextweek );
-				widget.wrapper.append( widget.later );
+				widget.nextweek.append( widget.later );
 				widget.wrapper.append( '<div style="clear:both;">&nbsp;</div>' );
 
 				widget.toolbar.append( '<div id="dashboard-search-cancel">&nbsp;</div>' );
@@ -53,6 +55,9 @@
 									break;
 								case 'tomorrow':
 									widget.tomorrow.append( $listItemHtml );
+									break;
+								case 'this week':
+									widget.thisweek.append( $listItemHtml );
 									break;
 								case 'next week':
 									widget.nextweek.append( $listItemHtml );
@@ -111,12 +116,23 @@
 								});
 							});
 
-							$listItemHtml.find( '.dashboard-item-more' ).simpletip({
-								content: '<div class="list-item-content">' + listItem.list_item.body_rendered + '</div>',
-								position: 'right',
-								offset: [-300,-200]
-							});
 						});
+						
+						/*
+						$listItemHtml.find( '.dashboard-item-more' ).simpletip({
+							content: '<div class="list-item-content">' + listItem.list_item.body_rendered + '</div>',
+							position: 'right',
+							offset: [-300,-200]
+						});
+						*/
+						
+
+						$( 'div[data-type~="scheduleColumn"]' ).each(function(){
+							if ( $( this ).children( '.dashboard-item' ).length === 0 ) {
+								$( this ).children( 'h1' ).after( '<p class="nothing-todo">no items scheduled</p>' );
+							}
+						});
+						
 						_TriggerReinitOfPanes();
 						_TriggerResize();
 					},
