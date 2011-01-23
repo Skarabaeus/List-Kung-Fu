@@ -66,6 +66,7 @@
 							$listItemHtml.find( '.dashboard-list-item-title' ).bind( 'click', function( e ){
 								widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
 							});
+
 							$listItemHtml.find( '.dashboard-item-completed' ).bind( 'click', function( e ){
 								$that = $( this );
 								// remove existing confirmation divs
@@ -110,6 +111,11 @@
 								});
 							});
 
+							$listItemHtml.find( '.dashboard-item-more' ).simpletip({
+								content: '<div class="list-item-content">' + listItem.list_item.body_rendered + '</div>',
+								position: 'right',
+								offset: [-300,-200]
+							});
 						});
 						_TriggerReinitOfPanes();
 						_TriggerResize();

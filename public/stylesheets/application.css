@@ -372,6 +372,7 @@ button:focus, input[type=submit]:focus {
 .dashboard-item-more {
 	font-size:0.7em;
 	color:#aaa;
+	cursor:pointer;
 }
 
 .dashboard-item-completed {
@@ -395,6 +396,21 @@ button:focus, input[type=submit]:focus {
 
 .yes:hover, .no:hover {
 	text-decoration:underline;
+}
+
+.tooltip {
+  background-color: #F6F0D2;
+  border: 1px solid #DECA7E;
+	position: absolute;
+	z-index: 3;
+	padding:10px;
+	display: none;
+	font-size:1.3em;
+	color:#000;
+	overflow-x:hidden;
+	overflow-y:auto;
+	width:250px;
+	height: 150px;
 }
 
 /*--------------------*/
