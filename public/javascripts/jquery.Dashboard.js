@@ -116,23 +116,18 @@
 								});
 							});
 
+							$listItemHtml.find( '.dashboard-item-more' ).bind( "click", function(){
+								widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
+							});
+
 						});
-						
-						/*
-						$listItemHtml.find( '.dashboard-item-more' ).simpletip({
-							content: '<div class="list-item-content">' + listItem.list_item.body_rendered + '</div>',
-							position: 'right',
-							offset: [-300,-200]
-						});
-						*/
-						
 
 						$( 'div[data-type~="scheduleColumn"]' ).each(function(){
 							if ( $( this ).children( '.dashboard-item' ).length === 0 ) {
 								$( this ).children( 'h1' ).after( '<p class="nothing-todo">no items scheduled</p>' );
 							}
 						});
-						
+
 						_TriggerReinitOfPanes();
 						_TriggerResize();
 					},
