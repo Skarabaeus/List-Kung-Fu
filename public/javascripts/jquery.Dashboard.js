@@ -166,7 +166,7 @@
 
 			destroy: function() {
 
-			},
+			}
 		};
 	}();
 	// register widget
