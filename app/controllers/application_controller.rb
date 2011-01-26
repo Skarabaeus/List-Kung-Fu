@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   layout "application_guest"
 
   after_filter :add_flash_to_header
-  before_filter :set_timezone
+  before_filter :set_timezone, :dev_javascript
 
   def after_sign_in_path_for(resource_or_scope)
     if resource_or_scope.is_a?(User)
@@ -33,5 +33,15 @@ class ApplicationController < ActionController::Base
 
     # make sure flash does not appear on the next page
     flash.discard
+  end
+
+  def dev_javascript
+    if params[:dev_javascript] == "1"
+      session[:dev_javascript] = true
+    end
+
+    if params[:dev_javascript] == "0"
+      session[:dev_javascript] = false
+    end
   end
 end

@@ -10,14 +10,14 @@ src_dir = File.join( prefix, 'ListKungFu/public/javascripts' )
 build_dir = File.join( prefix, 'ListKungFu/lib/build' )
 dist_dir = File.join( prefix, 'ListKungFu/public/javascripts' )
 
-base_files = %w{application Controller jquery-rails jquery.ConfirmationDialog jquery.Dashboard jquery.hotkeys jquery.ListItemView jquery.ListView jquery.SerializeForm jquery.StatusBar json2 mustache}.map { |js| File.join( src_dir, "#{js}.js" ) }
+base_files = %w{application Controller jquery-rails jquery.ConfirmationDialog jquery.Dashboard jquery.hotkeys jquery.ListItemView jquery.ListView jquery.SerializeForm jquery.StatusBar json2 mustache jquery.layout-1.2.0}.map { |js| File.join( src_dir, "#{js}.js" ) }
 
 jq = File.join( dist_dir, "listkungfu.all.js" )
 jq_min = File.join( dist_dir, "listkungfu.all.min.js" )
 
 # Build tools
 rhino = "java -jar #{build_dir}/js.jar"
-minfier = "java -jar #{build_dir}/google-compiler-20091218.jar"
+minfier = "java -jar #{build_dir}/google-compiler-20110126.jar"
 
 # Turn off output other than needed from `sh` and file commands
 verbose(false)
