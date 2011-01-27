@@ -9,6 +9,7 @@ class ListItemsController < ApplicationController
     case params[ :show ]
     when "dashboard"
       @presenter = ListItemPresenters::Dashboard.new( current_user.id )
+      ListItemMailer.dashboard(@presenter.data).deliver
     else
       @presenter = ListItemPresenters::ListItemView.new( current_user.id, params[ :list_id ], params[ :show ] )
     end
