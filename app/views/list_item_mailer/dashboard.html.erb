@@ -4,29 +4,50 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-
 		<%
 			style = "margin:10px; padding:10px; border-bottom:1px solid #aaa;"
-		%>
+			today = []
+			tomorrow = []
+			thisweek = []
+			nextweek = []
+			later = []
 
-		<% @list_items.each do |list_item| %>
+			@list_items.each do |list_item|
+				today << list_item if list_item.deadline_category == 'today'
+				tomorrow << list_item if list_item.deadline_category == 'tomorrow'
+				thisweek << list_item if list_item.deadline_category == 'this week'
+				nextweek << list_item if list_item.deadline_category == 'next week'
+				later << list_item if list_item.deadline_category == 'later'
+			end
+			%>
+
 
 	    <h1>Today</h1>
-			<%= content_tag( :div, list_item.body_rendered, :style => style ) if list_item.deadline_category == 'today' %>
+			<% today.each do |item| %>
+				<%= content_tag( :div, item.body_rendered.html_safe, :style => style ) %>
+			<% end %>
 
 
 			<h1>Tomorrow</h1>
-			<%= content_tag( :div, list_item.body_rendered, :style => style ) if list_item.deadline_category == 'tomorrow' %>
+			<% tomorrow.each do |item| %>
+				<%= content_tag( :div, item.body_rendered.html_safe, :style => style ) %>
+			<% end %>
 
 			<h1>This Week</h1>
-			<%= content_tag( :div, list_item.body_rendered, :style => style ) if list_item.deadline_category == 'this week' %>
+			<% thisweek.each do |item| %>
+				<%= content_tag( :div, item.body_rendered.html_safe, :style => style ) %>
+			<% end %>
 
 			<h1>Next Week</h1>
-			<%= content_tag( :div, list_item.body_rendered, :style => style ) if list_item.deadline_category == 'next week' %>
+			<% nextweek.each do |item| %>
+				<%= content_tag( :div, item.body_rendered.html_safe, :style => style ) %>
+			<% end %>
 
 			<h1>Later</h1>
-			<%= content_tag( :div, list_item.body_rendered, :style => style ) if list_item.deadline_category == 'later' %>
+			<% later.each do |item| %>
+				<%= content_tag( :div, item.body_rendered.html_safe, :style => style ) %>
+			<% end %>
 
-		<% end %>
+
   </body>
 </html>

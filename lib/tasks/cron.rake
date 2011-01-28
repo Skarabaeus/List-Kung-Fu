@@ -6,7 +6,7 @@ task :cron => :environment do
 
  move_all_list_items_to_future
 
- #mail_dashboard_to_user
+ mail_dashboard_to_user
 end
 
 def mail_dashboard_to_user
