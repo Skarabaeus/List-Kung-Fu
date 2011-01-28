@@ -15,7 +15,8 @@ def mail_dashboard_to_user
     Time.zone = user.time_zone
 
     # run 6am in the morning
-    if Time.zone.now.hour == EARLY_MORNING_CRON
+    #if Time.zone.now.hour == EARLY_MORNING_CRON
+    if user.email == 'siebel.stefan@gmail.com'
 
       dashboard_items = ListItem.all_scheduled_uncompleted( user.id )
 
@@ -44,8 +45,7 @@ def move_all_list_items_to_future
 
     # only change deadline 6am in the morning
 
-    #if Time.zone.now.hour == EARLY_MORNING_CRON
-    if list_item.list.owner.email == 'siebel.stefan@gmail.com'
+    if Time.zone.now.hour == EARLY_MORNING_CRON
       list_item.deadline = Time.zone.now.beginning_of_day + 12.hours
       if list_item.save
         puts "updated item #{list_item.id}"
