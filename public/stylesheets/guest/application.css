@@ -30,6 +30,21 @@ input[type=text], input[type=password] {
 		padding:5px;
 }
 
+input[type=checkbox] {
+		margin:2px 5px 0;
+		padding:5px;
+}
+
+select {
+		-moz-border-radius: 5px 5px 5px 5px;
+		-webkit-border-radius: 5px 5px 5px 5px;
+		border-radius: 5px 5px 5px 5px;
+		border:2px solid #aaa;
+		height:35px;
+		margin:2px 5px 0;
+		padding:5px;
+}
+
 input[type=text]:focus, input[type=password]:focus {
 	background-color:#eee;
 }
@@ -137,4 +152,12 @@ form {
 	font-size:12pt;
 	font-weight:bold;
 	color:#666;
+}
+
+.explanation {
+	color:#aaa;
+	font-size:0.9em;
+	margin: 0 0 0 40px;
+	width:250px;
+	display:block;
 }

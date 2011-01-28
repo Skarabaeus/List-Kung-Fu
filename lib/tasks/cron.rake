@@ -15,9 +15,8 @@ def mail_dashboard_to_user
     Time.zone = user.time_zone
 
     # run 6am in the morning
-    #if Time.zone.now.hour == EARLY_MORNING_CRON
-    if user.email == 'siebel.stefan@gmail.com'
-
+    #if Time.zone.now.hour == EARLY_MORNING_CRON and user.email_dashboard == true
+    if user.email_dashboard == true
       dashboard_items = ListItem.all_scheduled_uncompleted( user.id )
 
       # only mail the user if he actually has any scheduled list items.

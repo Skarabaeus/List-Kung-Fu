@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110101130304) do
+ActiveRecord::Schema.define(:version => 20110128215702) do
 
   create_table "filters", :force => true do |t|
     t.string    "name"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(:version => 20110101130304) do
     t.timestamp "created_at"
     t.timestamp "updated_at"
     t.string    "time_zone",                           :default => "UTC", :null => false
+    t.boolean   "email_dashboard",                     :default => false, :null => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

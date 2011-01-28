@@ -12,6 +12,10 @@
 	<p><%= f.label :time_zone %><br />
 	<%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all %></p>
 
+	<p><%= f.check_box :email_dashboard %> <%= f.label :email_dashboard, "Email Dashboard" %>
+		<p class="explanation">If you enable this option, List Kung Fu will send you your daily schedule by email.</p>
+	</p>
+
   <p><%= f.label :password %><br />
   <%= f.password_field :password %></p>
 
