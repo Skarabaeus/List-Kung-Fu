@@ -60,7 +60,7 @@
 									widget.thisweek.append( $listItemHtml );
 									break;
 								case 'next week':
-									widget.nextweek.append( $listItemHtml );
+									widget.later.before( $listItemHtml );
 									break;
 								default:
 									widget.later.append( $listItemHtml );
