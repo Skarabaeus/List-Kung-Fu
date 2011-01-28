@@ -4,9 +4,9 @@ desc "This task is called by the Heroku cron add-on"
 task :cron => :environment do
  # see documentation at http://docs.heroku.com/cron
 
- #move_all_list_items_to_future
+ move_all_list_items_to_future
 
- mail_dashboard_to_user
+ #mail_dashboard_to_user
 end
 
 def mail_dashboard_to_user
@@ -45,12 +45,12 @@ def move_all_list_items_to_future
 
     # only change deadline 6am in the morning
 
-    if Time.zone.now.hour == EARLY_MORNING_CRON
+    #if Time.zone.now.hour == EARLY_MORNING_CRON
       list_item.deadline = Time.zone.now.beginning_of_day + 12.hours
       if list_item.save
         puts "updated item #{list_item.id}"
       end
-    end
+    #end
 
   end
 end
