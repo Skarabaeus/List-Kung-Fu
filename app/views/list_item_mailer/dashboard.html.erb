@@ -30,35 +30,35 @@
 
 
 			<% if today.count > 0 %>
-		    <h1 class="text-decoration:underline;">Today</h1>
+		    <h1 style="text-decoration:underline;">Today</h1>
 				<% today.each do |item| %>
 					<%= content_tag( :div, item.body_rendered.html_safe, :style => style ) %>
 				<% end %>
 			<% end %>
 
 			<% if tomorrow.count > 0 %>
-				<h1 class="text-decoration:underline;">Tomorrow</h1>
+				<h1 style="text-decoration:underline;">Tomorrow</h1>
 				<% tomorrow.each do |item| %>
 					<%= content_tag( :div, item.body_rendered.html_safe, :style => style ) %>
 				<% end %>
 			<% end %>
 
 			<% if thisweek.count > 0 %>
-				<h1 class="text-decoration:underline;">This Week</h1>
+				<h1 style="text-decoration:underline;">This Week</h1>
 				<% thisweek.each do |item| %>
 					<%= content_tag( :div, item.body_rendered.html_safe, :style => style ) %>
 				<% end %>
 			<% end %>
 
 			<% if nextweek.count > 0 %>
-				<h1 class="text-decoration:underline;">Next Week</h1>
+				<h1 style="text-decoration:underline;">Next Week</h1>
 				<% nextweek.each do |item| %>
 					<%= content_tag( :div, item.body_rendered.html_safe, :style => style ) %>
 				<% end %>
 			<% end %>
 
 			<% if later.count > 0 %>
-				<h1 class="text-decoration:underline;">Later</h1>
+				<h1 style="text-decoration:underline;">Later</h1>
 				<% later.each do |item| %>
 					<%= content_tag( :div, item.body_rendered.html_safe, :style => style ) %>
 				<% end %>
