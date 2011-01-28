@@ -46,7 +46,7 @@ def move_all_list_items_to_future
     # only change deadline 6am in the morning
 
     #if Time.zone.now.hour == EARLY_MORNING_CRON
-      list_item.deadline = Time.zone.now.beginning_of_day + 12.hours
+      list_item.deadline = Time.zone.now.tomorrow.beginning_of_day + 12.hours
       if list_item.save
         puts "updated item #{list_item.id}"
       end
