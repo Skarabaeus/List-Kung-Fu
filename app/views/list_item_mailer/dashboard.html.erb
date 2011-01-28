@@ -13,11 +13,18 @@
 			later = []
 
 			@list_items.each do |list_item|
-				today << list_item if list_item.deadline_category == 'today'
-				tomorrow << list_item if list_item.deadline_category == 'tomorrow'
-				thisweek << list_item if list_item.deadline_category == 'this week'
-				nextweek << list_item if list_item.deadline_category == 'next week'
-				later << list_item if list_item.deadline_category == 'later'
+				case list_item.deadline_category
+				when 'today'
+					today << list_item
+				when 'tomorrow'
+					tomorrow << list_item
+				when 'this week'
+					thisweek << list_item
+				when 'next week'
+					nextweek << list_item
+				else
+					later << list_item
+				end
 			end
 			%>
 
