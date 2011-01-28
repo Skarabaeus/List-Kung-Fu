@@ -71,6 +71,9 @@
 							$listItemHtml.find( '.dashboard-list-item-title' ).bind( 'click', function( e ){
 								widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
 							});
+							$listItemHtml.find( '.dashboard-item-more' ).bind( 'click', function( e ){
+								widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
+							});
 
 							$listItemHtml.find( '.dashboard-item-completed' ).bind( 'click', function( e ){
 								$that = $( this );

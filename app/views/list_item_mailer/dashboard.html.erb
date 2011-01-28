@@ -4,10 +4,29 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-    <h1>Welcome to example.com</h1>
-    <p>
-      TEST
-    </p>
-    <p>Thanks for joining and have a great day!</p>
+
+		<%
+			style = "margin:10px; padding:10px; border-bottom:1px solid #aaa;"
+		%>
+
+		<% @list_items.each do |list_item| %>
+
+	    <h1>Today</h1>
+			<%= content_tag( :div, list_item.body_rendered, :style => style ) if list_item.deadline_category == 'today' %>
+
+
+			<h1>Tomorrow</h1>
+			<%= content_tag( :div, list_item.body_rendered, :style => style ) if list_item.deadline_category == 'tomorrow' %>
+
+			<h1>This Week</h1>
+			<%= content_tag( :div, list_item.body_rendered, :style => style ) if list_item.deadline_category == 'this week' %>
+
+			<h1>Next Week</h1>
+			<%= content_tag( :div, list_item.body_rendered, :style => style ) if list_item.deadline_category == 'next week' %>
+
+			<h1>Later</h1>
+			<%= content_tag( :div, list_item.body_rendered, :style => style ) if list_item.deadline_category == 'later' %>
+
+		<% end %>
   </body>
 </html>

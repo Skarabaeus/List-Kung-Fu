@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
 
   # all lists this user has access to through other users
   has_and_belongs_to_many :shared_lists, :class_name => 'List'
-  
+
   has_many :filters, :dependent => :destroy
 
   # Include default devise modules. Others available are:
@@ -14,19 +14,21 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :username, :time_zone
-  
+
   validates_uniqueness_of :username
-  
+
+  # SCOPES
+
   def tags
     all_tags = []
-    
+
     self.all_lists.each do |list|
       all_tags << list.tags
     end
-    
+
     all_tags.flatten
   end
-  
+
   def all_lists
     lists = []
     lists << self.lists << self.shared_lists
