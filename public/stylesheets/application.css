@@ -83,6 +83,9 @@ html, body {
 }
 
 /*--------------------*/
+
+/* LISTS */
+
 #list-toolbar {
 	height:50px;
 	max-height:50px;
@@ -192,6 +195,7 @@ button:focus, input[type=submit]:focus {
 
 /*--------------------*/
 
+/* LIST ITEMS */
 
 #deadline-settings {
 	width:100px;
@@ -458,3 +462,53 @@ button:focus, input[type=submit]:focus {
 
 /*--------------------*/
 
+/* TAGS */
+
+#tags {
+	height:150;
+}
+
+#add-tag {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border:2px solid #CDC3B7;
+	height:10px;
+	left:float;
+	margin:3px 5px 0;
+	padding:5px;
+	width:80px;
+	font-size:0.8em;
+}
+
+.tags {
+	height:80px;
+	overflow-x:hidden;
+	overflow-y:auto;
+}
+
+.tag {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	font-size:0.7em;
+	border:1px solid #00f;
+	margin:1px;
+	padding:1px 3px 1px 1px;
+	display:inline-block;
+}
+
+.color-selector {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+  border: 1px solid #000000;
+  display: inline-block;
+  margin: 2px;
+  text-align: center;
+  vertical-align: middle;
+  width: 10px;
+	font-size:0.9em;
+}
+
+/*--------------------*/

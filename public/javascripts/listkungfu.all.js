@@ -34,7 +34,7 @@ $(document).ready(function () {
 		},
 
 		south: {
-			minSize: 50
+			minSize: 30
 		},
 
 		west: {
@@ -665,7 +665,7 @@ jQuery(function ($) {
 				widget.nextweek.append( widget.later );
 				widget.wrapper.append( '<div style="clear:both;">&nbsp;</div>' );
 
-				widget.toolbar.append( '<div id="dashboard-search-cancel">&nbsp;</div>' );
+				widget.toolbar.append( '<div id="dashboard-search-cancel">&nbsp;</div><div style="clear:both;">&nbsp;</div>' );
 
 				// Load scheduled items
 				ListItem.Index( {
@@ -982,6 +982,7 @@ jQuery(function ($) {
 
 			newElement.bind( 'keydown', 'del', function(){
 				widget.toolbar.find( "#list-item-delete" ).effect('puff', {}, 300, function(){
+					$( this ).show();
 					widget.toolbar.find( "#list-item-delete" ).trigger( 'click' );
 				});
 			});

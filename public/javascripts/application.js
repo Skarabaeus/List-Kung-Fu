@@ -34,7 +34,7 @@ $(document).ready(function () {
 		},
 
 		south: {
-			minSize: 50
+			minSize: 30
 		},
 
 		west: {

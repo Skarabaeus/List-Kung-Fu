@@ -82,6 +82,7 @@
 
 			newElement.bind( 'keydown', 'del', function(){
 				widget.toolbar.find( "#list-item-delete" ).effect('puff', {}, 300, function(){
+					$( this ).show();
 					widget.toolbar.find( "#list-item-delete" ).trigger( 'click' );
 				});
 			});
