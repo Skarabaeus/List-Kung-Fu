@@ -3,7 +3,7 @@
 <head>
   <title>List Kung Fu</title>
 	<%= stylesheet_link_tag 'http://yui.yahooapis.com/2.8.1/build/reset/reset-min.css' %>
-  <%= stylesheet_link_tag 'application', 'scaffold', 'jquery-ui-1.8.5.custom', 'layout-default-latest', 'textile' %>
+  <%= stylesheet_link_tag 'application', 'scaffold', 'jquery-ui-1.8.5.custom', 'layout-default-latest', 'textile', 'colors' %>
 	<%= stylesheet_link_tag 'markitup/set_style.css' %>
 	<%= stylesheet_link_tag 'markitup/skin_style.css' %>
   <%= csrf_meta_tag %>
@@ -32,18 +32,21 @@
 		<div class="ui-layout-content" id="list-wrapper">
 			<%= yield :west %>
 		</div>
+		<div id="tags">
+		</div>
 	</div>
 
 	<div class="ui-layout-south" id="mainlayout-south">
 		<%= yield :south %>
 	</div>
-<!--
+
 	<div class="ui-layout-east" id="mainlayout-east">
 		<%= yield :east %>
 	</div>
--->
+
 	<div class="ui-layout-center" id="mainlayout-center">
 	</div>
+
 	<% unless use_minified_javascript? %>
 		<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js' %>
 		<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.js' %>
@@ -51,7 +54,7 @@
 
 		<%= javascript_include_tag 'jquery.SerializeForm', 'jquery.ConfirmationDialog' %>
 		<%= javascript_include_tag 'jquery.layout-1.2.0', 'json2', 'mustache', 'jquery.hotkeys' %>
-		<%= javascript_include_tag 'Controller', 'jquery.ListView', 'jquery.StatusBar', 'jquery.ListItemView', 'jquery.Dashboard' %>
+		<%= javascript_include_tag 'Controller', 'jquery.ListView', 'jquery.StatusBar', 'jquery.ListItemView', 'jquery.Dashboard', 'jquery.Tagger' %>
 		<%= javascript_include_tag 'application' %>
 
 	<% else %>
@@ -61,6 +64,8 @@
 
 		<%= javascript_include_tag 'listkungfu.all.min' %>
 	<% end %>
+
+
 	<%= javascript_tag do %>
       try {
           var pageTracker = _gat._getTracker("UA-9672233-3");
@@ -68,21 +73,23 @@
           pageTracker._trackPageview();
       } catch(err) {}
   <% end %>
-	<%= javascript_tag do %>
-	    var is_ssl = ("https:" == document.location.protocol);
-	    var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
-	    document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
-	<% end if user_signed_in? %>
-	<%= javascript_tag do %>
 
-	    var feedback_widget_options = {};
 
-	    feedback_widget_options.display = "overlay";
-	    feedback_widget_options.company = "listkungfu";
-	    feedback_widget_options.placement = "bottom";
-	    feedback_widget_options.color = "#ababab";
-	    feedback_widget_options.style = "idea";
-	    var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
-	<% end if user_signed_in?  %>
+	<script type="text/javascript" charset="utf-8">
+	  var is_ssl = ("https:" == document.location.protocol);
+	  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+	  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+
+	<script type="text/javascript" charset="utf-8">
+	  var feedback_widget_options = {};
+
+	  feedback_widget_options.display = "overlay";
+	  feedback_widget_options.company = "listkungfu";
+	  feedback_widget_options.placement = "bottom";
+	  feedback_widget_options.color = "#ddd";
+	  feedback_widget_options.style = "problem";
+	  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+	</script>
 </body>
 </html>

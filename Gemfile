@@ -4,7 +4,7 @@ gem 'rails', '3.0.1'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'paperclip'
-gem 'devise' #, :git => "git://github.com/plataformatec/devise.git", :tag => "v1.1.rc2"
+gem 'devise'
 gem 'rmagick' # for paperclip
 gem 'RedCloth' # for textile support
 gem 'aws-s3', :require => 'aws/s3'

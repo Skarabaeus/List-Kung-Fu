@@ -98,6 +98,10 @@ $(document).ready(function () {
 		}
 	});
 
+	ListKungFu.LayoutWest.find( '#tags' ).Tagger({
+
+	});
+
 	// bind "Dashboard"-link
 	$( "#dashboard" ).bind( "click", function() {
 		ListKungFu.LayoutCenter.ListItemView( "RemoveList" );

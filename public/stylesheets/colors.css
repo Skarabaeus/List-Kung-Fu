@@ -1,0 +1,152 @@
+/* colors for tags */
+
+.no-background-color{
+	background-color:transparent !important;
+	color:#000 !important;
+}
+
+/* http://www.colchis.com/clrtable.html */
+
+.c1{ /* steelblue */
+	color:#222;
+	background-color:#4682B4;
+	border: 1px solid #4682B4;
+}
+
+.c2{ /* royalblue */
+	color:#222;
+	background-color:#4169E1;
+	border: 1px solid #4169E1;
+}
+
+.c3{ /* navy */
+	color:#eee;
+	background-color:#000080;
+	border: 1px solid #000080;
+}
+
+.c4{ /* mediumblue */
+	color:#eee;
+	background-color:#0000CD;
+	border: 1px solid #0000CD;
+}
+
+.c5{ /* dodgerblue */
+	color:#222;
+	background-color:#1E90FF;
+	border: 1px solid #1E90FF;
+}
+
+.c6{ /* lightskyblue */
+	color:#222;
+	background-color:#87CEFA;
+	border: 1px solid #87CEFA;
+}
+
+.c7{ /* mediumseagreen */
+	color:#222;
+	background-color:#3CB371;
+	border: 1px solid #3CB371;
+}
+
+.c8{ /* darkgreen */
+	color:#eee;
+	background-color:#006400;
+	border: 1px solid #006400;
+}
+
+.c9{ /* limegreen */
+	color:#222;
+	background-color:#32CD32;
+	border: 1px solid #32CD32;
+}
+
+.c10{ /* lawngreen */
+	color:#222;
+	background-color:#7CFC00;
+	border: 1px solid #7CFC00;
+}
+
+.c11{ /* lightgreen */
+	color:#222;
+	background-color:#90EE90;
+	border: 1px solid #90EE90;
+}
+
+.c12{ /* olivedrab */
+	color:#222;
+	background-color:#6B8E23;
+	border: 1px solid #6B8E23;
+}
+
+.c13{ /* darkgoldenrod */
+	color:#222;
+	background-color:#B8860B;
+	border: 1px solid #B8860B;
+}
+
+.c14{ /* gold */
+	color:#222;
+	background-color:#FFD700;
+	border: 1px solid #FFD700;
+}
+
+.c15{ /* blanchedalmond */
+	color:#222;
+	background-color:#FFEBCD;
+	border: 1px solid #FFEBCD;
+}
+
+.c16{ /* blurrywood */
+	color:#222;
+	background-color:#DEB887;
+	border: 1px solid #DEB887;
+}
+
+.c17{ /* saddlebrown */
+	color:#222;
+	background-color:#DEB887;
+	border: 1px solid #DEB887;
+}
+
+.c18{ /* maroon */
+	color:#eee;
+	background-color:#800000;
+	border: 1px solid #800000;
+}
+
+.c19{ /* indianred */
+	color:#222;
+	background-color:#CD5C5C;
+	border: 1px solid #CD5C5C;
+}
+
+.c20{ /* coral */
+	color:#222;
+	background-color:#FF7F50;
+	border: 1px solid #FF7F50;
+}
+
+.c21{ /* darkorange */
+	color:#222;
+	background-color:#FF8C00;
+	border: 1px solid #FF8C00;
+}
+
+.c22{ /* crimson */
+	color:#222;
+	background-color:#DC143C;
+	border: 1px solid #DC143C;
+}
+
+.c23{ /* deeppink */
+	color:#222;
+	background-color:#FF1493;
+	border: 1px solid #FF1493;
+}
+
+.c24{ /* darkmagenta */
+	color:#eee;
+	background-color:#8B008B;
+	border: 1px solid #8B008B;
+}

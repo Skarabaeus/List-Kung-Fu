@@ -4,6 +4,6 @@ class AddEmailDashboardToUsers < ActiveRecord::Migration
   end
 
   def self.down
-    remove_column :users, :email_dashboard
+    drop_column :users, :email_dashboard
   end
 end

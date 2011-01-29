@@ -304,3 +304,11 @@ var ListItem = Controller({
 		ListKungFu.LayoutSouth.StatusBar( "SetNotice", notice );
 	}
 });
+
+var Tag = Controller({
+	route: [ "tags" ],
+	onFlashUpdate: function( notice, error, warning, message ) {
+		ListKungFu.LayoutSouth.StatusBar( "SetAlert", error );
+		ListKungFu.LayoutSouth.StatusBar( "SetNotice", notice );
+	}
+});
