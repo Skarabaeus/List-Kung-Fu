@@ -146,6 +146,11 @@
 						var $form = $( template );
 						var elementAlreadyFullsize = newElement.data( "isFullsize" );
 
+						// hide all rows
+						widget.listItemList.find( '.row' ).hide();
+						// show only the row which the user wants to edit
+						widget.selectedListItem.element.show();
+
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
 						$form.find( "textarea" ).markItUp( mySettings );
@@ -201,6 +206,10 @@
 
 										_SetSelectedListItem( newElement, json );
 										newElement.data( "data", json );
+
+										// show all the rows again
+										widget.listItemList.find( '.row' ).show();
+
 										newElement.focus();
 									});
 								},
@@ -224,6 +233,10 @@
 								if ( elementAlreadyFullsize === false ) {
 									_ToggleFullsize( newElement );
 								}
+
+								// show again all other rows
+								widget.listItemList.find( '.row' ).show();
+
 								newElement.focus();
 							});
 
