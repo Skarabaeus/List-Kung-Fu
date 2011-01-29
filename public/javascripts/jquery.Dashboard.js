@@ -40,7 +40,7 @@
 				widget.nextweek.append( widget.later );
 				widget.wrapper.append( '<div style="clear:both;">&nbsp;</div>' );
 
-				widget.toolbar.append( '<div id="dashboard-search-cancel">&nbsp;</div>' );
+				widget.toolbar.append( '<div id="dashboard-search-cancel">&nbsp;</div><div style="clear:both;">&nbsp;</div>' );
 
 				// Load scheduled items
 				ListItem.Index( {
