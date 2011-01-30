@@ -5,11 +5,13 @@
 
 		var _GetTag = function( data, template ) {
 			var tag = $( $.mustache( template, data.tag ) );
+
+			tag.data('data', data);
 			tag.find( '.tag-menu' ).hide();
-			
+
 			tag.find( '.color-selector' ).bind( 'click', function(){
 				var menu = tag.find( '.tag-menu' );
-				
+
 				if ( menu.data( 'visible' ) === true ) {
 					menu.hide( 'fast' );
 					menu.data( 'visible', false );
@@ -21,8 +23,32 @@
 					});
 					menu.data( 'visible', true );
 				}
-				
-			}); 
+
+				tag.find( '.color' ).bind( 'click', function( e ) {
+					var $target = $( e.target );
+					var colorClass = $target.attr( 'data-colorclass' );
+					var json = tag.data( 'data' );
+					var oldColorClass = json.tag.color_class;
+					json.tag.color_class = colorClass;
+
+					Tag.Update({
+
+						send: json,
+						successCallback: function( template, json, status, xhr, errors ){
+							var colorSelector = tag.find( '.color-selector' );
+
+							tag.removeClass( oldColorClass);
+							tag.addClass( colorClass );
+							colorSelector.removeClass( oldColorClass );
+							colorSelector.addClass( colorClass );
+							tag.find( '.tag-menu' ).hide( 'fast' );
+						},
+						tags: json.tag.id
+					});
+
+				});
+
+			});
 
 			return tag;
 		};

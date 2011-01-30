@@ -3,9 +3,10 @@ class User < ActiveRecord::Base
   has_many :lists, :foreign_key => 'owner_id', :dependent => :destroy
 
   # all lists this user has access to through other users
-  has_and_belongs_to_many :shared_lists, :class_name => 'List'
+  #has_and_belongs_to_many :shared_lists, :class_name => 'List'
 
   has_many :filters, :dependent => :destroy
+  has_many :tags
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, :lockable and :timeoutable
