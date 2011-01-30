@@ -528,10 +528,26 @@ button:focus, input[type=submit]:focus {
 	width:10px;
 	height:10px;
 	float:left;
-	margin:1px;
+	margin:2px;
 	text-align:center;
 	vertical-align:middle;
 	cursor:pointer;
+}
+
+.color:hover {
+	border:1px solid #000;
+}
+
+.tag-menu {
+	position:absolute;
+	background-color:#fff;
+	border: 1px solid #CDC3B7;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	padding:5px;
+	width:100px;
+	height:80px;
 }
 
 /*--------------------*/

@@ -15,6 +15,10 @@
 					menu.data( 'visible', false );
 				} else {
 					menu.show( 'fast' );
+					menu.css({
+						left: tag.position().left,
+						top: tag.position().top - 90
+					});
 					menu.data( 'visible', true );
 				}
 				
