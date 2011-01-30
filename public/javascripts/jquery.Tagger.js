@@ -37,11 +37,17 @@
 						successCallback: function( template, json, status, xhr, errors ){
 							var colorSelector = tag.find( '.color-selector' );
 
+							// update view
 							tag.removeClass( oldColorClass);
 							tag.addClass( colorClass );
 							colorSelector.removeClass( oldColorClass );
 							colorSelector.addClass( colorClass );
+
+							// hide the tag menu
 							tag.find( '.tag-menu' ).hide( 'fast' );
+
+							// update data object
+							tag.data( 'data', json );
 						},
 						tags: json.tag.id
 					});
@@ -85,7 +91,53 @@
 						}
 
 					}
-				} );
+				});
+
+				widget.addTagButton.bind( 'click', function(e){
+					if ( $.trim( widget.addTagInput.val() ) !== '' &&
+						widget.tagList.find( ".tag-name:HasExactValue('" + $.trim( widget.addTagInput.val() ) + "')").length === 0 ) {
+
+						var data = {};
+						data.tag = {
+							name: widget.addTagInput.val(),
+							color_class: "c1"
+						};
+
+						Tag.Create({
+							send: data,
+							successCallback: function( template, json, status, xhr, errors ) {
+								var newTag = _GetTag( json, template );
+								widget.tagList.prepend( newTag );
+								widget.addTagInput.val( '' );
+								widget.addTagInput.trigger( 'keyup' );
+							}
+						});
+
+						return false;
+					}
+				});
+
+				widget.addTagInput.bind( 'keyup', 'return', function(){
+					widget.addTagButton.trigger( 'click' );
+				});
+
+				widget.addTagInput.bind( 'keyup', function ( e ) {
+					var filtervalue = $(this).val();
+
+	        if (filtervalue === '') {
+						widget.tagList.find( ".tag" ).show();
+	        } else {
+						widget.tagList.find( ".tag:not(:Contains('" + filtervalue + "'))").hide();
+						widget.tagList.find( ".tag:Contains('" + filtervalue + "')").show();
+	        }
+
+					// if this tag already exists, disable the "add"-button
+					if ( widget.tagList.find( ".tag-name:HasExactValue('" + $.trim( filtervalue ) + "')").length > 0 ) {
+						widget.addTagButton.button( "option", "disabled", true );
+					} else {
+						widget.addTagButton.button( "option", "disabled", false );
+					}
+				});
 
 
 			},

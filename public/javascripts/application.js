@@ -14,7 +14,11 @@ var ListKungFu = {
 
 
 jQuery.expr[':'].Contains = function(a,i,m){
-     return jQuery(a).text().toLowerCase().indexOf(m[3].toLowerCase())>=0;
+	return jQuery(a).text().toLowerCase().indexOf(m[3].toLowerCase()) >= 0;
+};
+
+jQuery.expr[':'].HasExactValue = function(a,i,m){
+	return jQuery(a).text().toLowerCase() === m[3].toLowerCase();
 };
 
 /*

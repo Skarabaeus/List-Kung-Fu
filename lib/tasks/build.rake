@@ -31,7 +31,7 @@ task :clean do
 end
 
 desc "Builds a minified version of List Kung Fu javascript"
-task :js_min => [:clean, jq_min]
+task :build => [:clean, jq_min]
 
 desc "Tests built List Kung Fu javascripts against JSLint"
 task :lint => jq do
