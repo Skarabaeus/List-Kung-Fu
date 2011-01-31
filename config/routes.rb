@@ -9,7 +9,7 @@ ListKungFu::Application.routes.draw do
 
   resources :tags
 
-  devise_for :users
+  devise_for :users, :controllers => { :sessions => "sessions" }
 
   get "app/main"
   get "app/welcome"
