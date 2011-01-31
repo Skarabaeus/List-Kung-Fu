@@ -20,23 +20,23 @@
 	<%= javascript_include_tag 'jquery-rails.js' %>
 	<%= javascript_include_tag 'guest/application' %>
 	<%= yield :additional_javascript %>
-  <%- javascript_tag do -%>
+  <%= javascript_tag do %>
       var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
       document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-  <%- end -%>
-  <%- javascript_tag do -%>
+  <% end %>
+  <%= javascript_tag do %>
       try {
           var pageTracker = _gat._getTracker("UA-9672233-3");
           pageTracker._setDomainName(".listkungfu.com");
           pageTracker._trackPageview();
       } catch(err) {}
-  <%- end -%>
-	<%- javascript_tag do -%>
+  <% end %>
+	<%= javascript_tag do -%>
 	    var is_ssl = ("https:" == document.location.protocol);
 	    var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
 	    document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
-	<%-end if user_signed_in? -%>
-	<%- javascript_tag do -%>
+	<% end if user_signed_in? %>
+	<%= javascript_tag do %>
 
 	    var feedback_widget_options = {};
 
@@ -46,6 +46,6 @@
 	    feedback_widget_options.color = "#ababab";
 	    feedback_widget_options.style = "idea";
 	    var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
-	<%-end if user_signed_in? -%>
+	<% end if user_signed_in? %>
 </body>
 </html>
