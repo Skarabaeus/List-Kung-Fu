@@ -22,6 +22,7 @@ class ListItem < ActiveRecord::Base
 
   scope( :all_list, lambda { |user_id, list_id|
     joins( :list ).
+    includes( :list ).
     where( "lists.owner_id=? AND list_id=?", user_id, list_id ).
     order( "list_items.created_at desc" )
   })

@@ -16,7 +16,6 @@ class ApplicationController < ActionController::Base
 
   private
 
-
   def set_timezone
     Time.zone = current_user.time_zone if user_signed_in?
   end
@@ -37,11 +36,11 @@ class ApplicationController < ActionController::Base
 
   def dev_javascript
     if params[:dev_javascript] == "1"
-      session[:dev_javascript] = true
+      user_session[:dev_javascript] = true
     end
 
     if params[:dev_javascript] == "0"
-      session[:dev_javascript] = false
+      user_session[:dev_javascript] = false
     end
   end
 end
