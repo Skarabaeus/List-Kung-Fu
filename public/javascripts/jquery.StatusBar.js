@@ -47,7 +47,7 @@
 				var widget = this;
 
 				widget.notice.text( notice );
-				widget.notice.fadeIn().delay( 5000 ).fadeOut(function(){
+				widget.notice.fadeIn().delay( 2000 ).fadeOut(function(){
 					$(this).text("");
 				});
 			},
@@ -56,7 +56,7 @@
 				var widget = this;
 
 				widget.alert.text( alert );
-				widget.alert.fadeIn().delay( 5000 ).fadeOut(function(){
+				widget.alert.fadeIn().delay( 2000 ).fadeOut(function(){
 					$(this).text("");
 				});
 			},

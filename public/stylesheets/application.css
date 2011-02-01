@@ -23,6 +23,15 @@ html, body {
 
 #ajax-indicator {
 	display:none;
+	text-align:center;
+	width:100%;
+	font-size:1.7em;
+}
+
+#mainlayout-south #notice {
+	font-size:1.4em;
+	width:100%;
+	text-align:center;
 }
 
 .ui-layout-content {
