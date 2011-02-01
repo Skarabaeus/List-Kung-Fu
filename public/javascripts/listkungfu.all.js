@@ -18,7 +18,7 @@ jQuery.expr[':'].Contains = function(a,i,m){
 };
 
 jQuery.expr[':'].HasExactValue = function(a,i,m){
-	return jQuery(a).text().toLowerCase() === m[3].toLowerCase();
+	return jQuery.trim(jQuery(a).text().toLowerCase()) === m[3].toLowerCase();
 };
 
 /*
@@ -2285,7 +2285,7 @@ jQuery(function ($) {
 				var widget = this;
 
 				widget.notice.text( notice );
-				widget.notice.fadeIn().delay( 5000 ).fadeOut(function(){
+				widget.notice.fadeIn().delay( 2000 ).fadeOut(function(){
 					$(this).text("");
 				});
 			},
@@ -2294,7 +2294,7 @@ jQuery(function ($) {
 				var widget = this;
 
 				widget.alert.text( alert );
-				widget.alert.fadeIn().delay( 5000 ).fadeOut(function(){
+				widget.alert.fadeIn().delay( 2000 ).fadeOut(function(){
 					$(this).text("");
 				});
 			},
@@ -5482,50 +5482,27 @@ $.fn.layout = function (opts) {
 			tag.data('data', data);
 			tag.find( '.tag-menu' ).hide();
 
-			tag.find( '.color-selector' ).bind( 'click', function(){
-				var menu = tag.find( '.tag-menu' );
+			tag.find( '.color-selector' ).bind( 'click', function(e){
+				var menu = widget.tagList.find( '.tag-menu' );
+				var target = $( e.target );
 
-				if ( menu.data( 'visible' ) === true ) {
+				if ( menu.data( 'visible' ) === true && menu.data( 'tagId' ) === data.tag.id ) {
 					menu.hide( 'fast' );
 					menu.data( 'visible', false );
+					menu.data( 'tagId', null );
+					menu.data( 'tag', null );
+					menu.data( 'target', null );
 				} else {
 					menu.show( 'fast' );
 					menu.css({
 						left: tag.position().left,
-						top: tag.position().top - 90
+						top: tag.position().top - 100
 					});
 					menu.data( 'visible', true );
+					menu.data( 'tagId', data.tag.id );
+					menu.data( 'tag', data );
+					menu.data( 'target', target );
 				}
-
-				tag.find( '.color' ).bind( 'click', function( e ) {
-					var $target = $( e.target );
-					var colorClass = $target.attr( 'data-colorclass' );
-					var json = tag.data( 'data' );
-					var oldColorClass = json.tag.color_class;
-					json.tag.color_class = colorClass;
-
-					Tag.Update({
-
-						send: json,
-						successCallback: function( template, json, status, xhr, errors ){
-							var colorSelector = tag.find( '.color-selector' );
-
-							// update view
-							tag.removeClass( oldColorClass);
-							tag.addClass( colorClass );
-							colorSelector.removeClass( oldColorClass );
-							colorSelector.addClass( colorClass );
-
-							// hide the tag menu
-							tag.find( '.tag-menu' ).hide( 'fast' );
-
-							// update data object
-							tag.data( 'data', json );
-						},
-						tags: json.tag.id
-					});
-
-				});
 
 			});
 
@@ -5556,12 +5533,62 @@ $.fn.layout = function (opts) {
 					}
 				});
 
+				// retrieve all tags and display them
 				Tag.Index( {
 					successCallback: function( template, json, status, xhr, errors ) {
 
 						for ( var i = 0; i < json.length; i++ ) {
 							widget.tagList.append( _GetTag( json[ i ], template ) ) ;
 						}
+
+						var tagMenu = widget.tagList.find( '.tag-menu' ).first();
+						widget.tagList.find( '.tag-menu' ).remove();
+						widget.tagList.append( tagMenu );
+
+						// bind events for tag menu
+
+						// color selection
+						tagMenu.find( '.color' ).bind( 'click', function( e ) {
+							var $target = $( e.target );
+							var colorClass = $target.attr( 'data-colorclass' );
+							var json = tagMenu.data( 'tag' );
+							var oldColorClass = json.tag.color_class;
+							var target = tagMenu.data( 'target' );
+
+							json.tag.color_class = colorClass;
+
+							Tag.Update({
+
+								send: json,
+								successCallback: function( template, json, status, xhr, errors ){
+									var colorSelector = target;
+
+									// update view
+									target.parent( '.tag' ).removeClass( oldColorClass);
+									target.parent( '.tag' ).addClass( colorClass );
+									colorSelector.removeClass( oldColorClass );
+									colorSelector.addClass( colorClass );
+
+									// hide the tag menu
+									tagMenu.hide( 'fast' );
+									tagMenu.data( 'visible', false );
+									tagMenu.data( 'tagId', null );
+									tagMenu.data( 'tag', null );
+									tagMenu.data( 'target', null );
+
+									// update data object
+									target.data( 'data', json );
+								},
+								tags: json.tag.id
+							});
+						});
+
+
+						// delete label
+						tagMenu.find( '.delete-label' ).bind( 'click', function(){
+							alert("deleting label");
+							return false;
+						});
 
 					}
 				});
