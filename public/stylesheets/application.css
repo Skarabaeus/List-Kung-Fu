@@ -540,6 +540,7 @@ button:focus, input[type=submit]:focus {
 	text-align:center;
 	vertical-align:middle;
 	cursor:pointer;
+	font-size:0.7em;
 }
 
 .color:hover {
