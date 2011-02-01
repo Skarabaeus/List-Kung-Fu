@@ -23,7 +23,7 @@
 					menu.show( 'fast' );
 					menu.css({
 						left: tag.position().left,
-						top: tag.position().top - 90
+						top: tag.position().top - 100
 					});
 					menu.data( 'visible', true );
 					menu.data( 'tagId', data.tag.id );
@@ -72,6 +72,9 @@
 						widget.tagList.find( '.tag-menu' ).remove();
 						widget.tagList.append( tagMenu );
 
+						// bind events for tag menu
+
+						// color selection
 						tagMenu.find( '.color' ).bind( 'click', function( e ) {
 							var $target = $( e.target );
 							var colorClass = $target.attr( 'data-colorclass' );
@@ -105,7 +108,13 @@
 								},
 								tags: json.tag.id
 							});
+						});
 
+
+						// delete label
+						tagMenu.find( '.delete-label' ).bind( 'click', function(){
+							alert("deleting label");
+							return false;
 						});
 
 					}

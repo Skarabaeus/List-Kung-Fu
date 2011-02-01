@@ -556,7 +556,17 @@ button:focus, input[type=submit]:focus {
 	border-radius: 5px;
 	padding:5px;
 	width:100px;
-	height:80px;
+	height:90px;
+}
+
+.delete-label:hover {
+	text-decoration:underline;
+}
+
+.delete-label {
+	font-size:0.7em;
+	color:#f00;
+	text-decoration:none;
 }
 
 /*--------------------*/
