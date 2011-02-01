@@ -36,11 +36,11 @@ class ApplicationController < ActionController::Base
 
   def dev_javascript
     if params[:dev_javascript] == "1"
-      user_session[:dev_javascript] = true
+      session[:dev_javascript] = true
     end
 
     if params[:dev_javascript] == "0"
-      user_session[:dev_javascript] = false
+      session[:dev_javascript] = false
     end
   end
 end
