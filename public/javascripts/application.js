@@ -18,7 +18,7 @@ jQuery.expr[':'].Contains = function(a,i,m){
 };
 
 jQuery.expr[':'].HasExactValue = function(a,i,m){
-	return jQuery(a).text().toLowerCase() === m[3].toLowerCase();
+	return jQuery.trim(jQuery(a).text().toLowerCase()) === m[3].toLowerCase();
 };
 
 /*
