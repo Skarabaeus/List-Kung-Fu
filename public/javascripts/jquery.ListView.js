@@ -1,7 +1,9 @@
 (function(){
 	var ListView = function(){
 
-		var _IsNewList = function( widget, element ) {
+		var widget = null;
+
+		var _IsNewList = function( element ) {
 			if ( widget.selectedList === null || widget.selectedList.data.list.id !== element.list.id ) {
 				return true;
 			} else {
@@ -37,7 +39,7 @@
 			form.find( ".error_explanation" ).remove();
 		};
 
-		var _DeleteList = function( widget, delay ) {
+		var _DeleteList = function( delay ) {
 			var nextItem = widget.selectedList.element.next();
 			var prevItem = widget.selectedList.element.prev();
 			delay = delay || 0;
@@ -54,7 +56,7 @@
 			});
 		};
 
-		var _CreateToolbar = function( widget ) {
+		var _CreateToolbar = function() {
 			var toolbar = $('<div id="list-toolbar"> \
 				<button id="list-new">Create [shift+return]</button> \
 				<button id="list-delete">Delete [del]</button> \
@@ -90,9 +92,7 @@
 
 			// bind toolbar events.
 
-			toolbar.find("#list-delete").bind('click', { widget: widget }, function( e ) {
-				var widget = e.data.widget;
-
+			toolbar.find("#list-delete").bind('click', function( e ) {
 				if ( widget.selectedList !== null ) {
 
 
@@ -100,11 +100,11 @@
 						var deleteFunc = function() {
 							if ( widget.listForm !== null ) {
 								widget.listForm.bind( "FormHidden", function() {
-									_DeleteList( widget, 1000 );
+									_DeleteList( 1000 );
 								});
-								_HideForm( widget );
+								_HideForm();
 							} else {
-								_DeleteList( widget );
+								_DeleteList();
 							}
 						}
 
@@ -120,7 +120,7 @@
 				return false;
 			});
 
-			toolbar.find("#list-new").bind('click', { widget: widget }, function( e ) {
+			toolbar.find("#list-new").bind('click', function( e ) {
 
 				widget.listlist.hide('slide', { direction: 'left'}, 'slow', function(){
 
@@ -146,11 +146,11 @@
 							widget._trigger( "CloseList", 0, {} );
 
 							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
-								_HideForm( widget );
+								_HideForm();
 							});
 
 							widget.listForm.find( '#list_title' ).bind( 'keydown', 'esc', function( e ) {
-								_HideForm( widget );
+								_HideForm();
 							});
 
 							widget.listForm.bind( "submit", function( e ){
@@ -166,7 +166,7 @@
 										_ClearFormErrors( widget.listForm );
 
 										if ( errors === false ) {
-											_HideForm( widget, json, template );
+											_HideForm( json, template );
 
 											// clear searchfield
 											widget.toolbar.find( '#search-list' ).trigger( 'ClearValue' );
@@ -207,9 +207,7 @@
 				widget.listlist.find( ".row" ).show();
 			});
 
-			toolbar.find( "#list-edit" ).bind( 'click', { widget: widget }, function( e ) {
-				var widget = e.data.widget;
-
+			toolbar.find( "#list-edit" ).bind( 'click', function( e ) {
 				widget.listlist.hide('slide', { direction: 'left'}, 'slow', function(){
 
 					// remove eventual old occurances
@@ -232,11 +230,11 @@
 							});
 
 							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
-								_HideForm( widget );
+								_HideForm();
 							});
 
 							widget.listForm.find( '#list_title' ).bind( 'keydown', 'esc', function( e ) {
-								_HideForm( widget );
+								_HideForm();
 							});
 
 							widget.listForm.bind( "submit", function(e){
@@ -251,7 +249,7 @@
 										_ClearFormErrors( widget.listForm );
 
 										if ( errors === false ) {
-											_HideForm( widget, json, template );
+											_HideForm( json, template );
 										} else {
 											_HighlightFormErrors( widget.listForm, errors );
 										}
@@ -272,7 +270,7 @@
 			return toolbar
 		};
 
-		var _GetListElement = function( widget, data, template ) {
+		var _GetListElement = function( data, template ) {
 			// get HTML for single List representation
 			var newElement = $( $.mustache( template, data.list ) );
 
@@ -302,9 +300,7 @@
 				return false;
 			});
 
-			newElement.bind('focus', { widget: widget }, function(e){
-				var widget = e.data.widget;
-
+			newElement.bind('focus', function(e){
 				// remove selection from all rows
 				widget.listlist.find('.row').removeClass('selected-row');
 
@@ -385,22 +381,22 @@
 			return newElement;
 		};
 
-		var _triggerResize = function( widget ) {
+		var _triggerResize = function() {
 			widget._trigger("ContentDimensionsChanged", 0, {} );
 		};
 
-		var _AddListToDOM = function( widget, data, template ) {
+		var _AddListToDOM = function( data, template ) {
 			widget.listlist = $( '<div id="list-list"></div>' );
 			widget.wrapper.append( widget.listlist );
 			var toolbar = widget.toolbar;
 
 			for ( var i = 0; i < data.length; i++ ) {
-				widget.listlist.append( _GetListElement( widget, data[ i ], template ) ) ;
+				widget.listlist.append( _GetListElement( data[ i ], template ) ) ;
 			}
-			_triggerResize( widget );
+			_triggerResize();
 		};
 
-		var _SelectLastList = function( widget ) {
+		var _SelectLastList = function() {
 			var effect = "highlight";
 
 			if ( widget.selectedList ) {
@@ -417,9 +413,7 @@
 
 		};
 
-		var _RegisterGlobalKeyboardShortcuts = function( w ) {
-			var widget = w;
-
+		var _RegisterGlobalKeyboardShortcuts = function() {
 			// select list
 			$(document).bind( 'keydown', 'ctrl+l', function(e) {
 				_SelectLastList( w );
@@ -437,14 +431,14 @@
 			})
 		};
 
-		var _ShowListView = function( widget, updatedElement, template ) {
+		var _ShowListView = function( updatedElement, template ) {
 
 			widget.listlist.show('slide', { direction: 'left'}, 'slow', function(){
 				if ( updatedElement ) {
 
-					var newElement = _GetListElement( widget, updatedElement, template );
+					var newElement = _GetListElement( updatedElement, template );
 
-					if ( _IsNewList( widget, updatedElement ) ) {
+					if ( _IsNewList( updatedElement ) ) {
 						widget.listlist.prepend( newElement );
 					} else {
 						widget.selectedList.element.replaceWith( newElement );
@@ -462,10 +456,10 @@
 
 		};
 
-		var _HideForm = function( widget, updatedElement, template ) {
+		var _HideForm = function( updatedElement, template ) {
 
 			widget.listForm.hide('slide', { direction: 'left' }, 'slow', function(){
-				_ShowListView( widget, updatedElement, template );
+				_ShowListView( updatedElement, template );
 				widget.listForm.trigger( "FormHidden" );
 				if ( widget.selectedList ) {
 					widget.selectedList.element.focus();
@@ -493,7 +487,7 @@
 			selectedList: null,
 
 			_create: function() {
-				var widget = this;
+				widget = this;
 				widget.wrapper = widget.element.find('div#list-wrapper');
 				widget.toolbar = _CreateToolbar( widget );
 				widget.listForm = null;
@@ -506,7 +500,7 @@
 						widget.wrapper.find(".row").remove();
 
 						// add newly received Lists to DOM
-						_AddListToDOM( widget, json, template );
+						_AddListToDOM( json, template );
 
 						// focus first list
 						widget.listlist.find( '.row' ).first().focus();
@@ -514,7 +508,7 @@
 				} );
 
 				// register global keyboard shortcuts
-				_RegisterGlobalKeyboardShortcuts( widget );
+				_RegisterGlobalKeyboardShortcuts();
 			},
 
 			SelectList: function() {

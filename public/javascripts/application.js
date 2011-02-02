@@ -102,7 +102,7 @@ $(document).ready(function () {
 		}
 	});
 
-	ListKungFu.LayoutWest.find( '#tags' ).Tagger({
+	ListKungFu.LayoutWest.find( '#tags' ).TagView({
 
 	});
 
