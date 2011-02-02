@@ -113,7 +113,19 @@
 
 						// delete label
 						tagMenu.find( '.delete-label' ).bind( 'click', function(){
-							alert("deleting label");
+							var data = tagMenu.data( 'tag' );
+							var target = tagMenu.data( 'target' );
+
+							Tag.Destroy({
+								successCallback: function( template, json, status, xhr, errors ){
+									tagMenu.hide();
+									target.hide( 'fast', function(){
+										target.parent( '.tag' ).remove();
+									});
+								},
+								tags: data.tag.id
+							});
+
 							return false;
 						});
 

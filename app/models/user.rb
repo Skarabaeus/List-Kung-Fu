@@ -18,21 +18,4 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of :username
 
-  # SCOPES
-
-  def tags
-    all_tags = []
-
-    self.all_lists.each do |list|
-      all_tags << list.tags
-    end
-
-    all_tags.flatten
-  end
-
-  def all_lists
-    lists = []
-    lists << self.lists << self.shared_lists
-    lists.flatten
-  end
 end
