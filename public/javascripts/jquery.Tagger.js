@@ -116,15 +116,25 @@
 							var data = tagMenu.data( 'tag' );
 							var target = tagMenu.data( 'target' );
 
-							Tag.Destroy({
-								successCallback: function( template, json, status, xhr, errors ){
-									tagMenu.hide();
-									target.hide( 'fast', function(){
-										target.parent( '.tag' ).remove();
-									});
-								},
-								tags: data.tag.id
-							});
+							tagMenu.hide();
+
+							var deleteFunc = function(){
+								Tag.Destroy({
+									successCallback: function( template, json, status, xhr, errors ){
+										target.hide( 'fast', function(){
+											target.parent( '.tag' ).remove();
+										});
+									},
+									tags: data.tag.id
+								});
+							};
+
+							if ( typeof( widget.deleteDialog ) === 'undefined' ) {
+								widget.deleteDialog = $.confirmationDialog( "Delete Tag", deleteFunc, "Cancel"
+									, "Delete Tag and remove it from all lists?" );
+							}
+
+							widget.deleteDialog.dialog("open");
 
 							return false;
 						});
