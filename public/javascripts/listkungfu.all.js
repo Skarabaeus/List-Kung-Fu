@@ -5472,7 +5472,7 @@ $.fn.layout = function (opts) {
 
 }
 })( jQuery );(function(){
-	var Tagger = function(){
+	var TagView = function(){
 
 		var widget = null;
 
@@ -5586,7 +5586,29 @@ $.fn.layout = function (opts) {
 
 						// delete label
 						tagMenu.find( '.delete-label' ).bind( 'click', function(){
-							alert("deleting label");
+							var data = tagMenu.data( 'tag' );
+							var target = tagMenu.data( 'target' );
+
+							tagMenu.hide();
+
+							var deleteFunc = function(){
+								Tag.Destroy({
+									successCallback: function( template, json, status, xhr, errors ){
+										target.hide( 'fast', function(){
+											target.parent( '.tag' ).remove();
+										});
+									},
+									tags: data.tag.id
+								});
+							};
+
+							if ( typeof( widget.deleteDialog ) === 'undefined' ) {
+								widget.deleteDialog = $.confirmationDialog( "Delete Tag", deleteFunc, "Cancel"
+									, "Delete Tag and remove it from all lists?" );
+							}
+
+							widget.deleteDialog.dialog("open");
+
 							return false;
 						});
 
@@ -5648,5 +5670,5 @@ $.fn.layout = function (opts) {
 		};
 	}();
 	// register widget
-	$.widget("ui.Tagger", Tagger);
+	$.widget("ui.TagView", TagView);
 })();

@@ -1,5 +1,5 @@
 (function(){
-	var Tagger = function(){
+	var TagView = function(){
 
 		var widget = null;
 
@@ -197,5 +197,5 @@
 		};
 	}();
 	// register widget
-	$.widget("ui.Tagger", Tagger);
+	$.widget("ui.TagView", TagView);
 })();
