@@ -5,12 +5,12 @@ class TagsController < ApplicationController
   respond_to :xml
 
   def index
-    @tags = Tag.order( "name asc" )
+    @tags = current_user.tags.order( "name asc" )
     respond_with(@tags)
   end
 
   def show
-    @tag = Tag.find( params[:id] )
+    @tag = current_user.tags.where( "id = ?", params[:id] ).first
     respond_with(@tag)
   end
 
@@ -24,7 +24,7 @@ class TagsController < ApplicationController
   end
 
   def edit
-    @tag = Tag.find( params[:id] )
+    @tag = current_user.tags.where( "id = ?", params[:id] ).first
 
     respond_with( @tag ) do |format|
       format.js
@@ -43,7 +43,7 @@ class TagsController < ApplicationController
   end
 
   def update
-    @tag = Tag.find( params[:id] )
+    @tag = current_user.tags.where( "id = ?", params[:id] ).first
 
     @tag.name = params[ :tag ][ :name ]
     @tag.color_class = params[ :tag ][ :color_class ]
@@ -55,7 +55,7 @@ class TagsController < ApplicationController
   end
 
   def destroy
-    @tag = Tag.find( params[:id] )
+    @tag = current_user.tags.where( "id = ?", params[:id] ).first
     @tag.destroy
 
     respond_with( @tag )
