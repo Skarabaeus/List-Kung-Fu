@@ -314,7 +314,7 @@
 			});
 
 			newElement.bind( 'keydown dblclick', 'return', function( e ){
-				widget._trigger( "OpenList", 0, { selectedList: $(e.target).data("data") } );
+				widget._trigger( "OpenList", 0, { selectedList: $(e.target).parent().andSelf().filter( '.row' ).data("data") } );
 			});
 
 			newElement.bind( 'keydown', 'right', function( e ){
@@ -385,6 +385,16 @@
 			widget._trigger("ContentDimensionsChanged", 0, {} );
 		};
 
+		var _AdjustHeight = function() {
+			widget.listlist.find( '.row' ).each(function(){
+				var that = $(this);
+				var listTag = that.find( ".list-tag" );
+				var listName = that.find( ".list-name" );
+
+				listTag.height( listName.height() + 10 + "px" );
+			});
+		};
+
 		var _AddListToDOM = function( data, template ) {
 			widget.listlist = $( '<div id="list-list"></div>' );
 			widget.wrapper.append( widget.listlist );
@@ -393,6 +403,7 @@
 			for ( var i = 0; i < data.length; i++ ) {
 				widget.listlist.append( _GetListElement( data[ i ], template ) ) ;
 			}
+			_AdjustHeight();
 			_triggerResize();
 		};
 
@@ -443,6 +454,8 @@
 					} else {
 						widget.selectedList.element.replaceWith( newElement );
 					}
+
+					_AdjustHeight();
 
 					widget.selectedList =  {
 						data: updatedElement,

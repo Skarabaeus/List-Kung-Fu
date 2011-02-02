@@ -95,6 +95,17 @@ html, body {
 
 /* LISTS */
 
+.list-name {
+	margin:5px;
+	float:left;
+	width:90%;
+}
+
+.list-tag {
+	width:10px;
+	float:left;
+}
+
 #list-toolbar {
 	height:50px;
 	max-height:50px;
@@ -144,9 +155,8 @@ html, body {
 	overflow-x:hidden !important;
 }
 
-.row {
+#list-list .row {
 	margin:0px;
-	padding:7px;
 	background-image:url(/images/item_background.gif);
 	background-repeat: repeat-x;
 	overflow:hidden;
@@ -205,6 +215,14 @@ button:focus, input[type=submit]:focus {
 /*--------------------*/
 
 /* LIST ITEMS */
+
+#list-item-list .row {
+	margin:0px;
+	padding:7px;
+	background-image:url(/images/item_background.gif);
+	background-repeat: repeat-x;
+	overflow:hidden;
+}
 
 #deadline-settings {
 	width:100px;
