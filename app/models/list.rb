@@ -15,6 +15,10 @@ class List < ActiveRecord::Base
 
   attr_accessible :title
 
+  def tag_helper_color
+    "f00"
+  end
+
   def destroy_tag!( tag )
     self.tags.delete( tag )
     self.save
