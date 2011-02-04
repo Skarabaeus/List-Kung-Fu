@@ -70,6 +70,9 @@ $(document).ready(function () {
 		},
 		ReinitPanes: function(){
 			ListKungFu.MainLayout.reinitPane();
+		},
+		StartedDraggingListItem: function( event, data ) {
+			ListKungFu.LayoutWest.ListView( "SetupDroppable", data.dragType );
 		}
 	});
 
@@ -103,7 +106,9 @@ $(document).ready(function () {
 	});
 
 	ListKungFu.LayoutWest.find( '#tags' ).TagView({
-
+		StartedDraggingTag: function( event, data ) {
+			ListKungFu.LayoutWest.ListView( "SetupDroppable", data.dragType );
+		}
 	});
 
 	// bind "Dashboard"-link
@@ -1199,6 +1204,8 @@ jQuery(function ($) {
 						// disable the ability to select text.
 						// this is a hack for chrome and safari.
 						document.onselectstart = function () { return false; };
+
+						widget._trigger( "StartedDraggingListItem", 0, { dragType: "listitem" } );
 					},
 					stop: function ( event, ui ) {
 						document.onselectstart = null;
@@ -1677,8 +1684,54 @@ jQuery(function ($) {
 })();
 (function(){
 	var ListView = function(){
-		
+
 		var widget = null;
+
+		var _DroppableConfigTags = {
+			activeClass: "ui-state-default",
+			hoverClass: "ui-state-hover",
+			accept: ".tag",
+			drop: function( event, ui ) {
+				alert("dropped");
+			}
+		};
+
+		var _DroppableConfigListItems = function( newElement ) {
+			return {
+				activeClass: "ui-state-default",
+				hoverClass: "ui-state-hover",
+				accept: ".list-item",
+				drop: function( event, ui ) {
+					var originalListItem = ui.draggable.data( "data" );
+					var dropList = $( this ).data( "data" );
+
+					var data = {
+						list_item: {
+							body: originalListItem.list_item.body.replace(/\n/g, "\n\n")
+						}
+					};
+
+					ListListItem.Create({
+						send: data,
+						successCallback: function( template, json, status, xhr, errors ) {
+
+							$( event.target ).find(".fake-drop").remove();
+							newElement.effect( 'highlight', {}, 3000 );
+						},
+						lists: dropList.list.id
+					});
+				},
+				over: function(event, ui) {
+					var wrapper = $('<div class="fake-drop"></div>');
+					wrapper.html( '<p>' + ui.helper.text() + '</p>' );
+					$(event.target).append( wrapper );
+				},
+				out: function( event, ui ) {
+					$(event.target).find(".fake-drop").remove();
+				}
+
+			};
+		};
 
 		var _IsNewList = function( element ) {
 			if ( widget.selectedList === null || widget.selectedList.data.list.id !== element.list.id ) {
@@ -1991,7 +2044,7 @@ jQuery(function ($) {
 			});
 
 			newElement.bind( 'keydown dblclick', 'return', function( e ){
-				widget._trigger( "OpenList", 0, { selectedList: $(e.target).data("data") } );
+				widget._trigger( "OpenList", 0, { selectedList: $(e.target).parent().andSelf().filter( '.row' ).data("data") } );
 			});
 
 			newElement.bind( 'keydown', 'right', function( e ){
@@ -2018,48 +2071,24 @@ jQuery(function ($) {
 				return false;
 			});
 
-			newElement.droppable( {
-				activeClass: "ui-state-default",
-				hoverClass: "ui-state-hover",
-				accept: ".list-item",
-				drop: function( event, ui ) {
-					var originalListItem = ui.draggable.data( "data" );
-					var dropList = $( this ).data( "data" );
+			newElement.droppable( _DroppableConfigListItems( newElement ) );
 
-					var data = {
-						list_item: {
-							body: originalListItem.list_item.body.replace(/\n/g, "\n\n")
-						}
-					};
-
-					ListListItem.Create({
-						send: data,
-						successCallback: function( template, json, status, xhr, errors ) {
-
-							$( event.target ).find(".fake-drop").hide( 'slow', function() {
-								$(this).remove();
-								newElement.effect( 'highlight', {}, 3000 );
-							});
-						},
-						lists: dropList.list.id
-					});
-				},
-				over: function(event, ui) {
-					var wrapper = $('<div class="fake-drop"></div>');
-					wrapper.html( '<p>' + ui.helper.text() + '</p>' );
-					$(event.target).append( wrapper );
-				},
-				out: function( event, ui ) {
-					$(event.target).find(".fake-drop").remove();
-				}
-
-			} );
 
 			return newElement;
 		};
 
 		var _triggerResize = function() {
 			widget._trigger("ContentDimensionsChanged", 0, {} );
+		};
+
+		var _AdjustHeight = function() {
+			widget.listlist.find( '.row' ).each(function(){
+				var that = $(this);
+				var listTag = that.find( ".list-tag" );
+				var listName = that.find( ".list-name" );
+
+				listTag.height( listName.height() + 10 + "px" );
+			});
 		};
 
 		var _AddListToDOM = function( data, template ) {
@@ -2070,6 +2099,7 @@ jQuery(function ($) {
 			for ( var i = 0; i < data.length; i++ ) {
 				widget.listlist.append( _GetListElement( data[ i ], template ) ) ;
 			}
+			_AdjustHeight();
 			_triggerResize();
 		};
 
@@ -2120,6 +2150,8 @@ jQuery(function ($) {
 					} else {
 						widget.selectedList.element.replaceWith( newElement );
 					}
+
+					_AdjustHeight();
 
 					widget.selectedList =  {
 						data: updatedElement,
@@ -2186,6 +2218,22 @@ jQuery(function ($) {
 
 				// register global keyboard shortcuts
 				_RegisterGlobalKeyboardShortcuts();
+			},
+
+			SetupDroppable: function( dragType ) {
+				widget.listlist.find( '.row' ).each(function(){
+					var list = $(this)
+					list.droppable( "destroy");
+					switch( dragType ) {
+					case 'listitem':
+						list.droppable( _DroppableConfigListItems( list ) );
+						break;
+					case 'tag':
+						list.droppable( _DroppableConfigTags );
+						break;
+					}
+
+				});
 			},
 
 			SelectList: function() {
@@ -5497,8 +5545,28 @@ $.fn.layout = function (opts) {
 					menu.data( 'tag', data );
 					menu.data( 'target', target );
 				}
-
 			});
+
+
+			if ( ListKungFu && ListKungFu.LayoutWest ) {
+				tag.draggable( {
+					helper: 'clone',
+					appendTo: ListKungFu.LayoutWest,
+					revert: 'invalid',
+					containment: ListKungFu.LayoutWest,
+					start: function( event, ui ) {
+						// disable the ability to select text.
+						// this is a hack for chrome and safari.
+						document.onselectstart = function () { return false; };
+
+						widget._trigger( "StartedDraggingTag", 0, { dragType: "tag" } );
+					},
+					stop: function ( event, ui ) {
+						document.onselectstart = null;
+					}
+				});
+			}
+
 
 			return tag;
 		};
@@ -5577,7 +5645,6 @@ $.fn.layout = function (opts) {
 							});
 						});
 
-
 						// delete label
 						tagMenu.find( '.delete-label' ).bind( 'click', function(){
 							var data = tagMenu.data( 'tag' );
@@ -5605,6 +5672,7 @@ $.fn.layout = function (opts) {
 
 							return false;
 						});
+
 
 					}
 				});
