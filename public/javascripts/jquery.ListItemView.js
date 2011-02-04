@@ -283,6 +283,8 @@
 						// disable the ability to select text.
 						// this is a hack for chrome and safari.
 						document.onselectstart = function () { return false; };
+
+						widget._trigger( "StartedDraggingListItem", 0, { dragType: "listitem" } );
 					},
 					stop: function ( event, ui ) {
 						document.onselectstart = null;

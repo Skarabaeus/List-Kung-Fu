@@ -3,6 +3,52 @@
 
 		var widget = null;
 
+		var _DroppableConfigTags = {
+			activeClass: "ui-state-default",
+			hoverClass: "ui-state-hover",
+			accept: ".tag",
+			drop: function( event, ui ) {
+				alert("dropped");
+			}
+		};
+
+		var _DroppableConfigListItems = function( newElement ) {
+			return {
+				activeClass: "ui-state-default",
+				hoverClass: "ui-state-hover",
+				accept: ".list-item",
+				drop: function( event, ui ) {
+					var originalListItem = ui.draggable.data( "data" );
+					var dropList = $( this ).data( "data" );
+
+					var data = {
+						list_item: {
+							body: originalListItem.list_item.body.replace(/\n/g, "\n\n")
+						}
+					};
+
+					ListListItem.Create({
+						send: data,
+						successCallback: function( template, json, status, xhr, errors ) {
+
+							$( event.target ).find(".fake-drop").remove();
+							newElement.effect( 'highlight', {}, 3000 );
+						},
+						lists: dropList.list.id
+					});
+				},
+				over: function(event, ui) {
+					var wrapper = $('<div class="fake-drop"></div>');
+					wrapper.html( '<p>' + ui.helper.text() + '</p>' );
+					$(event.target).append( wrapper );
+				},
+				out: function( event, ui ) {
+					$(event.target).find(".fake-drop").remove();
+				}
+
+			};
+		};
+
 		var _IsNewList = function( element ) {
 			if ( widget.selectedList === null || widget.selectedList.data.list.id !== element.list.id ) {
 				return true;
@@ -341,42 +387,8 @@
 				return false;
 			});
 
-			newElement.droppable( {
-				activeClass: "ui-state-default",
-				hoverClass: "ui-state-hover",
-				accept: ".list-item",
-				drop: function( event, ui ) {
-					var originalListItem = ui.draggable.data( "data" );
-					var dropList = $( this ).data( "data" );
+			newElement.droppable( _DroppableConfigListItems( newElement ) );
 
-					var data = {
-						list_item: {
-							body: originalListItem.list_item.body.replace(/\n/g, "\n\n")
-						}
-					};
-
-					ListListItem.Create({
-						send: data,
-						successCallback: function( template, json, status, xhr, errors ) {
-
-							$( event.target ).find(".fake-drop").hide( 'slow', function() {
-								$(this).remove();
-								newElement.effect( 'highlight', {}, 3000 );
-							});
-						},
-						lists: dropList.list.id
-					});
-				},
-				over: function(event, ui) {
-					var wrapper = $('<div class="fake-drop"></div>');
-					wrapper.html( '<p>' + ui.helper.text() + '</p>' );
-					$(event.target).append( wrapper );
-				},
-				out: function( event, ui ) {
-					$(event.target).find(".fake-drop").remove();
-				}
-
-			} );
 
 			return newElement;
 		};
@@ -522,6 +534,22 @@
 
 				// register global keyboard shortcuts
 				_RegisterGlobalKeyboardShortcuts();
+			},
+
+			SetupDroppable: function( dragType ) {
+				widget.listlist.find( '.row' ).each(function(){
+					var list = $(this)
+					list.droppable( "destroy");
+					switch( dragType ) {
+					case 'listitem':
+						list.droppable( _DroppableConfigListItems( list ) );
+						break;
+					case 'tag':
+						list.droppable( _DroppableConfigTags );
+						break;
+					}
+
+				});
 			},
 
 			SelectList: function() {

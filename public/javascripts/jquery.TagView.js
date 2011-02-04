@@ -30,8 +30,28 @@
 					menu.data( 'tag', data );
 					menu.data( 'target', target );
 				}
-
 			});
+
+
+			if ( ListKungFu && ListKungFu.LayoutWest ) {
+				tag.draggable( {
+					helper: 'clone',
+					appendTo: ListKungFu.LayoutWest,
+					revert: 'invalid',
+					containment: ListKungFu.LayoutWest,
+					start: function( event, ui ) {
+						// disable the ability to select text.
+						// this is a hack for chrome and safari.
+						document.onselectstart = function () { return false; };
+
+						widget._trigger( "StartedDraggingTag", 0, { dragType: "tag" } );
+					},
+					stop: function ( event, ui ) {
+						document.onselectstart = null;
+					}
+				});
+			}
+
 
 			return tag;
 		};
@@ -110,7 +130,6 @@
 							});
 						});
 
-
 						// delete label
 						tagMenu.find( '.delete-label' ).bind( 'click', function(){
 							var data = tagMenu.data( 'tag' );
@@ -138,6 +157,7 @@
 
 							return false;
 						});
+
 
 					}
 				});
