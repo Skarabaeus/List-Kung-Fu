@@ -25,7 +25,7 @@ class List < ActiveRecord::Base
     end
 
     if tags.length > 0
-      mul_factor = 1.3
+      mul_factor = 1.1
 
       red = ( red / ( tags.length * mul_factor ) ).to_i
       green = green / tags.length
@@ -34,7 +34,7 @@ class List < ActiveRecord::Base
       red, green, blue = 255, 255, 255
     end
 
-    color = red.to_s(16) + green.to_s(16) + blue.to_s(16)
+    color = red.to_s(16).ljust( 2, '0' ) + green.to_s(16).ljust( 2, '0' ) + blue.to_s(16).ljust( 2, '0' )
   end
 
   def destroy_tag!( tag )
