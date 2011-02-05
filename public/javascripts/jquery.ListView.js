@@ -8,7 +8,9 @@
 			hoverClass: "ui-state-hover",
 			accept: ".tag",
 			drop: function( event, ui ) {
-				alert("dropped");
+				if ( $(this).position().top < widget.wrapper.height() ) {
+					alert("dropped");
+				}
 			}
 		};
 
@@ -18,24 +20,26 @@
 				hoverClass: "ui-state-hover",
 				accept: ".list-item",
 				drop: function( event, ui ) {
-					var originalListItem = ui.draggable.data( "data" );
-					var dropList = $( this ).data( "data" );
+					if ( $(this).position().top < widget.wrapper.height() ) {
+						var originalListItem = ui.draggable.data( "data" );
+						var dropList = $( this ).data( "data" );
 
-					var data = {
-						list_item: {
-							body: originalListItem.list_item.body.replace(/\n/g, "\n\n")
-						}
-					};
+						var data = {
+							list_item: {
+								body: originalListItem.list_item.body.replace(/\n/g, "\n\n")
+							}
+						};
 
-					ListListItem.Create({
-						send: data,
-						successCallback: function( template, json, status, xhr, errors ) {
+						ListListItem.Create({
+							send: data,
+							successCallback: function( template, json, status, xhr, errors ) {
 
-							$( event.target ).find(".fake-drop").remove();
-							newElement.effect( 'highlight', {}, 3000 );
-						},
-						lists: dropList.list.id
-					});
+								$( event.target ).find(".fake-drop").remove();
+								newElement.effect( 'highlight', {}, 3000 );
+							},
+							lists: dropList.list.id
+						});
+					}
 				},
 				over: function(event, ui) {
 					var wrapper = $('<div class="fake-drop"></div>');
@@ -439,7 +443,7 @@
 		var _RegisterGlobalKeyboardShortcuts = function() {
 			// select list
 			$(document).bind( 'keydown', 'ctrl+l', function(e) {
-				_SelectLastList( w );
+				_SelectLastList();
 			});
 
 			$(document).bind( 'keydown', 'ctrl+f', function(e){
@@ -537,6 +541,7 @@
 			},
 
 			SetupDroppable: function( dragType ) {
+
 				widget.listlist.find( '.row' ).each(function(){
 					var list = $(this)
 					list.droppable( "destroy");
@@ -553,7 +558,7 @@
 			},
 
 			SelectList: function() {
-				_SelectLastList( this );
+				_SelectLastList();
 			},
 
 			destroy: function() {
