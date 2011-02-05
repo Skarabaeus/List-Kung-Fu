@@ -1,6 +1,6 @@
 /* colors for tags */
 
 .no-background-color{
-	background-color:transparent !important;
+	background-color:#fff !important;
 	color:#000 !important;
 }
