@@ -11,6 +11,19 @@
 			widget._trigger("ReinitPanes", 0, {} );
 		};
 
+		var _SetupCustomDeadlinePicker = function( element ) {
+			var dateFormat = 'yy-mm-dd';
+
+			element.datepicker( {
+					minDate: new Date(), // choosing deadline in the past wouldn't make much sense
+					dateFormat: dateFormat,
+					onSelect: function( dateText, inst ) {
+						alert(dateText);
+						$(this).datepicker("hide");
+					}
+			});
+		};
+
 		return {
 			// default options
 			options: {
@@ -67,10 +80,13 @@
 									break;
 							}
 
+							$listItemHtml.data( 'data', listItem );
+
 							// bind events
 							$listItemHtml.find( '.dashboard-list-item-title' ).bind( 'click', function( e ){
 								widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
 							});
+
 							$listItemHtml.find( '.dashboard-item-more' ).bind( 'click', function( e ){
 								widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
 							});
@@ -123,6 +139,13 @@
 								widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
 							});
 
+
+							_SetupCustomDeadlinePicker( $listItemHtml.find( '.dashboard-list-item-deadline-hidden' ) );
+
+							$listItemHtml.find( '.dashboard-list-item-deadline' ).bind( 'click', function(){
+								$( this ).parent().find( '.dashboard-list-item-deadline-hidden' ).datepicker( "show" );
+							});
+
 						});
 
 						$( 'div[data-type~="scheduleColumn"]' ).each(function(){
@@ -153,8 +176,6 @@
 				widget.toolbar.find( '#dashboard-search-cancel' ).bind( 'click', function(){
 					widget.toolbar.find("#dashboard-search").val("").trigger('keyup');
 				});
-
-				_TriggerResize();
 			},
 
 			Hide: function() {
