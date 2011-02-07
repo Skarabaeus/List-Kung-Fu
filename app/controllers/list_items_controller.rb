@@ -8,9 +8,9 @@ class ListItemsController < ApplicationController
   def index
     case params[ :show ]
     when "dashboard"
-      @presenter = ListItemPresenters::Dashboard.new( current_user.id )
+      @presenter = ListItemIndexPresenters::Dashboard.new( current_user.id )
     else
-      @presenter = ListItemPresenters::ListItemView.new( current_user.id, params[ :list_id ], params[ :show ] )
+      @presenter = ListItemIndexPresenters::ListItemView.new( current_user.id, params[ :list_id ], params[ :show ] )
     end
 
     respond_with( @list_items )
@@ -52,13 +52,19 @@ class ListItemsController < ApplicationController
   end
 
   def update
-    @list_item = @list.list_items.find( params[ :id ] )
+    list_item = @list.list_items.find( params[ :id ] )
 
-    @list_item.body = params[ :list_item ][ :body ]
-    @list_item.completed = params[ :list_item ][ :completed ] unless params[ :list_item ][ :completed ].nil?
-    @list_item.deadline = get_deadline
+    list_item.body = params[ :list_item ][ :body ]
+    list_item.completed = params[ :list_item ][ :completed ] unless params[ :list_item ][ :completed ].nil?
+    list_item.deadline = get_deadline
 
-    if @list_item.save
+    if params[ :list_item ][ :template ] == 'dashboard'
+      @presenter = ListItemUpdatePresenters::Dashboard.new( list_item )
+    else
+      @presenter = ListITemupdatePresenters::ListItemView.new( list_item )
+    end
+
+    if list_item.save
       flash[:notice] = 'List Item has been updated.'
     end
 
@@ -90,6 +96,7 @@ class ListItemsController < ApplicationController
       @list_item.deadline
     when 'customdeadline'
       date_arr = (params[ :list_item ][ :customDeadlineValue ]).split( ',' )
+      # yy,mm,dd
       date = Time.local date_arr.first, date_arr.second, date_arr.third
       date + 12.hours
     else

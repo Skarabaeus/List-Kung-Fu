@@ -1,4 +1,4 @@
-module ListItemPresenters
+module ListItemIndexPresenters
 
   class Dashboard
     def initialize( user_id )
