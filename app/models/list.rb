@@ -25,11 +25,9 @@ class List < ActiveRecord::Base
     end
 
     if tags.length > 0
-      mul_factor = 1.1
-
-      red = ( red / ( tags.length * mul_factor ) ).to_i
+      red = red / tags.length
       green = green / tags.length
-      blue = ( blue / ( tags.length * mul_factor ) ).to_i
+      blue = blue / tags.length
     else
       red, green, blue = 255, 255, 255
     end
