@@ -108,6 +108,9 @@ $(document).ready(function () {
 	ListKungFu.LayoutWest.find( '#tags' ).TagView({
 		StartedDraggingTag: function( event, data ) {
 			ListKungFu.LayoutWest.ListView( "SetupDroppable", data.dragType );
+		},
+		AfterColorChanged: function( event, data ) {
+			ListKungFu.LayoutWest.ListView( "ReloadLists" );
 		}
 	});
 
@@ -1775,7 +1778,20 @@ jQuery(function ($) {
 			accept: ".tag",
 			drop: function( event, ui ) {
 				if ( $(this).position().top < widget.wrapper.height() ) {
-					alert("dropped");
+					var listElement = $( this );
+					var tagData = ui.draggable.data( 'data' );
+					var listData = listElement.data( 'data' );
+
+					listData.list.tag_id = tagData.tag.id;
+
+					List.Update({
+
+						send: listData,
+						successCallback: function( template, json, status, xhr, errors ){
+							listElement.find( '.list-tag' ).css( { backgroundColor: "#" + json.list.tag_helper_color } );
+						},
+						lists: listData.list.id
+					});
 				}
 			}
 		};
@@ -2321,6 +2337,19 @@ jQuery(function ($) {
 					}
 
 				});
+			},
+
+			ReloadLists: function() {
+				List.Index( {
+					successCallback: function( template, json, status, xhr, errors ) {
+
+						// remove all existing rows
+						widget.wrapper.find(".row").remove();
+
+						// add newly received Lists to DOM
+						_AddListToDOM( json, template );
+					}
+				} );
 			},
 
 			SelectList: function() {
@@ -5710,6 +5739,9 @@ $.fn.layout = function (opts) {
 
 								send: json,
 								successCallback: function( template, json, status, xhr, errors ){
+									// Lists need to be reloaded because tag_color_helper will have changed
+									widget._trigger( "AfterColorChanged", 0, {} );
+
 									var colorSelector = target;
 
 									// update view

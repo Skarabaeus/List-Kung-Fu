@@ -1,4 +1,13 @@
 <div class="single-list-wrapper">
 	<div class="list-tag" style="background-color:#{{tag_helper_color}};">&nbsp;</div>
-	<div class="list-name">{{title}}</div>
+	<div class="list-name">
+		{{title}}
+		<div class="assigned-tags">
+				{{#tags}}
+					<span class="assigned-tag" data-id="{{id}}">
+						{{name}}
+					</span>
+				{{/tags}}
+		</div>
+	</div>
 </div>
