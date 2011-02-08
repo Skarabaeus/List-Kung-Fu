@@ -570,6 +570,19 @@
 				});
 			},
 
+			ReloadLists: function() {
+				List.Index( {
+					successCallback: function( template, json, status, xhr, errors ) {
+
+						// remove all existing rows
+						widget.wrapper.find(".row").remove();
+
+						// add newly received Lists to DOM
+						_AddListToDOM( json, template );
+					}
+				} );
+			},
+
 			SelectList: function() {
 				_SelectLastList();
 			},

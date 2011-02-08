@@ -108,6 +108,9 @@
 
 								send: json,
 								successCallback: function( template, json, status, xhr, errors ){
+									// Lists need to be reloaded because tag_color_helper will have changed
+									widget._trigger( "AfterColorChanged", 0, {} );
+
 									var colorSelector = target;
 
 									// update view

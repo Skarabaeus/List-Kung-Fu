@@ -108,6 +108,9 @@ $(document).ready(function () {
 	ListKungFu.LayoutWest.find( '#tags' ).TagView({
 		StartedDraggingTag: function( event, data ) {
 			ListKungFu.LayoutWest.ListView( "SetupDroppable", data.dragType );
+		},
+		AfterColorChanged: function( event, data ) {
+			ListKungFu.LayoutWest.ListView( "ReloadLists" );
 		}
 	});
 
