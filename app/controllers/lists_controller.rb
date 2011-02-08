@@ -3,7 +3,7 @@ class ListsController < ApplicationController
 	before_filter :authenticate_user!
 
   respond_to :xml
-  
+
   def index
     @lists = current_user.lists.order( "created_at desc" )
     respond_with(@lists)
@@ -37,23 +37,35 @@ class ListsController < ApplicationController
     if @list.save
       flash[:notice] = 'List has been created.'
     end
-    
+
     respond_with( @list )
   end
 
   def update
+    flash_notice = 'List title has been updated.'
+
     @list = current_user.lists.find( params[:id] )
-    if @list.update_attributes(params[:list])
-      flash[:notice] = 'List has been updated.'
+
+    @list.title = params[ :list ][ :title ]
+
+    tag_id = params[ :list ][ :tag_id ]
+    unless tag_id.nil?
+      # no worries about dublicates, rails takes care of that.
+      @list.tag_ids = @list.tag_ids + [ tag_id ]
+      flash_notice = 'Tag has been added to list.'
     end
-    
+
+    if @list.save
+      flash[:notice] = flash_notice
+    end
+
     respond_with( @list )
   end
 
   def destroy
     @list = current_user.lists.find( params[:id] )
     @list.destroy
-    
+
     respond_with( @list )
   end
 end

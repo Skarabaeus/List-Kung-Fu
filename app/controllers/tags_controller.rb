@@ -43,12 +43,20 @@ class TagsController < ApplicationController
   end
 
   def update
+    flash_notice = ''
+
     @tag = current_user.tags.where( "id = ?", params[:id] ).first
 
-    @tag.name = params[ :tag ][ :name ]
-    @tag.color_class = params[ :tag ][ :color_class ]
+    tag_name = params[ :tag ][ :name ]
+    color_class = params[ :tag ][ :color_class ]
+    unless tag_name.nil? or color_class.nil?
+      @tag.name = tag_name
+      @tag.color_class = color_class
+      flash_notice = 'Tag color has been updated.'
+    end
+
     if @tag.save
-      flash[:notice] = 'Tag has been updated.'
+      flash[:notice] = flash_notice
     end
 
     respond_with( @tag )

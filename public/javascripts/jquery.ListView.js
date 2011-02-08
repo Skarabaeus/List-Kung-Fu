@@ -9,7 +9,20 @@
 			accept: ".tag",
 			drop: function( event, ui ) {
 				if ( $(this).position().top < widget.wrapper.height() ) {
-					alert("dropped");
+					var listElement = $( this );
+					var tagData = ui.draggable.data( 'data' );
+					var listData = listElement.data( 'data' );
+
+					listData.list.tag_id = tagData.tag.id;
+
+					List.Update({
+
+						send: listData,
+						successCallback: function( template, json, status, xhr, errors ){
+							listElement.find( '.list-tag' ).css( { backgroundColor: "#" + json.list.tag_helper_color } );
+						},
+						lists: listData.list.id
+					});
 				}
 			}
 		};
