@@ -52,19 +52,19 @@ class ListItemsController < ApplicationController
   end
 
   def update
-    list_item = @list.list_items.find( params[ :id ] )
+    @list_item = @list.list_items.find( params[ :id ] )
 
-    list_item.body = params[ :list_item ][ :body ]
-    list_item.completed = params[ :list_item ][ :completed ] unless params[ :list_item ][ :completed ].nil?
-    list_item.deadline = get_deadline
+    @list_item.body = params[ :list_item ][ :body ]
+    @list_item.completed = params[ :list_item ][ :completed ] unless params[ :list_item ][ :completed ].nil?
+    @list_item.deadline = get_deadline
 
     if params[ :list_item ][ :template ] == 'dashboard'
-      @presenter = ListItemUpdatePresenters::Dashboard.new( list_item )
+      @presenter = ListItemUpdatePresenters::Dashboard.new( @list_item )
     else
-      @presenter = ListITemupdatePresenters::ListItemView.new( list_item )
+      @presenter = ListItemUpdatePresenters::ListItemView.new( @list_item )
     end
 
-    if list_item.save
+    if @list_item.save
       flash[:notice] = 'List Item has been updated.'
     end
 

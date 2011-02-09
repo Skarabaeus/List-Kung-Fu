@@ -19,6 +19,7 @@ end
 
 Factory.define :tag do |f|
   f.sequence(:name) { |n| "Tag #{n}" }
+  f.association :user, :factory => :user
 end
 
 Factory.define :filter do |f|
