@@ -1,7 +1,7 @@
 class ListItemsController < ApplicationController
 
+  before_filter :authenticate_user!
   before_filter :load_list, :except => :index
-	before_filter :authenticate_user!
 
   respond_to :xml
 
