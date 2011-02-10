@@ -8,6 +8,7 @@
 			oldElement.replaceWith( ele );
 			_AdjustHeight();
 			_triggerResize();
+			ele.focus();
 		};
 
 		var _DroppableConfigTags = {
@@ -371,11 +372,18 @@
 			});
 
 			newElement.bind('focus', function(e){
+				var target = $( e.target );
+
 				// remove selection from all rows
 				widget.listlist.find('.row').removeClass('selected-row');
 
 				// add it to the selected row.
-				$( e.target ).addClass('selected-row');
+				target.addClass('selected-row');
+
+				// show tags of selected list and hide tags of all the others
+				widget.listlist.find( '.assigned-tags' ).hide();
+				target.find( '.assigned-tags' ).show();
+				_AdjustHeight();
 
 				widget.selectedList = {
 					element: $( e.target ),
@@ -432,9 +440,9 @@
 					},
 					lists: listData.list.id
 				});
-
 			});
 
+			newElement.find( '.assigned-tags' ).hide();
 			return newElement;
 		};
 
