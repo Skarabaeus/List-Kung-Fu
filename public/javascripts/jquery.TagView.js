@@ -7,10 +7,14 @@
 			var tag = $( $.mustache( template, data.tag ) );
 
 			tag.data('data', data);
-			tag.find( '.tag-menu' ).hide();
+
+			if (!widget.tagMenu) {
+				widget.tagMenu = tag.find( '.tag-menu' );
+			}
+			tag.find( '.tag-menu' ).remove();
 
 			tag.find( '.color-selector' ).bind( 'click', function(e){
-				var menu = widget.tagList.find( '.tag-menu' );
+				var menu = widget.tagMenu;
 				var target = $( e.target );
 
 				if ( menu.data( 'visible' ) === true && menu.data( 'tagId' ) === data.tag.id ) {
@@ -88,19 +92,17 @@
 							widget.tagList.append( _GetTag( json[ i ], template ) ) ;
 						}
 
-						var tagMenu = widget.tagList.find( '.tag-menu' ).first();
-						widget.tagList.find( '.tag-menu' ).remove();
-						widget.tagList.append( tagMenu );
+						widget.tagList.append( widget.tagMenu );
 
 						// bind events for tag menu
 
 						// color selection
-						tagMenu.find( '.color' ).bind( 'click', function( e ) {
+						widget.tagMenu.find( '.color' ).bind( 'click', function( e ) {
 							var $target = $( e.target );
 							var colorClass = $target.attr( 'data-colorclass' );
-							var json = tagMenu.data( 'tag' );
+							var json = widget.tagMenu.data( 'tag' );
 							var oldColorClass = json.tag.color_class;
-							var target = tagMenu.data( 'target' );
+							var target = widget.tagMenu.data( 'target' );
 
 							json.tag.color_class = colorClass;
 
@@ -120,11 +122,11 @@
 									colorSelector.addClass( colorClass );
 
 									// hide the tag menu
-									tagMenu.hide( 'fast' );
-									tagMenu.data( 'visible', false );
-									tagMenu.data( 'tagId', null );
-									tagMenu.data( 'tag', null );
-									tagMenu.data( 'target', null );
+									widget.tagMenu.hide( 'fast' );
+									widget.tagMenu.data( 'visible', false );
+									widget.tagMenu.data( 'tagId', null );
+									widget.tagMenu.data( 'tag', null );
+									widget.tagMenu.data( 'target', null );
 
 									// update data object
 									target.data( 'data', json );
@@ -134,11 +136,11 @@
 						});
 
 						// delete label
-						tagMenu.find( '.delete-label' ).bind( 'click', function(){
-							var data = tagMenu.data( 'tag' );
-							var target = tagMenu.data( 'target' );
+						widget.tagMenu.find( '.delete-label' ).bind( 'click', function(){
+							var data = widget.tagMenu.data( 'tag' );
+							var target = widget.tagMenu.data( 'target' );
 
-							tagMenu.hide();
+							widget.tagMenu.hide();
 
 							var deleteFunc = function(){
 								Tag.Destroy({
