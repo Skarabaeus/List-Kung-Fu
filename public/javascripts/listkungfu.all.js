@@ -5669,6 +5669,7 @@ $.fn.layout = function (opts) {
 
 			if (!widget.tagMenu) {
 				widget.tagMenu = tag.find( '.tag-menu' );
+				widget.tagMenu.hide();
 			}
 			tag.find( '.tag-menu' ).remove();
 
