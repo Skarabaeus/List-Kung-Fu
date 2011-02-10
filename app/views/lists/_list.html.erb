@@ -2,14 +2,12 @@
 	<div class="list-tag" style="background-color:#{{tag_helper_color}};">&nbsp;</div>
 	<div class="list-name">
 		{{title}}
-		<!-->
 		<div class="assigned-tags">
 				{{#tags}}
-					<span class="assigned-tag" data-id="{{id}}">
-						{{name}}
+					<span class="assigned-tag" data-id="{{id}}" style="background-color:#{{color_rgb}};color:#{{foreground_color_rgb}}">
+						<span class="assigned-tag-delete">[x]</span> {{name}}
 					</span>
 				{{/tags}}
 		</div>
-		-->
 	</div>
 </div>

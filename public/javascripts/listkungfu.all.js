@@ -1772,6 +1772,13 @@ jQuery(function ($) {
 
 		var widget = null;
 
+		var _ReplaceList = function( oldElement, data, template ) {
+			var ele = _GetListElement( data, template );
+			oldElement.replaceWith( ele );
+			_AdjustHeight();
+			_triggerResize();
+		};
+
 		var _DroppableConfigTags = {
 			activeClass: "ui-state-default",
 			hoverClass: "ui-state-hover",
@@ -1788,7 +1795,7 @@ jQuery(function ($) {
 
 						send: listData,
 						successCallback: function( template, json, status, xhr, errors ){
-							listElement.find( '.list-tag' ).css( { backgroundColor: "#" + json.list.tag_helper_color } );
+							_ReplaceList( listElement, json, template );
 						},
 						lists: listData.list.id
 					});
@@ -2160,13 +2167,13 @@ jQuery(function ($) {
 				return false;
 			});
 
-			newElement.bind('keydown', 'del', function(e){
+			newElement.bind( 'keydown', 'del', function(e){
 				widget.toolbar.find( "#list-delete" ).effect('puff', {}, 300, function(){
 					$(this).show();
 				}).trigger('click');
 			});
 
-			newElement.bind('keydown', 'space', function(){
+			newElement.bind( 'keydown', 'space', function(){
 				widget.toolbar.find( "#list-edit" ).effect('puff', {}, 300, function(){
 					$(this).show();
 					$(this).trigger('click') });
@@ -2175,6 +2182,27 @@ jQuery(function ($) {
 
 			newElement.droppable( _DroppableConfigListItems( newElement ) );
 
+			newElement.find( '.assigned-tag-delete' ).bind( 'click', function( e ){
+				var tagElement = $( e.target ).parent( '.assigned-tag' );
+				var tagId = tagElement.attr( 'data-id' );
+				var listData = newElement.data( 'data' );
+
+				listData.list.tag_id = tagId;
+				listData.list.tag_action = 'remove';
+
+				List.Update({
+
+					send: listData,
+					successCallback: function( template, json, status, xhr, errors ){
+						tagElement.hide( 'slow', function(){
+							tagElement.remove();
+							_ReplaceList( newElement, json, template );
+						});
+					},
+					lists: listData.list.id
+				});
+
+			});
 
 			return newElement;
 		};

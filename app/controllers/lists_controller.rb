@@ -49,10 +49,19 @@ class ListsController < ApplicationController
     @list.title = params[ :list ][ :title ]
 
     tag_id = params[ :list ][ :tag_id ]
+    tag_action = params[ :list ][ :tag_action ] || 'add'
+
     unless tag_id.nil?
-      # no worries about dublicates, rails takes care of that.
-      @list.tag_ids = @list.tag_ids + [ tag_id ]
-      flash_notice = 'Tag has been added to list.'
+      if tag_action == 'remove'
+        tag_ids = @list.tag_ids
+        tag_ids.delete( tag_id.to_i )
+        @list.tag_ids = tag_ids
+        flash_notice = 'Tag has been removed from list.'
+      else
+        # no worries about dublicates, rails takes care of that.
+        @list.tag_ids = @list.tag_ids + [ tag_id ]
+        flash_notice = 'Tag has been added to list.'
+      end
     end
 
     if @list.save
