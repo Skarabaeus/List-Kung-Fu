@@ -35,7 +35,7 @@ module TagsHelper
   def self.tag_colors
     color = {}
     color[ :c1 ] = TagColor.new( { :class_name => 'c1', :color_name => 'steelblue', :background_color => '4682B4', :foreground_color => '222222' } )
-    color[ :c2 ] = TagColor.new( { :class_name => 'c2', :color_name => 'royalblue', :background_color => '4169E1', :foreground_color => '222222' } )
+    color[ :c2 ] = TagColor.new( { :class_name => 'c2', :color_name => 'royalblue', :background_color => '4169E1', :foreground_color => 'eeeeee' } )
     color[ :c3 ] = TagColor.new( { :class_name => 'c3', :color_name => 'navy', :background_color => '000080', :foreground_color => 'eeeeee' } )
     color[ :c4 ] = TagColor.new( { :class_name => 'c4', :color_name => 'mediumblue', :background_color => '0000CD', :foreground_color => 'eeeeee' } )
     color[ :c5 ] = TagColor.new( { :class_name => 'c5', :color_name => 'dodgerblue', :background_color => '1E90FF', :foreground_color => '222222' } )
