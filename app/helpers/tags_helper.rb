@@ -55,7 +55,7 @@ module TagsHelper
     color[ :c19 ] = TagColor.new( { :class_name => 'c19', :color_name => 'indianred', :background_color => 'CD5C5C', :foreground_color => 'eeeeee' } )
     color[ :c20 ] = TagColor.new( { :class_name => 'c20', :color_name => 'coral', :background_color => 'FF7F50', :foreground_color => '222222' } )
     color[ :c21 ] = TagColor.new( { :class_name => 'c21', :color_name => 'darkorange', :background_color => 'FF8C00', :foreground_color => '222222' } )
-    color[ :c22 ] = TagColor.new( { :class_name => 'c22', :color_name => 'DC143C', :background_color => 'DC143C', :foreground_color => '222222' } )
+    color[ :c22 ] = TagColor.new( { :class_name => 'c22', :color_name => 'DC143C', :background_color => 'DC143C', :foreground_color => 'eeeeee' } )
     color[ :c23 ] = TagColor.new( { :class_name => 'c23', :color_name => 'deeppink', :background_color => 'FF1493', :foreground_color => '222222' } )
     color[ :c24 ] = TagColor.new( { :class_name => 'c24', :color_name => '', :background_color => 'darkmagenta', :foreground_color => 'eeeeee' } )
 
