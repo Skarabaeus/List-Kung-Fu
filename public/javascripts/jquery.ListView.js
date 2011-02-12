@@ -648,6 +648,7 @@
 						// add newly received Lists to DOM
 						_AddListToDOM( json, template );
 						widget.toolbar.find( "#search-list" ).trigger( "keyup" );
+						_FilterByTags();
 					}
 				} );
 			},
