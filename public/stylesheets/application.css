@@ -590,6 +590,7 @@ button:focus, input[type=submit]:focus {
 .assigned-tags {
 	font-size:0.7em;
 	padding-top:10px;
+	line-height:2em;
 }
 
 .assigned-tag {
@@ -598,6 +599,7 @@ button:focus, input[type=submit]:focus {
 	border-radius: 3px;
 	padding:1px;
 	margin:2px;
+	white-space:nowrap;
 }
 
 .assigned-tag-delete {

@@ -267,6 +267,8 @@
 					widget.listlist.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
 					widget.listlist.find( ".row:Contains('" + filtervalue + "')").show();
         }
+				_AdjustHeight();
+				_triggerResize();
 			});
 
 			toolbar.find( "#list-search-cancel" ).bind( 'click', function() {

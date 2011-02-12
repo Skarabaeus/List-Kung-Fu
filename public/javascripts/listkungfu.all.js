@@ -2036,6 +2036,8 @@ jQuery(function ($) {
 					widget.listlist.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
 					widget.listlist.find( ".row:Contains('" + filtervalue + "')").show();
         }
+				_AdjustHeight();
+				_triggerResize();
 			});
 
 			toolbar.find( "#list-search-cancel" ).bind( 'click', function() {
@@ -2384,6 +2386,7 @@ jQuery(function ($) {
 
 						// add newly received Lists to DOM
 						_AddListToDOM( json, template );
+						widget.toolbar.find( "#search-list" ).trigger( "keyup" );
 					}
 				} );
 			},
