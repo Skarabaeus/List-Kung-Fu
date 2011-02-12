@@ -1122,6 +1122,13 @@ jQuery(function ($) {
 				}
 			});
 
+			if ( $.browser.msie ) {
+				newElement.bind( 'click ', function() {
+					newElement.focus();
+					return false;
+				});
+			}
+
 			newElement.bind( 'keydown', 'down', function( e ){
 				e.preventDefault();
 				$( e.target ).nextAll( 'div:visible' ).first().focus();
@@ -2133,6 +2140,14 @@ jQuery(function ($) {
 			/////////////////////////////
 			//	bind Events for new List DOM
 			/////////////////////////////
+
+			if ( $.browser.msie ) {
+				newElement.bind( 'click', function(){
+					newElement.focus();
+					return false;
+				});
+			}
+
 			newElement.bind('keydown', 'down', function( e ){
 				e.preventDefault();
 				$( e.target ).nextAll( 'div:visible' ).first().focus();
@@ -2148,6 +2163,11 @@ jQuery(function ($) {
 			newElement.bind('focus', function(e){
 				var target = $( e.target );
 
+				widget.selectedList = {
+					element: target,
+					data: target.data("data")
+				};
+
 				// remove selection from all rows
 				widget.listlist.find('.row').removeClass('selected-row');
 
@@ -2158,15 +2178,10 @@ jQuery(function ($) {
 				widget.listlist.find( '.assigned-tags' ).hide();
 				target.find( '.assigned-tags' ).show();
 				_AdjustHeight();
-
-				widget.selectedList = {
-					element: $( e.target ),
-					data: $( e.target ).data("data")
-				};
 			});
 
-			newElement.bind( 'keydown dblclick', 'return', function( e ){
-				widget._trigger( "OpenList", 0, { selectedList: $(e.target).parent().andSelf().filter( '.row' ).data("data") } );
+			newElement.bind( 'keydown dblclick', 'return', function(){
+				widget._trigger( "OpenList", 0, { selectedList: newElement.data("data") } );
 			});
 
 			newElement.bind( 'keydown', 'right', function( e ){
@@ -2373,6 +2388,7 @@ jQuery(function ($) {
 				widget.wrapper = widget.element.find('div#list-wrapper');
 				widget.toolbar = _CreateToolbar( widget );
 				widget.listForm = null;
+				widget.selectedTags = [];
 
 				// retrieve Lists from server and add them to DOM.
 				List.Index( {
