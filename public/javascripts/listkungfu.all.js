@@ -111,6 +111,9 @@ $(document).ready(function () {
 		},
 		AfterColorChanged: function( event, data ) {
 			ListKungFu.LayoutWest.ListView( "ReloadLists" );
+		},
+		TagSelected: function( event, selectedTagsArray ) {
+			ListKungFu.LayoutWest.ListView( "FilterByTags", selectedTagsArray );
 		}
 	});
 
@@ -2207,6 +2210,9 @@ jQuery(function ($) {
 						tagElement.hide( 'slow', function(){
 							tagElement.remove();
 							_ReplaceList( newElement, json, template );
+
+							// rerun tag filter
+							_FilterByTags();
 						});
 					},
 					lists: listData.list.id
@@ -2320,6 +2326,33 @@ jQuery(function ($) {
 			});
 		};
 
+		var _FilterByTags = function() {
+			// apply text filter
+			widget.toolbar.find( "#search-list" ).trigger( "keyup" );
+
+			widget.listlist.find( '.row:visible' ).each(function(){
+				var that = $(this);
+				var data = that.data( 'data' );
+				var tagsFound = 0;
+
+				if ( widget.selectedTags.length > 0 ) {
+					for ( var i = 0; i < data.list.tags.length; i++ ) {
+						for ( var j = 0; j < widget.selectedTags.length; j++ ){
+							if ( widget.selectedTags[ j ] === data.list.tags[ i ].id ) {
+								tagsFound++;
+							}
+						}
+					}
+
+					if ( tagsFound === widget.selectedTags.length ) {
+						that.show();
+					} else {
+						that.hide();
+					}
+				}
+			});
+		};
+
 		return {
 			// default options
 			options: {
@@ -2393,6 +2426,12 @@ jQuery(function ($) {
 
 			SelectList: function() {
 				_SelectLastList();
+			},
+
+			FilterByTags: function( selectedTagsArray ) {
+				widget.selectedTags = selectedTagsArray;
+
+				_FilterByTags();
 			},
 
 			destroy: function() {
@@ -5705,6 +5744,7 @@ $.fn.layout = function (opts) {
 					menu.data( 'tag', data );
 					menu.data( 'target', target );
 				}
+				return false; // prevent bubbling
 			});
 
 
@@ -5727,8 +5767,43 @@ $.fn.layout = function (opts) {
 				});
 			}
 
+			tag.bind( 'click', function(e){
+				var data = tag.data( 'data' );
+				var selected = tag.data( 'selected' );
+
+				if ( selected ) {
+					_RemoveSelectedTag( data.tag.id );
+					tag.removeClass( 'tag-selected' );
+					tag.data( 'selected', false );
+				} else {
+					_AddSelectedTag( data.tag.id );
+					tag.addClass( 'tag-selected' );
+					tag.data( 'selected', true );
+				}
+
+				widget._trigger( "TagSelected", 0, widget.selectedTags );
+				return false;
+			});
+
 
 			return tag;
+		};
+
+		var _AddSelectedTag = function( tagId ) {
+			widget.selectedTags.push( tagId );
+			widget.selectedTags = jQuery.unique( widget.selectedTags );
+		};
+
+		var _RemoveSelectedTag = function( tagId ) {
+			var newArray = [];
+
+			for ( var i = 0; i < widget.selectedTags.length; i++ ) {
+				if ( widget.selectedTags[ i ] !== tagId ) {
+					newArray.push( widget.selectedTags[ i ] );
+				}
+			}
+
+			widget.selectedTags = newArray;
 		};
 
 		return {
@@ -5754,6 +5829,8 @@ $.fn.layout = function (opts) {
 						primary: 'ui-icon-plusthick'
 					}
 				});
+
+				widget.selectedTags = [];
 
 				// retrieve all tags and display them
 				Tag.Index( {
