@@ -601,6 +601,7 @@
 				widget.wrapper = widget.element.find('div#list-wrapper');
 				widget.toolbar = _CreateToolbar( widget );
 				widget.listForm = null;
+				widget.selectedTags = [];
 
 				// retrieve Lists from server and add them to DOM.
 				List.Index( {
