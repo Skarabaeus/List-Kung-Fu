@@ -113,6 +113,13 @@
 				}
 			});
 
+			if ( $.browser.msie ) {
+				newElement.bind( 'click ', function() {
+					newElement.focus();
+					return false;
+				});
+			}
+
 			newElement.bind( 'keydown', 'down', function( e ){
 				e.preventDefault();
 				$( e.target ).nextAll( 'div:visible' ).first().focus();
