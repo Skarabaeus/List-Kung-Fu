@@ -111,6 +111,9 @@ $(document).ready(function () {
 		},
 		AfterColorChanged: function( event, data ) {
 			ListKungFu.LayoutWest.ListView( "ReloadLists" );
+		},
+		TagSelected: function( event, selectedTagsArray ) {
+			ListKungFu.LayoutWest.ListView( "FilterByTags", selectedTagsArray );
 		}
 	});
 

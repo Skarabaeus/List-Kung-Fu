@@ -35,6 +35,7 @@
 					menu.data( 'tag', data );
 					menu.data( 'target', target );
 				}
+				return false; // prevent bubbling
 			});
 
 
@@ -57,8 +58,43 @@
 				});
 			}
 
+			tag.bind( 'click', function(e){
+				var data = tag.data( 'data' );
+				var selected = tag.data( 'selected' );
+
+				if ( selected ) {
+					_RemoveSelectedTag( data.tag.id );
+					tag.removeClass( 'tag-selected' );
+					tag.data( 'selected', false );
+				} else {
+					_AddSelectedTag( data.tag.id );
+					tag.addClass( 'tag-selected' );
+					tag.data( 'selected', true );
+				}
+
+				widget._trigger( "TagSelected", 0, widget.selectedTags );
+				return false;
+			});
+
 
 			return tag;
+		};
+
+		var _AddSelectedTag = function( tagId ) {
+			widget.selectedTags.push( tagId );
+			widget.selectedTags = jQuery.unique( widget.selectedTags );
+		};
+
+		var _RemoveSelectedTag = function( tagId ) {
+			var newArray = [];
+
+			for ( var i = 0; i < widget.selectedTags.length; i++ ) {
+				if ( widget.selectedTags[ i ] !== tagId ) {
+					newArray.push( widget.selectedTags[ i ] );
+				}
+			}
+
+			widget.selectedTags = newArray;
 		};
 
 		return {
@@ -84,6 +120,8 @@
 						primary: 'ui-icon-plusthick'
 					}
 				});
+
+				widget.selectedTags = [];
 
 				// retrieve all tags and display them
 				Tag.Index( {

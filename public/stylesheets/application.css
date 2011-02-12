@@ -522,6 +522,7 @@ button:focus, input[type=submit]:focus {
 	margin:1px;
 	padding:1px 3px 1px 1px;
 	display:inline-block;
+	cursor:pointer;
 }
 
 .color-selector {
@@ -608,6 +609,10 @@ button:focus, input[type=submit]:focus {
 
 .assigned-tag-delete:hover {
 	text-decoration:underline;
+}
+
+.tag-selected {
+	border-width:2px !important;
 }
 
 
