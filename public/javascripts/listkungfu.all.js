@@ -2025,6 +2025,7 @@ jQuery(function ($) {
 										}
 									}
 								});
+								return false;
 							});
 
 							widget.selectedList = null;

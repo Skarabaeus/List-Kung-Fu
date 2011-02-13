@@ -246,6 +246,7 @@
 										}
 									}
 								});
+								return false;
 							});
 
 							widget.selectedList = null;
