@@ -1008,26 +1008,22 @@ jQuery(function ($) {
 	});
 
 })( jQuery );(function(){
-	var ListItemView = function(){
+	var ListItemView = {
 
-		var widget = null;
+		/**
+		*
+		* Private Functions Start
+		*
+		**/
 
-		var _TriggerResize = function() {
-			widget._trigger("ContentDimensionsChanged", 0, {} );
-		};
-
-		var _TriggerReinitOfPanes = function() {
-			widget._trigger("ReinitPanes", 0, {} );
-		};
-
-		var _SetSelectedListItem = function( elem, obj ) {
-			widget.selectedListItem = {
+		_SetSelectedListItem: function( elem, obj ) {
+			this.selectedListItem = {
 				element: elem,
 				data: obj
 			};
-		};
+		},
 
-		var _SetupDeadlineButton = function( $parentItem ) {
+		_SetupDeadlineButton: function( $parentItem ) {
 			// prevent default for save-deadline button
 			var deadlineSettings = $parentItem.find( "#deadline-settings-wrapper" );
 			var saveDeadlineButton = $parentItem.find( "#save-deadline" );
@@ -1046,9 +1042,9 @@ jQuery(function ($) {
 				}
 				return false;
 			});
-		}
+		},
 
-		var _SetupCustomDeadlinePicker = function() {
+		_SetupCustomDeadlinePicker: function() {
 			var altFormat = 'yy,mm,dd';
 			var dateFormat = 'dd.mm.yy';
 
@@ -1061,11 +1057,20 @@ jQuery(function ($) {
 
 			$( '#custom-deadline-value' ).val( $.datepicker.formatDate( altFormat, new Date() ) );
 			$( '#custom-deadline-display' ).val( $.datepicker.formatDate( dateFormat, new Date() ) );
-		}
+		},
 
-		var _AddListItem = function( listItem, template, isFirst ) {
+		_TriggerReinitOfPanes: function() {
+			this._trigger("ReinitPanes", 0, {} );
+		},
+
+		_TriggerResize: function() {
+			this._trigger("ContentDimensionsChanged", 0, {} );
+		},
+
+		_AddListItem: function( listItem, template, isFirst ) {
+			var widget = this;
+
 			var newElement = $( $.mustache( template, listItem.list_item ) );
-
 			newElement.data( "data", listItem );
 			newElement.data( "isFullsize", false );
 
@@ -1118,7 +1123,7 @@ jQuery(function ($) {
 						}
 					}
 
-					_SetSelectedListItem( $( e.target ), $( e.target ).data( "data" ) );
+					widget._SetSelectedListItem( $( e.target ), $( e.target ).data( "data" ) );
 				}
 			});
 
@@ -1170,12 +1175,12 @@ jQuery(function ($) {
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
 						$form.find( "textarea" ).markItUp( mySettings );
-						_SetupDeadlineButton( $form );
-						_SetupCustomDeadlinePicker();
+						widget._SetupDeadlineButton( $form );
+						widget._SetupCustomDeadlinePicker();
 
 						// only toggleFullsize if not already fullsize (when opening the editing dialog)
 						if ( elementAlreadyFullsize === false ) {
-							_ToggleFullsize( newElement );
+							widget._ToggleFullsize( newElement );
 						}
 
 						// hide drag and drop handle
@@ -1217,10 +1222,10 @@ jQuery(function ($) {
 
 										// only toggleFullsize if not already fullsize (when saving item)
 										if ( elementAlreadyFullsize === false ) {
-											_ToggleFullsize( newElement );
+											widget._ToggleFullsize( newElement );
 										}
 
-										_SetSelectedListItem( newElement, json );
+										widget._SetSelectedListItem( newElement, json );
 										newElement.data( "data", json );
 
 										// show all the rows again
@@ -1247,7 +1252,7 @@ jQuery(function ($) {
 
 								// only toggleFullsize if not already fullsize (when canceling edit)
 								if ( elementAlreadyFullsize === false ) {
-									_ToggleFullsize( newElement );
+									widget._ToggleFullsize( newElement );
 								}
 
 								// show again all other rows
@@ -1273,7 +1278,7 @@ jQuery(function ($) {
 			newElement.bind( 'keydown', 'shift+return', function( e ){
 				widget.toolbar.find( "#list-item-new" ).effect('puff', {}, 300, function(){
 					$( this ).show();
-					_AddNewListItem();
+					widget._AddNewListItem();
 				});
 			});
 
@@ -1308,34 +1313,36 @@ jQuery(function ($) {
 				});
 			}
 
+			widget._CorrectHeight( newElement );
+		},
 
-			_CorrectHeight( newElement );
-		};
-
-		var _ToggleFullsize = function ( element ) {
+		_ToggleFullsize: function ( element ) {
+			var widget = this;
 			if ( element.data( "isFullsize" ) === true ) {
-				_CorrectHeight( element, false );
+				widget._CorrectHeight( element, false );
 				element.data( "isFullsize", false );
 				widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons"
 					, { primary:'ui-icon-zoomin' } );
 			} else {
-				_CorrectHeight( element, true );
+				widget._CorrectHeight( element, true );
 				element.data( "isFullsize", true );
 				widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons"
 					, { primary:'ui-icon-zoomout' } );
 			}
-		};
+		},
 
-		var _CorrectHeight = function( element, setToFullSize ) {
+		_CorrectHeight: function( element, setToFullSize ) {
+			var widget = this;
 			if ( element.height() > 150 && !setToFullSize ) {
 				element.height( 150 );
 			} else {
 				element.height( "auto" );
 			}
-			_TriggerResize();
-		};
+			widget._TriggerResize();
+		},
 
-		var _DeleteListItem = function( element, listItem ) {
+		_DeleteListItem: function( element, listItem ) {
+			var widget = this;
 			ListListItem.Destroy({
 				successCallback: function( template, json, status, xhr, errors ){
 					element.hide( "slow", function() {
@@ -1353,9 +1360,10 @@ jQuery(function ($) {
 				lists: listItem.list_item.list_id,
 				list_items: listItem.list_item.id
 			});
-		};
+		},
 
-		var _MarkCompleted = function( element, listItem ) {
+		_MarkCompleted: function( element, listItem ) {
+			var widget = this;
 			// set item completed
 			listItem.list_item.completed = true;
 
@@ -1370,12 +1378,12 @@ jQuery(function ($) {
 						var $undo = $( '<div class="undo clickable"><img src="/images/undo-icon.gif"/>Undo</div>' );
 
 						$undo.bind( "click", function() {
-							_MarkUncompleted( element, listItem, queueName );
+							widget._MarkUncompleted( element, listItem, queueName );
 						});
 
 						element.append( $undo );
 
-						_CorrectHeight( element );
+						widget._CorrectHeight( element );
 
 						// hide complete element after 5 seconds. In case the user
 						// clicks "undo", the queue will be cleared and the element
@@ -1389,7 +1397,7 @@ jQuery(function ($) {
 						// in case completed items are displayed, update them:
 						if ( widget.toolbar && widget.toolbar.find( "#showCompleted" ).get( 0 ).
 							checked === true ) {
-							_ToggleCompleted( true );
+							widget._ToggleCompleted( true );
 						}
 
 						// select list item
@@ -1401,9 +1409,10 @@ jQuery(function ($) {
 				list_items: listItem.list_item.id,
 				send: listItem
 			});
-		};
+		},
 
-		var _MarkUncompleted = function( element, listItem, queueName ) {
+		_MarkUncompleted: function( element, listItem, queueName ) {
+			var widget = this;
 			if ( queueName !== "" ) {
 				element.clearQueue( queueName );
 			}
@@ -1418,22 +1427,23 @@ jQuery(function ($) {
 						$( this ).remove();
 					});
 					element.find( ".list-item-wrapper" ).show('slow', function(){
-						_CorrectHeight( element );
+						widget._CorrectHeight( element );
 					});
 
 					// in case completed items are displayed, update them:
 					if ( widget.toolbar && widget.toolbar.find( "#showCompleted" ).get( 0 ).
 						checked === true ) {
-						_ToggleCompleted( true );
+						widget._ToggleCompleted( true );
 					}
 				},
 				lists: listItem.list_item.list_id,
 				list_items: listItem.list_item.id,
 				send: listItem
 			});
-		};
+		},
 
-		var _ToggleCompleted = function(  doShow ) {
+		_ToggleCompleted: function(  doShow ) {
+			var widget = this;
 			if ( doShow === true ) {
 
 				if ( widget.completedList ) {
@@ -1464,25 +1474,28 @@ jQuery(function ($) {
 				widget.completedList.remove();
 				widget.completedList = null;
 			}
-		}
+		},
 
-		var _CreateToolbar = function() {
+		_CreateToolbar: function() {
+			var widget = this;
 			// empty header
 			widget.header.html("");
 
 			// build new header
-			widget.toolbar = $( '<div id="list-item-toolbar"> \
-				<div id="list-name"></div><div id="list-item-toolbar-buttons"> \
-				<button id="list-item-completed">Completed [space]</button> \
-				<button id="list-item-new">Create [shift+return]</button> \
-				<button id="list-item-delete">Delete [del]</button> \
-				<button id="list-item-edit">Edit [return]</button> \
-				<button id="list-item-fullsize">Fullsize [l]</button> \
-				<input type="input" id="list-item-search"/> \
-				<input type="checkbox" id="showCompleted"/> \
-				<label for="showCompleted">Show Completed Items</label> \
-				<div id="list-item-search-cancel">&nbsp;</div> \
-				</div></div>' );
+		 	var toolbarArr = ['<div id="list-item-toolbar">',
+				'<div id="list-name"></div><div id="list-item-toolbar-buttons">',
+				'<button id="list-item-completed">Completed [space]</button>',
+				'<button id="list-item-new">Create [shift+return]</button>',
+				'<button id="list-item-delete">Delete [del]</button>',
+				'<button id="list-item-edit">Edit [return]</button>',
+				'<button id="list-item-fullsize">Fullsize [l]</button>',
+				'<input type="input" id="list-item-search"/>',
+				'<input type="checkbox" id="showCompleted"/>',
+				'<label for="showCompleted">Show Completed Items</label>',
+				'<div id="list-item-search-cancel">&nbsp;</div>',
+				'</div></div>'];
+
+			widget.toolbar = $( toolbarArr.join('') );
 
 			widget.listName = widget.toolbar.find( "#list-name" );
 
@@ -1525,11 +1538,11 @@ jQuery(function ($) {
 			// bind events
 
 			widget.toolbar.find( "#list-item-new" ).bind( 'click', function( e ){
-				_AddNewListItem();
+				widget._AddNewListItem();
 			});
 
 			widget.toolbar.find( "#showCompleted" ).bind( "change", function( e ){
-				_ToggleCompleted( e.target.checked );
+				widget._ToggleCompleted( e.target.checked );
 				widget.selectedListItem.element.focus();
 			});
 
@@ -1537,13 +1550,13 @@ jQuery(function ($) {
 				var data = widget.selectedListItem.data;
 				var $element = widget.selectedListItem.element;
 
-				_MarkCompleted( $element, data );
+				widget._MarkCompleted( $element, data );
 			});
 
 			widget.toolbar.find( "#list-item-delete" ).bind( 'click', function( e ) {
 
 				var deleteFunc = function() {
-					_DeleteListItem( widget.selectedListItem.element, widget.selectedListItem.data );
+					widget._DeleteListItem( widget.selectedListItem.element, widget.selectedListItem.data );
 				};
 
 				if ( typeof( widget.deleteDialog ) === 'undefined' ) {
@@ -1559,7 +1572,7 @@ jQuery(function ($) {
 			});
 
 			widget.toolbar.find( "#list-item-fullsize" ).bind( 'click', function( e ) {
-				_ToggleFullsize( widget.selectedListItem.element );
+				widget._ToggleFullsize( widget.selectedListItem.element );
 			});
 
 			widget.toolbar.find("#list-item-search").bind( 'keyup', function ( e ) {
@@ -1584,9 +1597,10 @@ jQuery(function ($) {
 
 			widget.header.append( widget.toolbar );
 
-		};
+		},
 
-		var _AddNewListItem = function() {
+		_AddNewListItem: function() {
+			var widget = this;
 			var data = widget.element.data( "data-list" );
 
 			ListListItem.New( {
@@ -1594,8 +1608,8 @@ jQuery(function ($) {
 					var $form = $( template );
 					widget.listItemList.prepend( $form );
 
-					_SetupDeadlineButton( $form );
-					_SetupCustomDeadlinePicker();
+					widget._SetupDeadlineButton( $form );
+					widget._SetupCustomDeadlinePicker();
 					$form.find( "textarea" ).markItUp( mySettings );
 					$form.find( "textarea" ).focus();
 
@@ -1629,7 +1643,7 @@ jQuery(function ($) {
 							send: serializedForm,
 							successCallback: function( template, json, status, xhr, errors ) {
 								$form.hide( 'slow', function(){
-									_AddListItem( json, template, true );
+									widget._AddListItem( json, template, true );
 									$( this ).remove();
 									widget.toolbar.find( "#list-item-search" ).trigger( "ClearValue" );
 									widget.listItemList.find( ".row" ).show();
@@ -1648,132 +1662,157 @@ jQuery(function ($) {
 				},
 				lists: data.list.id
 			} );
-		};
+		},
 
-		return {
-			// default options
-			options: {
+		_create: function() {
+			var widget = this;
 
-			},
+			widget.wrapper = $( '<div class="ui-layout-content" id="list-item-wrapper"></div>' );
+			widget.listItemList = $( '<div id="list-item-list"></div>');
+			widget.header = $( '<div class="header"></div>' );
 
-			_create: function() {
-				widget = this;
+			widget.element.append( widget.header );
+			widget.element.append( widget.wrapper );
+			widget.wrapper.append( widget.listItemList );
 
-				widget.wrapper = $( '<div class="ui-layout-content" id="list-item-wrapper"></div>' );
-				widget.listItemList = $( '<div id="list-item-list"></div>');
-				widget.header = $( '<div class="header"></div>' );
+			widget._TriggerResize();
 
-				widget.element.append( widget.header );
-				widget.element.append( widget.wrapper );
-				widget.wrapper.append( widget.listItemList );
+			// bind global events
 
-				_TriggerResize();
+			$( document ).bind( "keydown", "c", function( e ) {
+				var $completedInput = widget.toolbar.find( "#showCompleted" );
 
-				// bind global events
-
-				$( document ).bind( "keydown", "c", function( e ) {
-					var $completedInput = widget.toolbar.find( "#showCompleted" );
-
-						if ( $completedInput.length > 0 ) {
-						if ( $completedInput.get( 0 ).checked === true ) {
-							$completedInput.get( 0 ).checked = false;
-						} else {
-							$completedInput.get( 0 ).checked = true;
-						}
-
-						$completedInput.trigger( "change" );
+					if ( $completedInput.length > 0 ) {
+					if ( $completedInput.get( 0 ).checked === true ) {
+						$completedInput.get( 0 ).checked = false;
+					} else {
+						$completedInput.get( 0 ).checked = true;
 					}
-				});
 
-				$( document ).bind( "keyup", "f", function( e ) {
-					widget.toolbar.find( "#list-item-search" ).focus();
-				});
-
-
-			},
-
-			destroy: function() {
-				// remove elements
-				widget.children().remove();
-
-				// unbind global events
-				$( document ).unbind( "keydown" , "c" );
-				$( document ).unbind( "keyup", "f" );
-			},
-
-			RemoveList: function() {
-				// remove elements
-				widget.wrapper.remove();
-				widget.header.remove();
-
-				// unbind global events
-				$( document ).unbind( "keydown" , "c" );
-				$( document ).unbind( "keyup", "f" );
-			},
-
-			OpenList: function( data ) {
-				widget.RemoveList();
-				widget._create();
-
-				widget.element.data( "data-list", data );
-
-				ListListItem.Index( {
-					successCallback: function( template, json, status, xhr, errors ) {
-						_CreateToolbar();
-
-						$.each( json, function( index, listItem ) {
-							_AddListItem( listItem, template )
-						});
-
-						// if we have a list_item id, select the list item with that id
-						// otherwise just select the first.
-						if ( data.id ) {
-							widget.listItemList.find( ".row" ).each(function() {
-								var tempListItem = $( this );
-								var d = tempListItem.data( "data" );
-
-								if ( d.list_item.id === data.id ) {
-									tempListItem.focus();
-
-									// if item found, return false in order to exit the loop
-									return false;
-								}
-							});
-						} else {
-							widget.listItemList.find( ".row" ).first().focus();
-						}
-
-						if ( widget.listItemList.find( '.row' ).length === 0 ) {
-							_AddNewListItem();
-						}
-
-						// set list name
-						widget.listName.text( data.list.title );
-					},
-					lists: data.list.id
-				});
-
-				_TriggerReinitOfPanes();
-			},
-
-			SelectListItem: function() {
-				var effect = "highlight";
-
-				if ( widget.selectedListItem ) {
-					widget.selectedListItem.element.effect( effect, {}, 300, function(){
-						$( this ).show();
-						$( this ).focus();
-					});
-				} else {
-					widget.listItemList.find( '.row' ).first().effect( effect, {}, 300, function(){
-						$( this ).show();
-						$( this ).focus();
-					});
+					$completedInput.trigger( "change" );
 				}
+			});
 
+			$( document ).bind( "keyup", "f", function( e ) {
+				widget.toolbar.find( "#list-item-search" ).focus();
+			});
+
+
+		},
+		/**
+		*
+		* Private Functions End
+		*
+		**/
+
+		/**
+		*
+		* Options Start
+		*
+		**/
+		options: {
+
+		},
+		/**
+		*
+		* Options End
+		*
+		**/
+
+		/**
+		*
+		* Public Functions Start
+		*
+		**/
+		RemoveList: function() {
+			var widget = this;
+
+			// remove elements
+			widget.element.children().remove();
+
+			// unbind global events
+			$( document ).unbind( "keydown" , "c" )
+									 .unbind( "keyup", "f" );
+		},
+
+		OpenList: function( data ) {
+			var widget = this;
+			widget.RemoveList();
+			widget._create();
+
+			widget.element.data( "data-list", data );
+
+			ListListItem.Index( {
+				successCallback: function( template, json, status, xhr, errors ) {
+					widget._CreateToolbar();
+
+					$.each( json, function( index, listItem ) {
+						widget._AddListItem( listItem, template )
+					});
+
+					// if we have a list_item id, select the list item with that id
+					// otherwise just select the first.
+					if ( data.id ) {
+						widget.listItemList.find( ".row" ).each(function() {
+							var tempListItem = $( this );
+							var d = tempListItem.data( "data" );
+
+							if ( d.list_item.id === data.id ) {
+								tempListItem.focus();
+
+								// if item found, return false in order to exit the loop
+								return false;
+							}
+						});
+					} else {
+						widget.listItemList.find( ".row" ).first().focus();
+					}
+
+					if ( widget.listItemList.find( '.row' ).length === 0 ) {
+						widget._AddNewListItem();
+					}
+
+					// set list name
+					widget.listName.text( data.list.title );
+				},
+				lists: data.list.id
+			});
+
+			widget._TriggerReinitOfPanes();
+		},
+
+		SelectListItem: function() {
+			var widget = this;
+			var effect = "highlight";
+
+			if ( widget.selectedListItem ) {
+				widget.selectedListItem.element.effect( effect, {}, 300, function(){
+					$( this ).show().focus();
+				});
+			} else {
+				widget.listItemList.find( '.row' ).first().effect( effect, {}, 300, function(){
+					$( this ).show().focus();
+				});
 			}
-		};
-	}();
+		},
+
+		destroy: function() {
+			var widget = this;
+
+			// remove elements
+			widget.element.children().remove();
+
+			// unbind global events
+			$( document ).unbind( "keydown" , "c" )
+				.unbind( "keyup", "f" );
+		}
+		/**
+		*
+		* Public Functions End
+		*
+		**/
+
+	};
 	// register widget
 	$.widget("ui.ListItemView", ListItemView);
 })();
@@ -1925,13 +1964,15 @@ jQuery(function ($) {
 		_CreateToolbar: function() {
 			var widget = this;
 
-			var toolbar = $('<div id="list-toolbar"> \
-				<button id="list-new">Create [shift+return]</button> \
-				<button id="list-delete">Delete [del]</button> \
-				<button id="list-edit">Edit [space]</button> \
-				<input type="text" id="search-list" /> \
-				<div id="list-search-cancel">&nbsp;</div> \
-				</div>')
+			var toolbarArr = ['<div id="list-toolbar">',
+				'<button id="list-new">Create [shift+return]</button>',
+				'<button id="list-delete">Delete [del]</button>',
+				'<button id="list-edit">Edit [space]</button>',
+				'<input type="text" id="search-list" />',
+				'<div id="list-search-cancel">&nbsp;</div>',
+				'</div>'];
+
+			var toolbar = $( toolbarArr.join('') );
 
 			widget.element.find("div.header").append(toolbar);
 
@@ -2488,14 +2529,12 @@ jQuery(function ($) {
 		},
 
 		SelectList: function() {
-			widget._SelectLastList();
+			this._SelectLastList();
 		},
 
 		FilterByTags: function( selectedTagsArray ) {
-			var widget = this;
-
-			widget.selectedTags = selectedTagsArray;
-			widget._FilterByTags();
+			this.selectedTags = selectedTagsArray;
+			this._FilterByTags();
 		},
 
 		destroy: function() {

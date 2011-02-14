@@ -146,13 +146,15 @@
 		_CreateToolbar: function() {
 			var widget = this;
 
-			var toolbar = $('<div id="list-toolbar"> \
-				<button id="list-new">Create [shift+return]</button> \
-				<button id="list-delete">Delete [del]</button> \
-				<button id="list-edit">Edit [space]</button> \
-				<input type="text" id="search-list" /> \
-				<div id="list-search-cancel">&nbsp;</div> \
-				</div>')
+			var toolbarArr = ['<div id="list-toolbar">',
+				'<button id="list-new">Create [shift+return]</button>',
+				'<button id="list-delete">Delete [del]</button>',
+				'<button id="list-edit">Edit [space]</button>',
+				'<input type="text" id="search-list" />',
+				'<div id="list-search-cancel">&nbsp;</div>',
+				'</div>'];
+
+			var toolbar = $( toolbarArr.join('') );
 
 			widget.element.find("div.header").append(toolbar);
 
@@ -709,14 +711,12 @@
 		},
 
 		SelectList: function() {
-			widget._SelectLastList();
+			this._SelectLastList();
 		},
 
 		FilterByTags: function( selectedTagsArray ) {
-			var widget = this;
-
-			widget.selectedTags = selectedTagsArray;
-			widget._FilterByTags();
+			this.selectedTags = selectedTagsArray;
+			this._FilterByTags();
 		},
 
 		destroy: function() {
