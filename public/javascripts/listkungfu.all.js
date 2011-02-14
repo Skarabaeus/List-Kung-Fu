@@ -1778,43 +1778,55 @@ jQuery(function ($) {
 	$.widget("ui.ListItemView", ListItemView);
 })();
 (function(){
-	var ListView = function(){
+	var ListView = {
 
-		var widget = null;
+		/**
+		*
+		* Private Functions Start
+		*
+		**/
 
-		var _ReplaceList = function( oldElement, data, template ) {
-			var ele = _GetListElement( data, template );
+		_ReplaceList: function( oldElement, data, template ) {
+			var widget = this;
+
+			var ele = widget._GetListElement( data, template );
 			oldElement.replaceWith( ele );
-			_AdjustHeight();
-			_triggerResize();
+			widget._AdjustHeight();
+			widget._triggerResize();
 			ele.focus();
-		};
+		},
 
-		var _DroppableConfigTags = {
-			activeClass: "ui-state-default",
-			hoverClass: "ui-state-hover",
-			accept: ".tag",
-			drop: function( event, ui ) {
-				if ( $(this).position().top < widget.wrapper.height() ) {
+		_DroppableConfigTags: function() {
+			var widget = this;
+
+			return {
+				activeClass: "ui-state-default",
+				hoverClass: "ui-state-hover",
+				accept: ".tag",
+				drop: function( event, ui ) {
 					var listElement = $( this );
-					var tagData = ui.draggable.data( 'data' );
-					var listData = listElement.data( 'data' );
+					if ( listElement.position().top < widget.wrapper.height() ) {
+						var tagData = ui.draggable.data( 'data' );
+						var listData = listElement.data( 'data' );
 
-					listData.list.tag_id = tagData.tag.id;
+						listData.list.tag_id = tagData.tag.id;
 
-					List.Update({
+						List.Update({
 
-						send: listData,
-						successCallback: function( template, json, status, xhr, errors ){
-							_ReplaceList( listElement, json, template );
-						},
-						lists: listData.list.id
-					});
+							send: listData,
+							successCallback: function( template, json, status, xhr, errors ){
+								widget._ReplaceList( listElement, json, template );
+							},
+							lists: listData.list.id
+						});
+					}
 				}
 			}
-		};
+		},
 
-		var _DroppableConfigListItems = function( newElement ) {
+		_DroppableConfigListItems: function( newElement ) {
+			var widget = this;
+
 			return {
 				activeClass: "ui-state-default",
 				hoverClass: "ui-state-hover",
@@ -1851,17 +1863,19 @@ jQuery(function ($) {
 				}
 
 			};
-		};
+		},
 
-		var _IsNewList = function( element ) {
+		_IsNewList: function( element ) {
+			var widget = this;
+
 			if ( widget.selectedList === null || widget.selectedList.data.list.id !== element.list.id ) {
 				return true;
 			} else {
 				return false;
 			}
-		};
+		},
 
-		var	_HighlightFormErrors = function( form, errors ) {
+		_HighlightFormErrors: function( form, errors ) {
 			for ( var model in errors ) {
 				var currentModel = errors[ model ];
 
@@ -1882,14 +1896,16 @@ jQuery(function ($) {
 					input.parent( ".field" ).append( errorExplanation );
 				}
 			}
-		};
+		},
 
-		var _ClearFormErrors = function( form ) {
+		_ClearFormErrors: function( form ) {
 			form.find( ".field" ).removeClass( "field_with_errors" );
 			form.find( ".error_explanation" ).remove();
-		};
+		},
 
-		var _DeleteList = function( delay ) {
+		_DeleteList: function( delay ) {
+			var widget = this;
+
 			var nextItem = widget.selectedList.element.next();
 			var prevItem = widget.selectedList.element.prev();
 			delay = delay || 0;
@@ -1904,9 +1920,11 @@ jQuery(function ($) {
 				},
 				lists: widget.selectedList.data.list.id
 			});
-		};
+		},
 
-		var _CreateToolbar = function() {
+		_CreateToolbar: function() {
+			var widget = this;
+
 			var toolbar = $('<div id="list-toolbar"> \
 				<button id="list-new">Create [shift+return]</button> \
 				<button id="list-delete">Delete [del]</button> \
@@ -1950,11 +1968,11 @@ jQuery(function ($) {
 						var deleteFunc = function() {
 							if ( widget.listForm !== null ) {
 								widget.listForm.bind( "FormHidden", function() {
-									_DeleteList( 1000 );
+									widget._DeleteList( 1000 );
 								});
-								_HideForm();
+								widget._HideForm();
 							} else {
-								_DeleteList();
+								widget._DeleteList();
 							}
 						}
 
@@ -1996,11 +2014,11 @@ jQuery(function ($) {
 							widget._trigger( "CloseList", 0, {} );
 
 							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
-								_HideForm();
+								widget._HideForm();
 							});
 
 							widget.listForm.find( '#list_title' ).bind( 'keydown', 'esc', function( e ) {
-								_HideForm();
+								widget._HideForm();
 							});
 
 							widget.listForm.bind( "submit", function( e ){
@@ -2013,15 +2031,15 @@ jQuery(function ($) {
 								List.Create({
 									send: data,
 									successCallback: function( template, json, status, xhr, errors ) {
-										_ClearFormErrors( widget.listForm );
+										widget._ClearFormErrors( widget.listForm );
 
 										if ( errors === false ) {
-											_HideForm( json, template );
+											widget._HideForm( json, template );
 
 											// clear searchfield
 											widget.toolbar.find( '#search-list' ).trigger( 'ClearValue' );
 										} else {
-											_HighlightFormErrors( widget.listForm, errors );
+											widget._HighlightFormErrors( widget.listForm, errors );
 										}
 									}
 								});
@@ -2047,8 +2065,8 @@ jQuery(function ($) {
 					widget.listlist.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
 					widget.listlist.find( ".row:Contains('" + filtervalue + "')").show();
         }
-				_AdjustHeight();
-				_triggerResize();
+				widget._AdjustHeight();
+				widget._triggerResize();
 			});
 
 			toolbar.find( "#list-search-cancel" ).bind( 'click', function() {
@@ -2083,11 +2101,11 @@ jQuery(function ($) {
 							});
 
 							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
-								_HideForm();
+								widget._HideForm();
 							});
 
 							widget.listForm.find( '#list_title' ).bind( 'keydown', 'esc', function( e ) {
-								_HideForm();
+								widget._HideForm();
 							});
 
 							widget.listForm.bind( "submit", function(e){
@@ -2099,12 +2117,12 @@ jQuery(function ($) {
 
 									send: serializedForm,
 									successCallback: function( template, json, status, xhr, errors ){
-										_ClearFormErrors( widget.listForm );
+										widget._ClearFormErrors( widget.listForm );
 
 										if ( errors === false ) {
-											_HideForm( json, template );
+											widget._HideForm( json, template );
 										} else {
-											_HighlightFormErrors( widget.listForm, errors );
+											widget._HighlightFormErrors( widget.listForm, errors );
 										}
 									},
 									lists: widget.selectedList.data.list.id
@@ -2121,9 +2139,11 @@ jQuery(function ($) {
 			// return toolbar
 
 			return toolbar
-		};
+		},
 
-		var _GetListElement = function( data, template ) {
+		_GetListElement: function( data, template ) {
+			var widget = this;
+
 			// get HTML for single List representation
 			var newElement = $( $.mustache( template, data.list ) );
 
@@ -2178,7 +2198,7 @@ jQuery(function ($) {
 				// show tags of selected list and hide tags of all the others
 				widget.listlist.find( '.assigned-tags' ).hide();
 				target.find( '.assigned-tags' ).show();
-				_AdjustHeight();
+				widget._AdjustHeight();
 			});
 
 			newElement.bind( 'keydown dblclick', 'return', function(){
@@ -2209,7 +2229,7 @@ jQuery(function ($) {
 				return false;
 			});
 
-			newElement.droppable( _DroppableConfigListItems( newElement ) );
+			newElement.droppable( widget._DroppableConfigListItems( newElement ) );
 
 			newElement.find( '.assigned-tag-delete' ).bind( 'click', function( e ){
 				var tagElement = $( e.target ).parent( '.assigned-tag' );
@@ -2225,10 +2245,10 @@ jQuery(function ($) {
 					successCallback: function( template, json, status, xhr, errors ){
 						tagElement.hide( 'slow', function(){
 							tagElement.remove();
-							_ReplaceList( newElement, json, template );
+							widget._ReplaceList( newElement, json, template );
 
 							// rerun tag filter
-							_FilterByTags();
+							widget._FilterByTags();
 						});
 					},
 					lists: listData.list.id
@@ -2237,13 +2257,15 @@ jQuery(function ($) {
 
 			newElement.find( '.assigned-tags' ).hide();
 			return newElement;
-		};
+		},
 
-		var _triggerResize = function() {
+		_triggerResize: function() {
+			var widget = this;
 			widget._trigger("ContentDimensionsChanged", 0, {} );
-		};
+		},
 
-		var _AdjustHeight = function() {
+		_AdjustHeight: function() {
+			var widget = this;
 			widget.listlist.find( '.row' ).each(function(){
 				var that = $(this);
 				var listTag = that.find( ".list-tag" );
@@ -2251,21 +2273,24 @@ jQuery(function ($) {
 
 				listTag.height( listName.height() + 10 + "px" );
 			});
-		};
+		},
 
-		var _AddListToDOM = function( data, template ) {
+		_AddListToDOM: function( data, template ) {
+			var widget = this;
+
 			widget.listlist = $( '<div id="list-list"></div>' );
 			widget.wrapper.append( widget.listlist );
 			var toolbar = widget.toolbar;
 
 			for ( var i = 0; i < data.length; i++ ) {
-				widget.listlist.append( _GetListElement( data[ i ], template ) ) ;
+				widget.listlist.append( widget._GetListElement( data[ i ], template ) ) ;
 			}
-			_AdjustHeight();
-			_triggerResize();
-		};
+			widget._AdjustHeight();
+			widget._triggerResize();
+		},
 
-		var _SelectLastList = function() {
+		_SelectLastList: function() {
+			var widget = this;
 			var effect = "highlight";
 
 			if ( widget.selectedList ) {
@@ -2279,13 +2304,14 @@ jQuery(function ($) {
 					$(this).focus();
 				});
 			}
+		},
 
-		};
+		_RegisterGlobalKeyboardShortcuts: function() {
+			var widget = this;
 
-		var _RegisterGlobalKeyboardShortcuts = function() {
 			// select list
 			$(document).bind( 'keydown', 'ctrl+l', function(e) {
-				_SelectLastList();
+				widget._SelectLastList();
 			});
 
 			$(document).bind( 'keydown', 'ctrl+f', function(e){
@@ -2298,22 +2324,23 @@ jQuery(function ($) {
 				widget.toolbar.find( "#search-list" ).focus();
 				return false;
 			})
-		};
+		},
 
-		var _ShowListView = function( updatedElement, template ) {
+		_ShowListView: function( updatedElement, template ) {
+			var widget = this;
 
-			widget.listlist.show('slide', { direction: 'left'}, 'slow', function(){
+			widget.listlist.show( 'slide', { direction: 'left'}, 'slow', function(){
 				if ( updatedElement ) {
 
-					var newElement = _GetListElement( updatedElement, template );
+					var newElement = widget._GetListElement( updatedElement, template );
 
-					if ( _IsNewList( updatedElement ) ) {
+					if ( widget._IsNewList( updatedElement ) ) {
 						widget.listlist.prepend( newElement );
 					} else {
 						widget.selectedList.element.replaceWith( newElement );
 					}
 
-					_AdjustHeight();
+					widget._AdjustHeight();
 
 					widget.selectedList =  {
 						data: updatedElement,
@@ -2325,12 +2352,13 @@ jQuery(function ($) {
 				}
 			});
 
-		};
+		},
 
-		var _HideForm = function( updatedElement, template ) {
+		_HideForm: function( updatedElement, template ) {
+			var widget = this;
 
 			widget.listForm.hide('slide', { direction: 'left' }, 'slow', function(){
-				_ShowListView( updatedElement, template );
+				widget._ShowListView( updatedElement, template );
 				widget.listForm.trigger( "FormHidden" );
 				if ( widget.selectedList ) {
 					widget.selectedList.element.focus();
@@ -2340,9 +2368,11 @@ jQuery(function ($) {
 				widget.listForm.remove();
 				widget.listForm = null;
 			});
-		};
+		},
 
-		var _FilterByTags = function() {
+		_FilterByTags: function() {
+			var widget = this;
+
 			// apply text filter
 			widget.toolbar.find( "#search-list" ).trigger( "keyup" );
 
@@ -2367,103 +2397,125 @@ jQuery(function ($) {
 					}
 				}
 			});
-		};
+		},
 
-		return {
-			// default options
-			options: {
+		_create: function() {
+			var widget = this;
+			widget.selectedList = null;
+			widget.wrapper = widget.element.find('div#list-wrapper');
+			widget.toolbar = widget._CreateToolbar();
+			widget.listForm = null;
+			widget.selectedTags = [];
 
-			},
+			// retrieve Lists from server and add them to DOM.
+			List.Index( {
+				successCallback: function( template, json, status, xhr, errors ) {
 
-			///////
-			//	holds object with selected list:
-			//	{
-			//		element: jQuery object with the UI element displaying the list
-			//		data: the data object (retrieved from server)
-			//	}
-			//////
-			selectedList: null,
+					// remove all existing rows
+					widget.wrapper.find(".row").remove();
 
-			_create: function() {
-				widget = this;
-				widget.wrapper = widget.element.find('div#list-wrapper');
-				widget.toolbar = _CreateToolbar( widget );
-				widget.listForm = null;
-				widget.selectedTags = [];
+					// add newly received Lists to DOM
+					widget._AddListToDOM( json, template );
 
-				// retrieve Lists from server and add them to DOM.
-				List.Index( {
-					successCallback: function( template, json, status, xhr, errors ) {
+					// focus first list
+					widget.listlist.find( '.row' ).first().focus();
+				}
+			} );
 
-						// remove all existing rows
-						widget.wrapper.find(".row").remove();
+			// register global keyboard shortcuts
+			widget._RegisterGlobalKeyboardShortcuts();
+		},
 
-						// add newly received Lists to DOM
-						_AddListToDOM( json, template );
+		/**
+		*
+		* Private Functions End
+		*
+		**/
 
-						// focus first list
-						widget.listlist.find( '.row' ).first().focus();
-					}
-				} );
+		/**
+		*
+		* Default Options Start
+		*
+		**/
+		options: {
 
-				// register global keyboard shortcuts
-				_RegisterGlobalKeyboardShortcuts();
-			},
+		},
+		/**
+		*
+		* Default Options End
+		*
+		**/
 
-			SetupDroppable: function( dragType ) {
+		/**
+		*
+		* Public Functions Start
+		*
+		**/
 
-				widget.listlist.find( '.row' ).each(function(){
-					var list = $(this)
-					list.droppable( "destroy");
-					switch( dragType ) {
-					case 'listitem':
-						list.droppable( _DroppableConfigListItems( list ) );
-						break;
-					case 'tag':
-						list.droppable( _DroppableConfigTags );
-						break;
-					}
+		SetupDroppable: function( dragType ) {
+			var widget = this;
 
-				});
-			},
+			widget.listlist.find( '.row' ).each(function(){
+				var list = $(this)
+				list.droppable( "destroy");
+				switch( dragType ) {
+				case 'listitem':
+					list.droppable( widget._DroppableConfigListItems( list ) );
+					break;
+				case 'tag':
+					list.droppable( widget._DroppableConfigTags() );
+					break;
+				}
 
-			ReloadLists: function() {
-				List.Index( {
-					successCallback: function( template, json, status, xhr, errors ) {
+			});
+		},
 
-						// remove all existing rows
-						widget.wrapper.find(".row").remove();
+		ReloadLists: function() {
+			var widget = this;
 
-						// add newly received Lists to DOM
-						_AddListToDOM( json, template );
-						widget.toolbar.find( "#search-list" ).trigger( "keyup" );
-						_FilterByTags();
-					}
-				} );
-			},
+			List.Index( {
+				successCallback: function( template, json, status, xhr, errors ) {
 
-			SelectList: function() {
-				_SelectLastList();
-			},
+					// remove all existing rows
+					widget.wrapper.find(".row").remove();
 
-			FilterByTags: function( selectedTagsArray ) {
-				widget.selectedTags = selectedTagsArray;
+					// add newly received Lists to DOM
+					widget._AddListToDOM( json, template );
+					widget.toolbar.find( "#search-list" ).trigger( "keyup" );
+					widget._FilterByTags();
+				}
+			} );
+		},
 
-				_FilterByTags();
-			},
+		SelectList: function() {
+			widget._SelectLastList();
+		},
 
-			destroy: function() {
-				widget.toolbar.remove();
-				widget.listForm.remove();
-				widget.wrapper.find(".row").remove();
-			}
-		};
-	}();
+		FilterByTags: function( selectedTagsArray ) {
+			var widget = this;
+
+			widget.selectedTags = selectedTagsArray;
+			widget._FilterByTags();
+		},
+
+		destroy: function() {
+			var widget = this;
+			widget.toolbar.remove();
+			widget.listForm.remove();
+			widget.wrapper.find(".row").remove();
+		}
+		/**
+		*
+		* Public Functions End
+		*
+		**/
+
+	};
+
 
 	// register widget
 	$.widget("ui.ListView", ListView);
-})();
-(function( $ ) {
+})();(function( $ ) {
 
 	$.fn.serializeForm = function() {
 		
