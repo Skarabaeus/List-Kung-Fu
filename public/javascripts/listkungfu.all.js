@@ -113,7 +113,7 @@ $(document).ready(function () {
 			ListKungFu.LayoutWest.ListView( "ReloadLists" );
 		},
 		TagSelected: function( event, selectedTagsArray ) {
-			ListKungFu.LayoutWest.ListView( "FilterByTags", selectedTagsArray );
+			ListKungFu.LayoutWest.ListView( "Filter", selectedTagsArray );
 		}
 	});
 
@@ -2126,16 +2126,7 @@ jQuery(function ($) {
 			});
 
 			toolbar.find("#search-list").bind( 'keyup', function ( e ) {
-				var filtervalue = $(this).val();
-
-        if (filtervalue === '') {
-					widget.listlist.find( ".row" ).show();
-        } else {
-					widget.listlist.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
-					widget.listlist.find( ".row:Contains('" + filtervalue + "')").show();
-        }
-				widget._AdjustHeight();
-				widget._triggerResize();
+				widget._Filter();
 			});
 
 			toolbar.find( "#list-search-cancel" ).bind( 'click', function() {
@@ -2317,7 +2308,7 @@ jQuery(function ($) {
 							widget._ReplaceList( newElement, json, template );
 
 							// rerun tag filter
-							widget._FilterByTags();
+							widget._Filter();
 						});
 					},
 					lists: listData.list.id
@@ -2439,11 +2430,27 @@ jQuery(function ($) {
 			});
 		},
 
+		_Filter: function() {
+			this._FilterBySearchText();
+			this._FilterByTags();
+		},
+
+		_FilterBySearchText: function() {
+			var widget = this;
+			var filtervalue = widget.toolbar.find("#search-list").val();
+
+      if (filtervalue === '') {
+				widget.listlist.find( ".row" ).show();
+      } else {
+				widget.listlist.find( ".row:visible:not(:Contains('" + filtervalue + "'))").hide();
+				widget.listlist.find( ".row:visible:Contains('" + filtervalue + "')").show();
+      }
+			widget._AdjustHeight();
+			widget._triggerResize();
+		},
+
 		_FilterByTags: function() {
 			var widget = this;
-
-			// apply text filter
-			widget.toolbar.find( "#search-list" ).trigger( "keyup" );
 
 			widget.listlist.find( '.row:visible' ).each(function(){
 				var that = $(this);
@@ -2551,7 +2558,7 @@ jQuery(function ($) {
 					// add newly received Lists to DOM
 					widget._AddListToDOM( json, template );
 					widget.toolbar.find( "#search-list" ).trigger( "keyup" );
-					widget._FilterByTags();
+					widget._Filter();
 				}
 			} );
 		},
@@ -2560,9 +2567,9 @@ jQuery(function ($) {
 			this._SelectLastList();
 		},
 
-		FilterByTags: function( selectedTagsArray ) {
+		Filter: function( selectedTagsArray ) {
 			this.selectedTags = selectedTagsArray;
-			this._FilterByTags();
+			this._Filter();
 		},
 
 		destroy: function() {
