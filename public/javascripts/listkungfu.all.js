@@ -651,21 +651,28 @@ jQuery(function ($) {
     return dialog;
   };
 })( jQuery );(function(){
-	var Dashboard = function(){
+	var Dashboard = {
 
-		var widget = null;
+		/**
+		*
+		* Private Functions Start
+		*
+		**/
 
-		var _TriggerResize = function() {
-			widget._trigger("ContentDimensionsChanged", 0, {} );
-		};
+		_TriggerResize: function() {
+			this._trigger("ContentDimensionsChanged", 0, {} );
+		},
 
-		var _NothingToDoText = '<p class="nothing-todo">no items scheduled</p>';
+		_NothingToDoText: function() {
+			return '<p class="nothing-todo">no items scheduled</p>';
+		},
 
-		var _TriggerReinitOfPanes = function() {
-			widget._trigger("ReinitPanes", 0, {} );
-		};
+		_TriggerReinitOfPanes: function() {
+			this._trigger("ReinitPanes", 0, {} );
+		},
 
-		var _SetupCustomDeadlinePicker = function( listItemDom ) {
+		_SetupCustomDeadlinePicker: function( listItemDom ) {
+			var widget = this;
 			var dateFormat = 'yy,mm,dd';
 			var that = $(this);
 			var element = listItemDom.find( '.dashboard-list-item-deadline-hidden' );
@@ -699,10 +706,10 @@ jQuery(function ($) {
 								listItemDom.hide( 'slow', function(){
 									listItemDom.remove();
 									if ( parent.find( '.dashboard-item' ).length === 0 ) {
-										parent.append( _NothingToDoText );
+										parent.append( widget._NothingToDoText() );
 									}
 								});
-								_CreateDashboardItem( json, template, {
+								widget._CreateDashboardItem( json, template, {
 									highlightCategory: true,
 									addType: 'prepend'
 								});
@@ -715,9 +722,9 @@ jQuery(function ($) {
 						that.datepicker("hide");
 					}
 			});
-		};
+		},
 
-		var _AppendToDashboard = function( target, item, options ) {
+		_AppendToDashboard: function( target, item, options ) {
 			options = options || {};
 
 			target.find( '.nothing-todo' ).remove();
@@ -731,26 +738,28 @@ jQuery(function ($) {
 			if ( options.highlightCategory === true ) {
 				item.effect( 'highlight', {}, 2000 );
 			}
-		};
+		},
 
-		var _CreateDashboardItem = function( listItem, template, options ) {
+		_CreateDashboardItem: function( listItem, template, options ) {
+			var widget = this;
+
 			var $listItemHtml = $( $.mustache( template, listItem.list_item ) );
 
 			switch( listItem.list_item.deadline_category ) {
 				case 'today':
-					_AppendToDashboard( widget.today, $listItemHtml, options );
+					widget._AppendToDashboard( widget.today, $listItemHtml, options );
 					break;
 				case 'tomorrow':
-					_AppendToDashboard( widget.tomorrow, $listItemHtml, options );
+					widget._AppendToDashboard( widget.tomorrow, $listItemHtml, options );
 					break;
 				case 'this week':
-					_AppendToDashboard( widget.thisweek, $listItemHtml, options );
+					widget._AppendToDashboard( widget.thisweek, $listItemHtml, options );
 					break;
 				case 'next week':
-					_AppendToDashboard( widget.nextweek, $listItemHtml, options );
+					widget._AppendToDashboard( widget.nextweek, $listItemHtml, options );
 					break;
 				default:
-					_AppendToDashboard( widget.later, $listItemHtml, options );
+					widget._AppendToDashboard( widget.later, $listItemHtml, options );
 					break;
 			}
 
@@ -813,99 +822,118 @@ jQuery(function ($) {
 				widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
 			});
 
-			_SetupCustomDeadlinePicker( $listItemHtml );
+			widget._SetupCustomDeadlinePicker( $listItemHtml );
 
 			$listItemHtml.find( '.dashboard-list-item-deadline' ).bind( 'click', function(){
 				$listItemHtml.find( '.dashboard-list-item-deadline' ).parent().find( '.dashboard-list-item-deadline-hidden' ).datepicker( "show" );
 			});
 
 			return $listItemHtml;
-		};
+		},
 
-		return {
-			// default options
-			options: {
+		_create: function() {
+		},
+		/**
+		*
+		* Private Functions End
+		*
+		**/
 
-			},
+		/**
+		*
+		* Options Start
+		*
+		**/
+		options: {
 
-			Show: function() {
-				widget.Hide();
+		},
+		/**
+		*
+		* Options End
+		*
+		**/
 
-				widget.header = $( '<div id="dashboard-header" class="header"><h1>Dashboard</h1></div>')
-				widget.toolbar = $( '<div id="dashboard-toolbar"><input type="text" id="dashboard-search" value=""/></div>');
-				widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
-				widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1><div data-type="scheduleColumn"></div></div>' );
-				widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1><div data-type="scheduleColumn"></div></div>' );
-				widget.thisweek = $( '<div id="thisweek" class="schedule-column"><h1>This Week</h1><div data-type="scheduleColumn"></div></div>' );
-				widget.nextweek = $( '<div id="nextweek" class="schedule-column"><h1>Next Week</h1><div data-type="scheduleColumn"></div></div>' );
-				widget.later = $( '<div id="later"><h1>Later</h1><div data-type="scheduleColumn"></div></div>' );
+		/**
+		*
+		* Public Functions Start
+		*
+		**/
+		Show: function() {
+			var widget = this;
+			widget.Hide();
 
-				widget.element.append( widget.header );
-				widget.header.append( widget.toolbar );
-				widget.element.append( widget.wrapper );
+			widget.header = $( '<div id="dashboard-header" class="header"><h1>Dashboard</h1></div>')
+			widget.toolbar = $( '<div id="dashboard-toolbar"><input type="text" id="dashboard-search" value=""/></div>');
+			widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
+			widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1><div data-type="scheduleColumn"></div></div>' );
+			widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1><div data-type="scheduleColumn"></div></div>' );
+			widget.thisweek = $( '<div id="thisweek" class="schedule-column"><h1>This Week</h1><div data-type="scheduleColumn"></div></div>' );
+			widget.nextweek = $( '<div id="nextweek" class="schedule-column"><h1>Next Week</h1><div data-type="scheduleColumn"></div></div>' );
+			widget.later = $( '<div id="later"><h1>Later</h1><div data-type="scheduleColumn"></div></div>' );
 
-				widget.wrapper.append( widget.today );
-				widget.wrapper.append( widget.tomorrow );
-				widget.wrapper.append( widget.thisweek );
-				widget.wrapper.append( widget.nextweek );
-				widget.nextweek.append( widget.later );
-				widget.wrapper.append( '<div style="clear:both;">&nbsp;</div>' );
+			widget.element.append( widget.header );
+			widget.header.append( widget.toolbar );
+			widget.element.append( widget.wrapper );
 
-				widget.toolbar.append( '<div id="dashboard-search-cancel">&nbsp;</div><div style="clear:both;">&nbsp;</div>' );
+			widget.wrapper.append( widget.today );
+			widget.wrapper.append( widget.tomorrow );
+			widget.wrapper.append( widget.thisweek );
+			widget.wrapper.append( widget.nextweek );
+			widget.nextweek.append( widget.later );
+			widget.wrapper.append( '<div style="clear:both;">&nbsp;</div>' );
 
-				// Load scheduled items
-				ListItem.Index( {
-					successCallback: function( template, json, status, xhr, errors ) {
+			widget.toolbar.append( '<div id="dashboard-search-cancel">&nbsp;</div><div style="clear:both;">&nbsp;</div>' );
 
-						$.each( json, function( index, listItem ) {
-							_CreateDashboardItem( listItem, template );
-						});
+			// Load scheduled items
+			ListItem.Index( {
+				successCallback: function( template, json, status, xhr, errors ) {
 
-						$( 'div[data-type="scheduleColumn"]' ).each(function(){
-							if ( $( this ).children( '.dashboard-item' ).length === 0 ) {
-								$( this ).append( _NothingToDoText );
-							}
-						});
+					$.each( json, function( index, listItem ) {
+						widget._CreateDashboardItem( listItem, template );
+					});
 
-						_TriggerReinitOfPanes();
-						_TriggerResize();
-					},
-					send: { show: "dashboard" }
-				});
+					$( 'div[data-type="scheduleColumn"]' ).each(function(){
+						if ( $( this ).children( '.dashboard-item' ).length === 0 ) {
+							$( this ).append( widget._NothingToDoText() );
+						}
+					});
 
-				// bind events
+					widget._TriggerReinitOfPanes();
+					widget._TriggerResize();
+				},
+				send: { show: "dashboard" }
+			});
 
-				widget.toolbar.find( '#dashboard-search' ).bind( 'keyup', function( e ){
-					var filtervalue = $( this ).val();
+			// bind events
 
-	        if ( filtervalue === '' ) {
-						widget.wrapper.find( ".dashboard-item" ).show();
-	        } else {
-						widget.wrapper.find( ".dashboard-item:not(:Contains('" + filtervalue + "'))").hide();
-						widget.wrapper.find( ".dashboard-item:Contains('" + filtervalue + "')").show();
-	        }
-				});
+			widget.toolbar.find( '#dashboard-search' ).bind( 'keyup', function( e ){
+				var filtervalue = $( this ).val();
 
-				widget.toolbar.find( '#dashboard-search-cancel' ).bind( 'click', function(){
-					widget.toolbar.find("#dashboard-search").val("").trigger('keyup');
-				});
-			},
+        if ( filtervalue === '' ) {
+					widget.wrapper.find( ".dashboard-item" ).show();
+        } else {
+					widget.wrapper.find( ".dashboard-item:not(:Contains('" + filtervalue + "'))").hide();
+					widget.wrapper.find( ".dashboard-item:Contains('" + filtervalue + "')").show();
+        }
+			});
 
-			Hide: function() {
-				// clean up
-				widget.element.children().remove();
-			},
+			widget.toolbar.find( '#dashboard-search-cancel' ).bind( 'click', function(){
+				widget.toolbar.find("#dashboard-search").val("").trigger('keyup');
+			});
+		},
 
-			// required function. Automatically called when widget is created
-			_create: function() {
-				widget = this;
-			},
+		Hide: function() {
+			this.element.children().remove();
+		},
 
-			destroy: function() {
-
-			}
-		};
-	}();
+		destroy: function() {
+		}
+		/**
+		*
+		* Public Functions End
+		*
+		**/
+	};
 	// register widget
 	$.widget("ui.Dashboard", Dashboard);
 })();
@@ -2582,75 +2610,66 @@ jQuery(function ($) {
     return objects;
   };
 })( jQuery );(function(){
-	var StatusBar = function(){
+	var StatusBar = {
 
-		var _myPrivateFunction = function() {
-		};
+		options: {
+		},
 
-		// put all private functions in here
-		// that improves minification. See http://blog.project-sierra.de/archives/1622
+		_create: function() {
+			var widget = this;
 
-		return {
-			// default options
-			options: {
+			widget.ajaxLoader = $('<div id="ajax-indicator"> \
+					<img src="/images/ajax-loader.gif" class="ajax-indicator" /> Loading ... \
+					</div>');
 
-			},
+			widget.notice = $('<p id="notice"></p>');
+			widget.alert = $('<p id="alert"></p>');
 
-			// required function. Automatically called when widget is created
-			_create: function() {
-				var widget = this;
+			widget.element.append( widget.ajaxLoader );
+			widget.element.append( widget.notice );
+			widget.element.append( widget.alert );
 
-				widget.ajaxLoader = $('<div id="ajax-indicator"> \
-						<img src="/images/ajax-loader.gif" class="ajax-indicator" /> Loading ... \
-						</div>');
+			widget.notice.hide(function( e ){
+				$( e.target ).html("");
+			});
+			widget.alert.hide(function( e ){
+				$( e.target ).html("");
+			});
 
-				widget.notice = $('<p id="notice"></p>');
-				widget.alert = $('<p id="alert"></p>');
+			widget.ajaxLoader.bind("ajaxSend", function(){
+			  $(this).show();
+			}).bind("ajaxComplete", function(){
+			  $(this).hide();
+			});
 
-				widget.element.append( widget.ajaxLoader );
-				widget.element.append( widget.notice );
-				widget.element.append( widget.alert );
+		},
 
-				widget.notice.hide(function( e ){
-					$( e.target ).html("");
-				});
-				widget.alert.hide(function( e ){
-					$( e.target ).html("");
-				});
+		SetNotice: function( notice ) {
+			var widget = this;
 
-				widget.ajaxLoader.bind("ajaxSend", function(){
-				  $(this).show();
-				}).bind("ajaxComplete", function(){
-				  $(this).hide();
-				});
+			widget.notice.text( notice )
+								   .fadeIn()
+								   .delay( 2000 )
+								   .fadeOut(function(){
+				$(this).text("");
+			});
+		},
 
-			},
+		SetAlert: function( alert ) {
+			var widget = this;
 
-			SetNotice: function( notice ) {
-				var widget = this;
+			widget.alert.text( alert );
+			widget.alert.fadeIn().delay( 2000 ).fadeOut(function(){
+				$(this).text("");
+			});
+		},
 
-				widget.notice.text( notice );
-				widget.notice.fadeIn().delay( 2000 ).fadeOut(function(){
-					$(this).text("");
-				});
-			},
-
-			SetAlert: function( alert ) {
-				var widget = this;
-
-				widget.alert.text( alert );
-				widget.alert.fadeIn().delay( 2000 ).fadeOut(function(){
-					$(this).text("");
-				});
-			},
-
-			destroy: function() {
-				widget.ajaxLoader.remove();
-				widget.notice.remove();
-				widget.alert.remove();
-			}
-		};
-	}();
+		destroy: function() {
+			widget.ajaxLoader.remove();
+			widget.notice.remove();
+			widget.alert.remove();
+		}
+	};
 	// register widget
 	$.widget("ui.StatusBar", StatusBar);
 })();
@@ -5817,11 +5836,18 @@ $.fn.layout = function (opts) {
 
 }
 })( jQuery );(function(){
-	var TagView = function(){
+	var TagView = {
 
-		var widget = null;
 
-		var _GetTag = function( data, template ) {
+		/**
+		*
+		* Private Functions Start
+		*
+		**/
+
+		_GetTag: function( data, template ) {
+			var widget = this;
+
 			var tag = $( $.mustache( template, data.tag ) );
 
 			tag.data('data', data);
@@ -5881,11 +5907,11 @@ $.fn.layout = function (opts) {
 				var selected = tag.data( 'selected' );
 
 				if ( selected ) {
-					_RemoveSelectedTag( data.tag.id );
+					widget._RemoveSelectedTag( data.tag.id );
 					tag.removeClass( 'tag-selected' );
 					tag.data( 'selected', false );
 				} else {
-					_AddSelectedTag( data.tag.id );
+					widget._AddSelectedTag( data.tag.id );
 					tag.addClass( 'tag-selected' );
 					tag.data( 'selected', true );
 				}
@@ -5896,14 +5922,15 @@ $.fn.layout = function (opts) {
 
 
 			return tag;
-		};
+		},
 
-		var _AddSelectedTag = function( tagId ) {
-			widget.selectedTags.push( tagId );
-			widget.selectedTags = jQuery.unique( widget.selectedTags );
-		};
+		_AddSelectedTag: function( tagId ) {
+			this.selectedTags.push( tagId );
+			this.selectedTags = jQuery.unique( widget.selectedTags );
+		},
 
-		var _RemoveSelectedTag = function( tagId ) {
+		_RemoveSelectedTag: function( tagId ) {
+			var widget = this;
 			var newArray = [];
 
 			for ( var i = 0; i < widget.selectedTags.length; i++ ) {
@@ -5913,171 +5940,174 @@ $.fn.layout = function (opts) {
 			}
 
 			widget.selectedTags = newArray;
-		};
+		},
 
-		return {
-			options: {
+		_create: function() {
+			widget = this;
+			widget.toolbar = $( '<div id="tag-toolbar"></div>' );
+			widget.addTagInput = $( '<input type="text" value="" id="add-tag"/>' );
+			widget.addTagButton = $( '<button id="tag-new">Create Tag</button>' );
+			widget.tagList = $( '<div class="tags"></div>' );
 
-			},
+			widget.element.append( widget.toolbar );
+			widget.toolbar.append( widget.addTagInput );
+			widget.toolbar.append( widget.addTagButton );
+			widget.element.append( widget.tagList );
 
-			_create: function() {
-				widget = this;
-				widget.toolbar = $( '<div id="tag-toolbar"></div>' );
-				widget.addTagInput = $( '<input type="text" value="" id="add-tag"/>' );
-				widget.addTagButton = $( '<button id="tag-new">Create Tag</button>' );
-				widget.tagList = $( '<div class="tags"></div>' );
+			widget.addTagButton.button({
+				text: false,
+				icons: {
+					primary: 'ui-icon-plusthick'
+				}
+			});
 
-				widget.element.append( widget.toolbar );
-				widget.toolbar.append( widget.addTagInput );
-				widget.toolbar.append( widget.addTagButton );
-				widget.element.append( widget.tagList );
+			widget.selectedTags = [];
 
-				widget.addTagButton.button({
-					text: false,
-					icons: {
-						primary: 'ui-icon-plusthick'
+			// retrieve all tags and display them
+			Tag.Index( {
+				successCallback: function( template, json, status, xhr, errors ) {
+
+					for ( var i = 0; i < json.length; i++ ) {
+						widget.tagList.append( widget._GetTag( json[ i ], template ) ) ;
 					}
-				});
 
-				widget.selectedTags = [];
+					widget.tagList.append( widget.tagMenu );
 
-				// retrieve all tags and display them
-				Tag.Index( {
-					successCallback: function( template, json, status, xhr, errors ) {
+					// bind events for tag menu
 
-						for ( var i = 0; i < json.length; i++ ) {
-							widget.tagList.append( _GetTag( json[ i ], template ) ) ;
-						}
+					// color selection
+					widget.tagMenu.find( '.color' ).bind( 'click', function( e ) {
+						var $target = $( e.target );
+						var colorClass = $target.attr( 'data-colorclass' );
+						var json = widget.tagMenu.data( 'tag' );
+						var oldColorClass = json.tag.color_class;
+						var target = widget.tagMenu.data( 'target' );
 
-						widget.tagList.append( widget.tagMenu );
+						json.tag.color_class = colorClass;
 
-						// bind events for tag menu
+						Tag.Update({
 
-						// color selection
-						widget.tagMenu.find( '.color' ).bind( 'click', function( e ) {
-							var $target = $( e.target );
-							var colorClass = $target.attr( 'data-colorclass' );
-							var json = widget.tagMenu.data( 'tag' );
-							var oldColorClass = json.tag.color_class;
-							var target = widget.tagMenu.data( 'target' );
+							send: json,
+							successCallback: function( template, json, status, xhr, errors ){
+								// Lists need to be reloaded because tag_color_helper will have changed
+								widget._trigger( "AfterColorChanged", 0, {} );
 
-							json.tag.color_class = colorClass;
+								var colorSelector = target;
 
-							Tag.Update({
+								// update view
+								target.parent( '.tag' ).removeClass( oldColorClass);
+								target.parent( '.tag' ).addClass( colorClass );
+								colorSelector.removeClass( oldColorClass );
+								colorSelector.addClass( colorClass );
 
-								send: json,
+								// hide the tag menu
+								widget.tagMenu.hide( 'fast' );
+								widget.tagMenu.data( 'visible', false );
+								widget.tagMenu.data( 'tagId', null );
+								widget.tagMenu.data( 'tag', null );
+								widget.tagMenu.data( 'target', null );
+
+								// update data object
+								target.data( 'data', json );
+							},
+							tags: json.tag.id
+						});
+					});
+
+					// delete label
+					widget.tagMenu.find( '.delete-label' ).bind( 'click', function(){
+						var data = widget.tagMenu.data( 'tag' );
+						var target = widget.tagMenu.data( 'target' );
+
+						widget.tagMenu.hide();
+
+						var deleteFunc = function(){
+							Tag.Destroy({
 								successCallback: function( template, json, status, xhr, errors ){
-									// Lists need to be reloaded because tag_color_helper will have changed
-									widget._trigger( "AfterColorChanged", 0, {} );
-
-									var colorSelector = target;
-
-									// update view
-									target.parent( '.tag' ).removeClass( oldColorClass);
-									target.parent( '.tag' ).addClass( colorClass );
-									colorSelector.removeClass( oldColorClass );
-									colorSelector.addClass( colorClass );
-
-									// hide the tag menu
-									widget.tagMenu.hide( 'fast' );
-									widget.tagMenu.data( 'visible', false );
-									widget.tagMenu.data( 'tagId', null );
-									widget.tagMenu.data( 'tag', null );
-									widget.tagMenu.data( 'target', null );
-
-									// update data object
-									target.data( 'data', json );
+									target.hide( 'fast', function(){
+										target.parent( '.tag' ).remove();
+									});
 								},
-								tags: json.tag.id
+								tags: data.tag.id
 							});
-						});
-
-						// delete label
-						widget.tagMenu.find( '.delete-label' ).bind( 'click', function(){
-							var data = widget.tagMenu.data( 'tag' );
-							var target = widget.tagMenu.data( 'target' );
-
-							widget.tagMenu.hide();
-
-							var deleteFunc = function(){
-								Tag.Destroy({
-									successCallback: function( template, json, status, xhr, errors ){
-										target.hide( 'fast', function(){
-											target.parent( '.tag' ).remove();
-										});
-									},
-									tags: data.tag.id
-								});
-							};
-
-							if ( typeof( widget.deleteDialog ) === 'undefined' ) {
-								widget.deleteDialog = $.confirmationDialog( "Delete Tag", deleteFunc, "Cancel"
-									, "Delete Tag and remove it from all lists?" );
-							}
-
-							widget.deleteDialog.dialog("open");
-
-							return false;
-						});
-
-
-					}
-				});
-
-				widget.addTagButton.bind( 'click', function(e){
-					if ( $.trim( widget.addTagInput.val() ) !== '' &&
-						widget.tagList.find( ".tag-name:HasExactValue('" + $.trim( widget.addTagInput.val() ) + "')").length === 0 ) {
-
-						var data = {};
-						data.tag = {
-							name: widget.addTagInput.val(),
-							color_class: "c1"
 						};
 
-						Tag.Create({
-							send: data,
-							successCallback: function( template, json, status, xhr, errors ) {
-								var newTag = _GetTag( json, template );
-								widget.tagList.prepend( newTag );
-								widget.addTagInput.val( '' );
-								widget.addTagInput.trigger( 'keyup' );
-							}
-						});
+						if ( typeof( widget.deleteDialog ) === 'undefined' ) {
+							widget.deleteDialog = $.confirmationDialog( "Delete Tag", deleteFunc, "Cancel"
+								, "Delete Tag and remove it from all lists?" );
+						}
+
+						widget.deleteDialog.dialog("open");
 
 						return false;
-					}
-				});
-
-				widget.addTagInput.bind( 'keyup', 'return', function(){
-					widget.addTagButton.trigger( 'click' );
-				});
-
-				widget.addTagInput.bind( 'keyup', function ( e ) {
-					var filtervalue = $(this).val();
-
-	        if (filtervalue === '') {
-						widget.tagList.find( ".tag" ).show();
-	        } else {
-						widget.tagList.find( ".tag:not(:Contains('" + filtervalue + "'))").hide();
-						widget.tagList.find( ".tag:Contains('" + filtervalue + "')").show();
-	        }
-
-					// if this tag already exists, disable the "add"-button
-					if ( widget.tagList.find( ".tag-name:HasExactValue('" + $.trim( filtervalue ) + "')").length > 0 ) {
-						widget.addTagButton.button( "option", "disabled", true );
-					} else {
-						widget.addTagButton.button( "option", "disabled", false );
-					}
-				});
+					});
 
 
-			},
+				}
+			});
 
-			destroy: function() {
-				widget.element.children().remove();
-			}
-		};
-	}();
+			widget.addTagButton.bind( 'click', function(e){
+				if ( $.trim( widget.addTagInput.val() ) !== '' &&
+					widget.tagList.find( ".tag-name:HasExactValue('" + $.trim( widget.addTagInput.val() ) + "')").length === 0 ) {
+
+					var data = {};
+					data.tag = {
+						name: widget.addTagInput.val(),
+						color_class: "c1"
+					};
+
+					Tag.Create({
+						send: data,
+						successCallback: function( template, json, status, xhr, errors ) {
+							var newTag = widget._GetTag( json, template );
+							widget.tagList.prepend( newTag );
+							widget.addTagInput.val( '' );
+							widget.addTagInput.trigger( 'keyup' );
+						}
+					});
+
+					return false;
+				}
+			});
+
+			widget.addTagInput.bind( 'keyup', 'return', function(){
+				widget.addTagButton.trigger( 'click' );
+			});
+
+			widget.addTagInput.bind( 'keyup', function ( e ) {
+				var filtervalue = $(this).val();
+
+        if (filtervalue === '') {
+					widget.tagList.find( ".tag" ).show();
+        } else {
+					widget.tagList.find( ".tag:not(:Contains('" + filtervalue + "'))").hide();
+					widget.tagList.find( ".tag:Contains('" + filtervalue + "')").show();
+        }
+
+				// if this tag already exists, disable the "add"-button
+				if ( widget.tagList.find( ".tag-name:HasExactValue('" + $.trim( filtervalue ) + "')").length > 0 ) {
+					widget.addTagButton.button( "option", "disabled", true );
+				} else {
+					widget.addTagButton.button( "option", "disabled", false );
+				}
+			});
+
+
+		},
+
+		/**
+		*
+		* Private Functions End
+		*
+		**/
+		options: {
+
+		},
+
+		destroy: function() {
+			widget.element.children().remove();
+		}
+	};
 	// register widget
 	$.widget("ui.TagView", TagView);
 })();

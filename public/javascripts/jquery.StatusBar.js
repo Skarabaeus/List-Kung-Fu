@@ -1,73 +1,64 @@
 (function(){
-	var StatusBar = function(){
+	var StatusBar = {
 
-		var _myPrivateFunction = function() {
-		};
+		options: {
+		},
 
-		// put all private functions in here
-		// that improves minification. See http://blog.project-sierra.de/archives/1622
+		_create: function() {
+			var widget = this;
 
-		return {
-			// default options
-			options: {
+			widget.ajaxLoader = $('<div id="ajax-indicator"> \
+					<img src="/images/ajax-loader.gif" class="ajax-indicator" /> Loading ... \
+					</div>');
 
-			},
+			widget.notice = $('<p id="notice"></p>');
+			widget.alert = $('<p id="alert"></p>');
 
-			// required function. Automatically called when widget is created
-			_create: function() {
-				var widget = this;
+			widget.element.append( widget.ajaxLoader );
+			widget.element.append( widget.notice );
+			widget.element.append( widget.alert );
 
-				widget.ajaxLoader = $('<div id="ajax-indicator"> \
-						<img src="/images/ajax-loader.gif" class="ajax-indicator" /> Loading ... \
-						</div>');
+			widget.notice.hide(function( e ){
+				$( e.target ).html("");
+			});
+			widget.alert.hide(function( e ){
+				$( e.target ).html("");
+			});
 
-				widget.notice = $('<p id="notice"></p>');
-				widget.alert = $('<p id="alert"></p>');
+			widget.ajaxLoader.bind("ajaxSend", function(){
+			  $(this).show();
+			}).bind("ajaxComplete", function(){
+			  $(this).hide();
+			});
 
-				widget.element.append( widget.ajaxLoader );
-				widget.element.append( widget.notice );
-				widget.element.append( widget.alert );
+		},
 
-				widget.notice.hide(function( e ){
-					$( e.target ).html("");
-				});
-				widget.alert.hide(function( e ){
-					$( e.target ).html("");
-				});
+		SetNotice: function( notice ) {
+			var widget = this;
 
-				widget.ajaxLoader.bind("ajaxSend", function(){
-				  $(this).show();
-				}).bind("ajaxComplete", function(){
-				  $(this).hide();
-				});
+			widget.notice.text( notice )
+								   .fadeIn()
+								   .delay( 2000 )
+								   .fadeOut(function(){
+				$(this).text("");
+			});
+		},
 
-			},
+		SetAlert: function( alert ) {
+			var widget = this;
 
-			SetNotice: function( notice ) {
-				var widget = this;
+			widget.alert.text( alert );
+			widget.alert.fadeIn().delay( 2000 ).fadeOut(function(){
+				$(this).text("");
+			});
+		},
 
-				widget.notice.text( notice );
-				widget.notice.fadeIn().delay( 2000 ).fadeOut(function(){
-					$(this).text("");
-				});
-			},
-
-			SetAlert: function( alert ) {
-				var widget = this;
-
-				widget.alert.text( alert );
-				widget.alert.fadeIn().delay( 2000 ).fadeOut(function(){
-					$(this).text("");
-				});
-			},
-
-			destroy: function() {
-				widget.ajaxLoader.remove();
-				widget.notice.remove();
-				widget.alert.remove();
-			}
-		};
-	}();
+		destroy: function() {
+			widget.ajaxLoader.remove();
+			widget.notice.remove();
+			widget.alert.remove();
+		}
+	};
 	// register widget
 	$.widget("ui.StatusBar", StatusBar);
 })();

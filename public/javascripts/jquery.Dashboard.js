@@ -1,19 +1,26 @@
 (function(){
-	var Dashboard = function(){
+	var Dashboard = {
 
-		var widget = null;
+		/**
+		*
+		* Private Functions Start
+		*
+		**/
 
-		var _TriggerResize = function() {
-			widget._trigger("ContentDimensionsChanged", 0, {} );
-		};
+		_TriggerResize: function() {
+			this._trigger("ContentDimensionsChanged", 0, {} );
+		},
 
-		var _NothingToDoText = '<p class="nothing-todo">no items scheduled</p>';
+		_NothingToDoText: function() {
+			return '<p class="nothing-todo">no items scheduled</p>';
+		},
 
-		var _TriggerReinitOfPanes = function() {
-			widget._trigger("ReinitPanes", 0, {} );
-		};
+		_TriggerReinitOfPanes: function() {
+			this._trigger("ReinitPanes", 0, {} );
+		},
 
-		var _SetupCustomDeadlinePicker = function( listItemDom ) {
+		_SetupCustomDeadlinePicker: function( listItemDom ) {
+			var widget = this;
 			var dateFormat = 'yy,mm,dd';
 			var that = $(this);
 			var element = listItemDom.find( '.dashboard-list-item-deadline-hidden' );
@@ -47,10 +54,10 @@
 								listItemDom.hide( 'slow', function(){
 									listItemDom.remove();
 									if ( parent.find( '.dashboard-item' ).length === 0 ) {
-										parent.append( _NothingToDoText );
+										parent.append( widget._NothingToDoText() );
 									}
 								});
-								_CreateDashboardItem( json, template, {
+								widget._CreateDashboardItem( json, template, {
 									highlightCategory: true,
 									addType: 'prepend'
 								});
@@ -63,9 +70,9 @@
 						that.datepicker("hide");
 					}
 			});
-		};
+		},
 
-		var _AppendToDashboard = function( target, item, options ) {
+		_AppendToDashboard: function( target, item, options ) {
 			options = options || {};
 
 			target.find( '.nothing-todo' ).remove();
@@ -79,26 +86,28 @@
 			if ( options.highlightCategory === true ) {
 				item.effect( 'highlight', {}, 2000 );
 			}
-		};
+		},
 
-		var _CreateDashboardItem = function( listItem, template, options ) {
+		_CreateDashboardItem: function( listItem, template, options ) {
+			var widget = this;
+
 			var $listItemHtml = $( $.mustache( template, listItem.list_item ) );
 
 			switch( listItem.list_item.deadline_category ) {
 				case 'today':
-					_AppendToDashboard( widget.today, $listItemHtml, options );
+					widget._AppendToDashboard( widget.today, $listItemHtml, options );
 					break;
 				case 'tomorrow':
-					_AppendToDashboard( widget.tomorrow, $listItemHtml, options );
+					widget._AppendToDashboard( widget.tomorrow, $listItemHtml, options );
 					break;
 				case 'this week':
-					_AppendToDashboard( widget.thisweek, $listItemHtml, options );
+					widget._AppendToDashboard( widget.thisweek, $listItemHtml, options );
 					break;
 				case 'next week':
-					_AppendToDashboard( widget.nextweek, $listItemHtml, options );
+					widget._AppendToDashboard( widget.nextweek, $listItemHtml, options );
 					break;
 				default:
-					_AppendToDashboard( widget.later, $listItemHtml, options );
+					widget._AppendToDashboard( widget.later, $listItemHtml, options );
 					break;
 			}
 
@@ -161,99 +170,118 @@
 				widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
 			});
 
-			_SetupCustomDeadlinePicker( $listItemHtml );
+			widget._SetupCustomDeadlinePicker( $listItemHtml );
 
 			$listItemHtml.find( '.dashboard-list-item-deadline' ).bind( 'click', function(){
 				$listItemHtml.find( '.dashboard-list-item-deadline' ).parent().find( '.dashboard-list-item-deadline-hidden' ).datepicker( "show" );
 			});
 
 			return $listItemHtml;
-		};
+		},
 
-		return {
-			// default options
-			options: {
+		_create: function() {
+		},
+		/**
+		*
+		* Private Functions End
+		*
+		**/
 
-			},
+		/**
+		*
+		* Options Start
+		*
+		**/
+		options: {
 
-			Show: function() {
-				widget.Hide();
+		},
+		/**
+		*
+		* Options End
+		*
+		**/
 
-				widget.header = $( '<div id="dashboard-header" class="header"><h1>Dashboard</h1></div>')
-				widget.toolbar = $( '<div id="dashboard-toolbar"><input type="text" id="dashboard-search" value=""/></div>');
-				widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
-				widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1><div data-type="scheduleColumn"></div></div>' );
-				widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1><div data-type="scheduleColumn"></div></div>' );
-				widget.thisweek = $( '<div id="thisweek" class="schedule-column"><h1>This Week</h1><div data-type="scheduleColumn"></div></div>' );
-				widget.nextweek = $( '<div id="nextweek" class="schedule-column"><h1>Next Week</h1><div data-type="scheduleColumn"></div></div>' );
-				widget.later = $( '<div id="later"><h1>Later</h1><div data-type="scheduleColumn"></div></div>' );
+		/**
+		*
+		* Public Functions Start
+		*
+		**/
+		Show: function() {
+			var widget = this;
+			widget.Hide();
 
-				widget.element.append( widget.header );
-				widget.header.append( widget.toolbar );
-				widget.element.append( widget.wrapper );
+			widget.header = $( '<div id="dashboard-header" class="header"><h1>Dashboard</h1></div>')
+			widget.toolbar = $( '<div id="dashboard-toolbar"><input type="text" id="dashboard-search" value=""/></div>');
+			widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
+			widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1><div data-type="scheduleColumn"></div></div>' );
+			widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1><div data-type="scheduleColumn"></div></div>' );
+			widget.thisweek = $( '<div id="thisweek" class="schedule-column"><h1>This Week</h1><div data-type="scheduleColumn"></div></div>' );
+			widget.nextweek = $( '<div id="nextweek" class="schedule-column"><h1>Next Week</h1><div data-type="scheduleColumn"></div></div>' );
+			widget.later = $( '<div id="later"><h1>Later</h1><div data-type="scheduleColumn"></div></div>' );
 
-				widget.wrapper.append( widget.today );
-				widget.wrapper.append( widget.tomorrow );
-				widget.wrapper.append( widget.thisweek );
-				widget.wrapper.append( widget.nextweek );
-				widget.nextweek.append( widget.later );
-				widget.wrapper.append( '<div style="clear:both;">&nbsp;</div>' );
+			widget.element.append( widget.header );
+			widget.header.append( widget.toolbar );
+			widget.element.append( widget.wrapper );
 
-				widget.toolbar.append( '<div id="dashboard-search-cancel">&nbsp;</div><div style="clear:both;">&nbsp;</div>' );
+			widget.wrapper.append( widget.today );
+			widget.wrapper.append( widget.tomorrow );
+			widget.wrapper.append( widget.thisweek );
+			widget.wrapper.append( widget.nextweek );
+			widget.nextweek.append( widget.later );
+			widget.wrapper.append( '<div style="clear:both;">&nbsp;</div>' );
 
-				// Load scheduled items
-				ListItem.Index( {
-					successCallback: function( template, json, status, xhr, errors ) {
+			widget.toolbar.append( '<div id="dashboard-search-cancel">&nbsp;</div><div style="clear:both;">&nbsp;</div>' );
 
-						$.each( json, function( index, listItem ) {
-							_CreateDashboardItem( listItem, template );
-						});
+			// Load scheduled items
+			ListItem.Index( {
+				successCallback: function( template, json, status, xhr, errors ) {
 
-						$( 'div[data-type="scheduleColumn"]' ).each(function(){
-							if ( $( this ).children( '.dashboard-item' ).length === 0 ) {
-								$( this ).append( _NothingToDoText );
-							}
-						});
+					$.each( json, function( index, listItem ) {
+						widget._CreateDashboardItem( listItem, template );
+					});
 
-						_TriggerReinitOfPanes();
-						_TriggerResize();
-					},
-					send: { show: "dashboard" }
-				});
+					$( 'div[data-type="scheduleColumn"]' ).each(function(){
+						if ( $( this ).children( '.dashboard-item' ).length === 0 ) {
+							$( this ).append( widget._NothingToDoText() );
+						}
+					});
 
-				// bind events
+					widget._TriggerReinitOfPanes();
+					widget._TriggerResize();
+				},
+				send: { show: "dashboard" }
+			});
 
-				widget.toolbar.find( '#dashboard-search' ).bind( 'keyup', function( e ){
-					var filtervalue = $( this ).val();
+			// bind events
 
-	        if ( filtervalue === '' ) {
-						widget.wrapper.find( ".dashboard-item" ).show();
-	        } else {
-						widget.wrapper.find( ".dashboard-item:not(:Contains('" + filtervalue + "'))").hide();
-						widget.wrapper.find( ".dashboard-item:Contains('" + filtervalue + "')").show();
-	        }
-				});
+			widget.toolbar.find( '#dashboard-search' ).bind( 'keyup', function( e ){
+				var filtervalue = $( this ).val();
 
-				widget.toolbar.find( '#dashboard-search-cancel' ).bind( 'click', function(){
-					widget.toolbar.find("#dashboard-search").val("").trigger('keyup');
-				});
-			},
+        if ( filtervalue === '' ) {
+					widget.wrapper.find( ".dashboard-item" ).show();
+        } else {
+					widget.wrapper.find( ".dashboard-item:not(:Contains('" + filtervalue + "'))").hide();
+					widget.wrapper.find( ".dashboard-item:Contains('" + filtervalue + "')").show();
+        }
+			});
 
-			Hide: function() {
-				// clean up
-				widget.element.children().remove();
-			},
+			widget.toolbar.find( '#dashboard-search-cancel' ).bind( 'click', function(){
+				widget.toolbar.find("#dashboard-search").val("").trigger('keyup');
+			});
+		},
 
-			// required function. Automatically called when widget is created
-			_create: function() {
-				widget = this;
-			},
+		Hide: function() {
+			this.element.children().remove();
+		},
 
-			destroy: function() {
-
-			}
-		};
-	}();
+		destroy: function() {
+		}
+		/**
+		*
+		* Public Functions End
+		*
+		**/
+	};
 	// register widget
 	$.widget("ui.Dashboard", Dashboard);
 })();

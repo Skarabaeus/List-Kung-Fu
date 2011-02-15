@@ -1,9 +1,16 @@
 (function(){
-	var TagView = function(){
+	var TagView = {
 
-		var widget = null;
 
-		var _GetTag = function( data, template ) {
+		/**
+		*
+		* Private Functions Start
+		*
+		**/
+
+		_GetTag: function( data, template ) {
+			var widget = this;
+
 			var tag = $( $.mustache( template, data.tag ) );
 
 			tag.data('data', data);
@@ -63,11 +70,11 @@
 				var selected = tag.data( 'selected' );
 
 				if ( selected ) {
-					_RemoveSelectedTag( data.tag.id );
+					widget._RemoveSelectedTag( data.tag.id );
 					tag.removeClass( 'tag-selected' );
 					tag.data( 'selected', false );
 				} else {
-					_AddSelectedTag( data.tag.id );
+					widget._AddSelectedTag( data.tag.id );
 					tag.addClass( 'tag-selected' );
 					tag.data( 'selected', true );
 				}
@@ -78,14 +85,15 @@
 
 
 			return tag;
-		};
+		},
 
-		var _AddSelectedTag = function( tagId ) {
-			widget.selectedTags.push( tagId );
-			widget.selectedTags = jQuery.unique( widget.selectedTags );
-		};
+		_AddSelectedTag: function( tagId ) {
+			this.selectedTags.push( tagId );
+			this.selectedTags = jQuery.unique( widget.selectedTags );
+		},
 
-		var _RemoveSelectedTag = function( tagId ) {
+		_RemoveSelectedTag: function( tagId ) {
+			var widget = this;
 			var newArray = [];
 
 			for ( var i = 0; i < widget.selectedTags.length; i++ ) {
@@ -95,171 +103,174 @@
 			}
 
 			widget.selectedTags = newArray;
-		};
+		},
 
-		return {
-			options: {
+		_create: function() {
+			widget = this;
+			widget.toolbar = $( '<div id="tag-toolbar"></div>' );
+			widget.addTagInput = $( '<input type="text" value="" id="add-tag"/>' );
+			widget.addTagButton = $( '<button id="tag-new">Create Tag</button>' );
+			widget.tagList = $( '<div class="tags"></div>' );
 
-			},
+			widget.element.append( widget.toolbar );
+			widget.toolbar.append( widget.addTagInput );
+			widget.toolbar.append( widget.addTagButton );
+			widget.element.append( widget.tagList );
 
-			_create: function() {
-				widget = this;
-				widget.toolbar = $( '<div id="tag-toolbar"></div>' );
-				widget.addTagInput = $( '<input type="text" value="" id="add-tag"/>' );
-				widget.addTagButton = $( '<button id="tag-new">Create Tag</button>' );
-				widget.tagList = $( '<div class="tags"></div>' );
+			widget.addTagButton.button({
+				text: false,
+				icons: {
+					primary: 'ui-icon-plusthick'
+				}
+			});
 
-				widget.element.append( widget.toolbar );
-				widget.toolbar.append( widget.addTagInput );
-				widget.toolbar.append( widget.addTagButton );
-				widget.element.append( widget.tagList );
+			widget.selectedTags = [];
 
-				widget.addTagButton.button({
-					text: false,
-					icons: {
-						primary: 'ui-icon-plusthick'
+			// retrieve all tags and display them
+			Tag.Index( {
+				successCallback: function( template, json, status, xhr, errors ) {
+
+					for ( var i = 0; i < json.length; i++ ) {
+						widget.tagList.append( widget._GetTag( json[ i ], template ) ) ;
 					}
-				});
 
-				widget.selectedTags = [];
+					widget.tagList.append( widget.tagMenu );
 
-				// retrieve all tags and display them
-				Tag.Index( {
-					successCallback: function( template, json, status, xhr, errors ) {
+					// bind events for tag menu
 
-						for ( var i = 0; i < json.length; i++ ) {
-							widget.tagList.append( _GetTag( json[ i ], template ) ) ;
-						}
+					// color selection
+					widget.tagMenu.find( '.color' ).bind( 'click', function( e ) {
+						var $target = $( e.target );
+						var colorClass = $target.attr( 'data-colorclass' );
+						var json = widget.tagMenu.data( 'tag' );
+						var oldColorClass = json.tag.color_class;
+						var target = widget.tagMenu.data( 'target' );
 
-						widget.tagList.append( widget.tagMenu );
+						json.tag.color_class = colorClass;
 
-						// bind events for tag menu
+						Tag.Update({
 
-						// color selection
-						widget.tagMenu.find( '.color' ).bind( 'click', function( e ) {
-							var $target = $( e.target );
-							var colorClass = $target.attr( 'data-colorclass' );
-							var json = widget.tagMenu.data( 'tag' );
-							var oldColorClass = json.tag.color_class;
-							var target = widget.tagMenu.data( 'target' );
+							send: json,
+							successCallback: function( template, json, status, xhr, errors ){
+								// Lists need to be reloaded because tag_color_helper will have changed
+								widget._trigger( "AfterColorChanged", 0, {} );
 
-							json.tag.color_class = colorClass;
+								var colorSelector = target;
 
-							Tag.Update({
+								// update view
+								target.parent( '.tag' ).removeClass( oldColorClass);
+								target.parent( '.tag' ).addClass( colorClass );
+								colorSelector.removeClass( oldColorClass );
+								colorSelector.addClass( colorClass );
 
-								send: json,
+								// hide the tag menu
+								widget.tagMenu.hide( 'fast' );
+								widget.tagMenu.data( 'visible', false );
+								widget.tagMenu.data( 'tagId', null );
+								widget.tagMenu.data( 'tag', null );
+								widget.tagMenu.data( 'target', null );
+
+								// update data object
+								target.data( 'data', json );
+							},
+							tags: json.tag.id
+						});
+					});
+
+					// delete label
+					widget.tagMenu.find( '.delete-label' ).bind( 'click', function(){
+						var data = widget.tagMenu.data( 'tag' );
+						var target = widget.tagMenu.data( 'target' );
+
+						widget.tagMenu.hide();
+
+						var deleteFunc = function(){
+							Tag.Destroy({
 								successCallback: function( template, json, status, xhr, errors ){
-									// Lists need to be reloaded because tag_color_helper will have changed
-									widget._trigger( "AfterColorChanged", 0, {} );
-
-									var colorSelector = target;
-
-									// update view
-									target.parent( '.tag' ).removeClass( oldColorClass);
-									target.parent( '.tag' ).addClass( colorClass );
-									colorSelector.removeClass( oldColorClass );
-									colorSelector.addClass( colorClass );
-
-									// hide the tag menu
-									widget.tagMenu.hide( 'fast' );
-									widget.tagMenu.data( 'visible', false );
-									widget.tagMenu.data( 'tagId', null );
-									widget.tagMenu.data( 'tag', null );
-									widget.tagMenu.data( 'target', null );
-
-									// update data object
-									target.data( 'data', json );
+									target.hide( 'fast', function(){
+										target.parent( '.tag' ).remove();
+									});
 								},
-								tags: json.tag.id
+								tags: data.tag.id
 							});
-						});
-
-						// delete label
-						widget.tagMenu.find( '.delete-label' ).bind( 'click', function(){
-							var data = widget.tagMenu.data( 'tag' );
-							var target = widget.tagMenu.data( 'target' );
-
-							widget.tagMenu.hide();
-
-							var deleteFunc = function(){
-								Tag.Destroy({
-									successCallback: function( template, json, status, xhr, errors ){
-										target.hide( 'fast', function(){
-											target.parent( '.tag' ).remove();
-										});
-									},
-									tags: data.tag.id
-								});
-							};
-
-							if ( typeof( widget.deleteDialog ) === 'undefined' ) {
-								widget.deleteDialog = $.confirmationDialog( "Delete Tag", deleteFunc, "Cancel"
-									, "Delete Tag and remove it from all lists?" );
-							}
-
-							widget.deleteDialog.dialog("open");
-
-							return false;
-						});
-
-
-					}
-				});
-
-				widget.addTagButton.bind( 'click', function(e){
-					if ( $.trim( widget.addTagInput.val() ) !== '' &&
-						widget.tagList.find( ".tag-name:HasExactValue('" + $.trim( widget.addTagInput.val() ) + "')").length === 0 ) {
-
-						var data = {};
-						data.tag = {
-							name: widget.addTagInput.val(),
-							color_class: "c1"
 						};
 
-						Tag.Create({
-							send: data,
-							successCallback: function( template, json, status, xhr, errors ) {
-								var newTag = _GetTag( json, template );
-								widget.tagList.prepend( newTag );
-								widget.addTagInput.val( '' );
-								widget.addTagInput.trigger( 'keyup' );
-							}
-						});
+						if ( typeof( widget.deleteDialog ) === 'undefined' ) {
+							widget.deleteDialog = $.confirmationDialog( "Delete Tag", deleteFunc, "Cancel"
+								, "Delete Tag and remove it from all lists?" );
+						}
+
+						widget.deleteDialog.dialog("open");
 
 						return false;
-					}
-				});
-
-				widget.addTagInput.bind( 'keyup', 'return', function(){
-					widget.addTagButton.trigger( 'click' );
-				});
-
-				widget.addTagInput.bind( 'keyup', function ( e ) {
-					var filtervalue = $(this).val();
-
-	        if (filtervalue === '') {
-						widget.tagList.find( ".tag" ).show();
-	        } else {
-						widget.tagList.find( ".tag:not(:Contains('" + filtervalue + "'))").hide();
-						widget.tagList.find( ".tag:Contains('" + filtervalue + "')").show();
-	        }
-
-					// if this tag already exists, disable the "add"-button
-					if ( widget.tagList.find( ".tag-name:HasExactValue('" + $.trim( filtervalue ) + "')").length > 0 ) {
-						widget.addTagButton.button( "option", "disabled", true );
-					} else {
-						widget.addTagButton.button( "option", "disabled", false );
-					}
-				});
+					});
 
 
-			},
+				}
+			});
 
-			destroy: function() {
-				widget.element.children().remove();
-			}
-		};
-	}();
+			widget.addTagButton.bind( 'click', function(e){
+				if ( $.trim( widget.addTagInput.val() ) !== '' &&
+					widget.tagList.find( ".tag-name:HasExactValue('" + $.trim( widget.addTagInput.val() ) + "')").length === 0 ) {
+
+					var data = {};
+					data.tag = {
+						name: widget.addTagInput.val(),
+						color_class: "c1"
+					};
+
+					Tag.Create({
+						send: data,
+						successCallback: function( template, json, status, xhr, errors ) {
+							var newTag = widget._GetTag( json, template );
+							widget.tagList.prepend( newTag );
+							widget.addTagInput.val( '' );
+							widget.addTagInput.trigger( 'keyup' );
+						}
+					});
+
+					return false;
+				}
+			});
+
+			widget.addTagInput.bind( 'keyup', 'return', function(){
+				widget.addTagButton.trigger( 'click' );
+			});
+
+			widget.addTagInput.bind( 'keyup', function ( e ) {
+				var filtervalue = $(this).val();
+
+        if (filtervalue === '') {
+					widget.tagList.find( ".tag" ).show();
+        } else {
+					widget.tagList.find( ".tag:not(:Contains('" + filtervalue + "'))").hide();
+					widget.tagList.find( ".tag:Contains('" + filtervalue + "')").show();
+        }
+
+				// if this tag already exists, disable the "add"-button
+				if ( widget.tagList.find( ".tag-name:HasExactValue('" + $.trim( filtervalue ) + "')").length > 0 ) {
+					widget.addTagButton.button( "option", "disabled", true );
+				} else {
+					widget.addTagButton.button( "option", "disabled", false );
+				}
+			});
+
+
+		},
+
+		/**
+		*
+		* Private Functions End
+		*
+		**/
+		options: {
+
+		},
+
+		destroy: function() {
+			widget.element.children().remove();
+		}
+	};
 	// register widget
 	$.widget("ui.TagView", TagView);
 })();
