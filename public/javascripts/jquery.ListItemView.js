@@ -597,8 +597,17 @@
 			var widget = this;
 			var data = widget.element.data( "data-list" );
 
+			// only show one "new list item" form
+			if ( widget.listItemList.find( '#new_list_item' ).length > 0 ) {
+				return false;
+			}
+
 			ListListItem.New( {
 				successCallback: function( template, json, status, xhr, errors ) {
+					if ( $.browser.msie && widget.listItemList.find( '#new_list_item' ).length > 0 ) {
+						return false;
+					}
+
 					var $form = $( template );
 					widget.listItemList.prepend( $form );
 
