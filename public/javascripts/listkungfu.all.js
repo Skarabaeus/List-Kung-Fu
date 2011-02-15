@@ -1110,7 +1110,7 @@ jQuery(function ($) {
 
 			newElement.find( ".handle" ).height( newElement.height() );
 
-			newElement.bind( 'keydown', 'space', function( e ){
+			newElement.bind( 'keyup', 'space', function( e ){
 				widget.toolbar.find( "#list-item-completed" ).effect('puff', {}, 300, function(){
 					$( this ).show();
 
@@ -1120,6 +1120,7 @@ jQuery(function ($) {
 						newElement.find( ".undo" ).trigger( "click" );
 					}
 				});
+				return false;
 			});
 
 			newElement.bind( 'keydown', 'del', function(){
@@ -1127,6 +1128,7 @@ jQuery(function ($) {
 					$( this ).show();
 					widget.toolbar.find( "#list-item-delete" ).trigger( 'click' );
 				});
+				return false;
 			});
 
 			newElement.bind( 'focus', function(e){
@@ -1173,8 +1175,8 @@ jQuery(function ($) {
 				$( e.target ).prevAll( 'div:visible' ).first().focus();
 				return false;
 			});
-
-			newElement.bind( 'keydown dblclick', 'return', function( e ){
+			
+			newElement.bind( 'keydown dblclick', 'return', function(){
 				// if we display already the form for this element,
 				// just exit.
 				if ( newElement.find( "form" ).length > 0 ) {
@@ -1186,12 +1188,14 @@ jQuery(function ($) {
 				});
 
 				// close all open forms
-				widget.listItemList.find( ".row" ).find( "form" ).hide( "slow", function() {
-					$( this ).remove();
-				});
+				widget.listItemList.find( ".row" ).find( "form" ).remove();
 
 				ListListItem.Edit({
 					successCallback: function( template, json, status, xhr, errors ) {
+						if ( $.browser.msie && newElement.find( "form" ).length > 0 ) {
+							return false;
+						}
+						
 						var $form = $( template );
 						var elementAlreadyFullsize = newElement.data( "isFullsize" );
 
@@ -1317,7 +1321,6 @@ jQuery(function ($) {
 				});
 				return false;
 			});
-
 
 			// code for drag and drop of item to new list.
 			if ( ListKungFu && ListKungFu.LayoutCenter ) {
