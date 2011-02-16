@@ -2174,10 +2174,12 @@ jQuery(function ($) {
 
 							widget.listForm.find( "#list-back-button" ).bind( 'click', function(){
 								widget._HideForm();
+								return false;
 							});
 
 							widget.listForm.find( '#list_title' ).bind( 'keydown', 'esc', function( e ) {
 								widget._HideForm();
+								return false;
 							});
 
 							widget.listForm.bind( "submit", function(e){
