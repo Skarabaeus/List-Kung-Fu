@@ -112,6 +112,9 @@ $(document).ready(function () {
 		AfterColorChanged: function( event, data ) {
 			ListKungFu.LayoutWest.ListView( "ReloadLists" );
 		},
+		AfterTagDeleted: function( event, data ) {
+			ListKungFu.LayoutWest.ListView( "ReloadLists" );
+		},
 		TagSelected: function( event, selectedTagsArray ) {
 			ListKungFu.LayoutWest.ListView( "Filter", selectedTagsArray );
 		}

@@ -112,6 +112,9 @@ $(document).ready(function () {
 		AfterColorChanged: function( event, data ) {
 			ListKungFu.LayoutWest.ListView( "ReloadLists" );
 		},
+		AfterTagDeleted: function( event, data ) {
+			ListKungFu.LayoutWest.ListView( "ReloadLists" );
+		},
 		TagSelected: function( event, selectedTagsArray ) {
 			ListKungFu.LayoutWest.ListView( "Filter", selectedTagsArray );
 		}
@@ -6062,6 +6065,7 @@ $.fn.layout = function (opts) {
 
 					Tag.Destroy({
 						successCallback: function( template, json, status, xhr, errors ){
+							widget._trigger( "AfterTagDeleted", 0, {} );
 							target.hide( 'fast', function(){
 								target.parent( '.tag' ).remove();
 

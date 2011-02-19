@@ -170,6 +170,7 @@
 
 					Tag.Destroy({
 						successCallback: function( template, json, status, xhr, errors ){
+							widget._trigger( "AfterTagDeleted", 0, {} );
 							target.hide( 'fast', function(){
 								target.parent( '.tag' ).remove();
 
