@@ -136,6 +136,7 @@
 					widget.selectedList.element.delay( delay ).fadeOut(function(){
 						$(this).remove();
 						nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
+						widget._ToggleEmptyListImage();
 					});
 					widget._trigger( "CloseList", 0, {} );
 				},
@@ -229,6 +230,7 @@
 					// HTML of the form.
 					List.New({
 						successCallback: function( template, json, status, xhr, errors ) {
+							widget.emptyListImage.hide();
 							widget.listForm.append( template );
 							widget.listForm.show('slide', { direction: 'left' }, 'slow', function(){
 								widget.listForm.find('#list_title').first().focus();
@@ -557,6 +559,7 @@
 					}
 
 					widget._AdjustHeight();
+					widget._ToggleEmptyListImage();
 
 					widget.selectedList =  {
 						data: updatedElement,
@@ -576,6 +579,7 @@
 			widget.listForm.hide('slide', { direction: 'left' }, 'slow', function(){
 				widget._ShowListView( updatedElement, template );
 				widget.listForm.trigger( "FormHidden" );
+				widget._ToggleEmptyListImage();
 				if ( widget.selectedList ) {
 					widget.selectedList.element.focus();
 				} else {
@@ -639,6 +643,18 @@
 			widget.listForm = null;
 			widget.selectedTags = [];
 
+			var date = new Date();
+			var seconds = Date.UTC( date.getFullYear(), date.getMonth(), date.getDay(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds());
+
+			widget.emptyListImage = $('<img src="/images/empty/list.jpg?' + seconds + '"/>');
+			widget.emptyListImage.css({
+				position: 'absolute',
+				top: '45px',
+				left:'15px'
+			});
+			widget.emptyListImage.hide();
+			widget.toolbar.append( widget.emptyListImage );
+
 			// retrieve Lists from server and add them to DOM.
 			List.Index( {
 				successCallback: function( template, json, status, xhr, errors ) {
@@ -649,13 +665,26 @@
 					// add newly received Lists to DOM
 					widget._AddListToDOM( json, template );
 
-					// focus first list
-					widget.listlist.find( '.row' ).first().focus();
+					// check if there are any lists. If not, show a help screen.
+					// Otherwise select the first row.
+					widget._ToggleEmptyListImage();
 				}
+
+
 			} );
 
 			// register global keyboard shortcuts
 			widget._RegisterGlobalKeyboardShortcuts();
+		},
+
+		_ToggleEmptyListImage: function() {
+			var widget = this;
+			if ( widget.listlist.find( '.row' ).length > 0 ) {
+				widget.emptyListImage.hide();
+				widget.listlist.find( '.row' ).first().focus();
+			} else {
+				widget.emptyListImage.show();
+			}
 		},
 
 		/**
@@ -715,6 +744,8 @@
 					widget._AddListToDOM( json, template );
 					widget.toolbar.find( "#search-list" ).trigger( "keyup" );
 					widget._Filter();
+
+					widget._ToggleEmptyListImage();
 				}
 			} );
 		},

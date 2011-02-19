@@ -601,7 +601,7 @@ jQuery(function ($) {
 });
 (function( $ ) {
 
-	$.confirmationDialog = function( confButtonText, confButtonFunction, cancelButtonText, confirmationText) {
+	$.confirmationDialog = function( confButtonText, confButtonFunction, cancelButtonText, confirmationText, cancelButtonFunction ) {
 
 		dialog = $('<div id="dialog-confirm"> \
 			<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"> \
@@ -623,6 +623,9 @@ jQuery(function ($) {
 		};
 		buttonObj[ cancelButtonText ] = function(){
 			$( dialog ).dialog( "close" );
+			if ( typeof( cancelButtonFunction ) === 'function' ) {
+				cancelButtonFunction();
+			}
 		};
 
 		dialog.dialog( "option", "buttons", buttonObj );
@@ -1994,6 +1997,7 @@ jQuery(function ($) {
 					widget.selectedList.element.delay( delay ).fadeOut(function(){
 						$(this).remove();
 						nextItem.length > 0 ? nextItem.focus() : prevItem.focus();
+						widget._ToggleEmptyListImage();
 					});
 					widget._trigger( "CloseList", 0, {} );
 				},
@@ -2087,6 +2091,7 @@ jQuery(function ($) {
 					// HTML of the form.
 					List.New({
 						successCallback: function( template, json, status, xhr, errors ) {
+							widget.emptyListImage.hide();
 							widget.listForm.append( template );
 							widget.listForm.show('slide', { direction: 'left' }, 'slow', function(){
 								widget.listForm.find('#list_title').first().focus();
@@ -2415,6 +2420,7 @@ jQuery(function ($) {
 					}
 
 					widget._AdjustHeight();
+					widget._ToggleEmptyListImage();
 
 					widget.selectedList =  {
 						data: updatedElement,
@@ -2434,6 +2440,7 @@ jQuery(function ($) {
 			widget.listForm.hide('slide', { direction: 'left' }, 'slow', function(){
 				widget._ShowListView( updatedElement, template );
 				widget.listForm.trigger( "FormHidden" );
+				widget._ToggleEmptyListImage();
 				if ( widget.selectedList ) {
 					widget.selectedList.element.focus();
 				} else {
@@ -2497,6 +2504,18 @@ jQuery(function ($) {
 			widget.listForm = null;
 			widget.selectedTags = [];
 
+			var date = new Date();
+			var seconds = Date.UTC( date.getFullYear(), date.getMonth(), date.getDay(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds());
+
+			widget.emptyListImage = $('<img src="/images/empty/list.jpg?' + seconds + '"/>');
+			widget.emptyListImage.css({
+				position: 'absolute',
+				top: '45px',
+				left:'15px'
+			});
+			widget.emptyListImage.hide();
+			widget.toolbar.append( widget.emptyListImage );
+
 			// retrieve Lists from server and add them to DOM.
 			List.Index( {
 				successCallback: function( template, json, status, xhr, errors ) {
@@ -2507,13 +2526,26 @@ jQuery(function ($) {
 					// add newly received Lists to DOM
 					widget._AddListToDOM( json, template );
 
-					// focus first list
-					widget.listlist.find( '.row' ).first().focus();
+					// check if there are any lists. If not, show a help screen.
+					// Otherwise select the first row.
+					widget._ToggleEmptyListImage();
 				}
+
+
 			} );
 
 			// register global keyboard shortcuts
 			widget._RegisterGlobalKeyboardShortcuts();
+		},
+
+		_ToggleEmptyListImage: function() {
+			var widget = this;
+			if ( widget.listlist.find( '.row' ).length > 0 ) {
+				widget.emptyListImage.hide();
+				widget.listlist.find( '.row' ).first().focus();
+			} else {
+				widget.emptyListImage.show();
+			}
 		},
 
 		/**
@@ -2573,6 +2605,8 @@ jQuery(function ($) {
 					widget._AddListToDOM( json, template );
 					widget.toolbar.find( "#search-list" ).trigger( "keyup" );
 					widget._Filter();
+
+					widget._ToggleEmptyListImage();
 				}
 			} );
 		},
@@ -5882,6 +5916,7 @@ $.fn.layout = function (opts) {
 			tag.find( '.color-selector' ).bind( 'click', function(e){
 				var menu = widget.tagMenu;
 				var target = $( e.target );
+				var json = target.parent( '.tag' ).data( 'data' );
 
 				if ( menu.data( 'visible' ) === true && menu.data( 'tagId' ) === data.tag.id ) {
 					menu.hide( 'fast' );
@@ -5896,8 +5931,8 @@ $.fn.layout = function (opts) {
 						top: tag.position().top - 100
 					});
 					menu.data( 'visible', true );
-					menu.data( 'tagId', data.tag.id );
-					menu.data( 'tag', data );
+					menu.data( 'tagId', json.tag.id );
+					menu.data( 'tag', json );
 					menu.data( 'target', target );
 				}
 				return false; // prevent bubbling
@@ -5963,6 +5998,93 @@ $.fn.layout = function (opts) {
 			widget.selectedTags = newArray;
 		},
 
+		_CreateToolbar: function() {
+
+			widget.tagList.append( widget.tagMenu );
+
+			// bind events for tag menu
+
+			// color selection
+			widget.tagMenu.find( '.color' ).bind( 'click', function( e ) {
+				var $target = $( e.target );
+				var colorClass = $target.attr( 'data-colorclass' );
+				var json = widget.tagMenu.data( 'tag' );
+				var oldColorClass = json.tag.color_class;
+				var target = widget.tagMenu.data( 'target' );
+
+				json.tag.color_class = colorClass;
+
+				Tag.Update({
+
+					send: json,
+					successCallback: function( template, json, status, xhr, errors ){
+						// Lists need to be reloaded because tag_color_helper will have changed
+						widget._trigger( "AfterColorChanged", 0, {} );
+
+						var colorSelector = target;
+
+						// update view
+						target.parent( '.tag' ).removeClass( oldColorClass);
+						target.parent( '.tag' ).addClass( colorClass );
+						colorSelector.removeClass( oldColorClass );
+						colorSelector.addClass( colorClass );
+
+						// hide the tag menu
+						widget.tagMenu.hide( 'fast' );
+						widget.tagMenu.data( 'visible', false );
+						widget.tagMenu.data( 'tagId', null );
+						widget.tagMenu.data( 'tag', null );
+						widget.tagMenu.data( 'target', null );
+
+						// update data object
+						target.data( 'data', json );
+					},
+					tags: json.tag.id
+				});
+			});
+
+			// delete label
+			widget.tagMenu.find( '.delete-label' ).bind( 'click', function(){
+				// hide the tag menu
+				widget.tagMenu.hide( 'fast' );
+				widget.tagMenu.data( 'visible', false );
+
+
+				var cancelFunc = function(){
+					widget.tagMenu.data( 'tagId', null );
+					widget.tagMenu.data( 'tag', null );
+					widget.tagMenu.data( 'target', null );
+				};
+
+				var deleteFunc = function(){
+					var data = widget.tagMenu.data( 'tag' );
+					var target = widget.tagMenu.data( 'target' );
+
+					Tag.Destroy({
+						successCallback: function( template, json, status, xhr, errors ){
+							target.hide( 'fast', function(){
+								target.parent( '.tag' ).remove();
+
+								widget.tagMenu.data( 'tagId', null );
+								widget.tagMenu.data( 'tag', null );
+								widget.tagMenu.data( 'target', null );
+							});
+						},
+						tags: data.tag.id
+					});
+				};
+
+				if ( typeof( widget.deleteDialog ) === 'undefined' ) {
+					widget.deleteDialog = $.confirmationDialog( "Delete Tag", deleteFunc, "Cancel"
+						, "Delete Tag and remove it from all lists?", cancelFunc );
+				}
+
+				widget.deleteDialog.dialog("open");
+
+				return false;
+			});
+		},
+
 		_create: function() {
 			widget = this;
 			widget.toolbar = $( '<div id="tag-toolbar"></div>' );
@@ -5992,78 +6114,9 @@ $.fn.layout = function (opts) {
 						widget.tagList.append( widget._GetTag( json[ i ], template ) ) ;
 					}
 
-					widget.tagList.append( widget.tagMenu );
-
-					// bind events for tag menu
-
-					// color selection
-					widget.tagMenu.find( '.color' ).bind( 'click', function( e ) {
-						var $target = $( e.target );
-						var colorClass = $target.attr( 'data-colorclass' );
-						var json = widget.tagMenu.data( 'tag' );
-						var oldColorClass = json.tag.color_class;
-						var target = widget.tagMenu.data( 'target' );
-
-						json.tag.color_class = colorClass;
-
-						Tag.Update({
-
-							send: json,
-							successCallback: function( template, json, status, xhr, errors ){
-								// Lists need to be reloaded because tag_color_helper will have changed
-								widget._trigger( "AfterColorChanged", 0, {} );
-
-								var colorSelector = target;
-
-								// update view
-								target.parent( '.tag' ).removeClass( oldColorClass);
-								target.parent( '.tag' ).addClass( colorClass );
-								colorSelector.removeClass( oldColorClass );
-								colorSelector.addClass( colorClass );
-
-								// hide the tag menu
-								widget.tagMenu.hide( 'fast' );
-								widget.tagMenu.data( 'visible', false );
-								widget.tagMenu.data( 'tagId', null );
-								widget.tagMenu.data( 'tag', null );
-								widget.tagMenu.data( 'target', null );
-
-								// update data object
-								target.data( 'data', json );
-							},
-							tags: json.tag.id
-						});
-					});
-
-					// delete label
-					widget.tagMenu.find( '.delete-label' ).bind( 'click', function(){
-						var data = widget.tagMenu.data( 'tag' );
-						var target = widget.tagMenu.data( 'target' );
-
-						widget.tagMenu.hide();
-
-						var deleteFunc = function(){
-							Tag.Destroy({
-								successCallback: function( template, json, status, xhr, errors ){
-									target.hide( 'fast', function(){
-										target.parent( '.tag' ).remove();
-									});
-								},
-								tags: data.tag.id
-							});
-						};
-
-						if ( typeof( widget.deleteDialog ) === 'undefined' ) {
-							widget.deleteDialog = $.confirmationDialog( "Delete Tag", deleteFunc, "Cancel"
-								, "Delete Tag and remove it from all lists?" );
-						}
-
-						widget.deleteDialog.dialog("open");
-
-						return false;
-					});
-
-
+					if ( widget.tagMenu ) {
+						widget._CreateToolbar();
+					}
 				}
 			});
 
@@ -6084,6 +6137,10 @@ $.fn.layout = function (opts) {
 							widget.tagList.prepend( newTag );
 							widget.addTagInput.val( '' );
 							widget.addTagInput.trigger( 'keyup' );
+
+							if ( widget.tagMenu ) {
+								widget._CreateToolbar();
+							}
 						}
 					});
 

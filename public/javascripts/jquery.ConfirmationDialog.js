@@ -1,6 +1,6 @@
 (function( $ ) {
 
-	$.confirmationDialog = function( confButtonText, confButtonFunction, cancelButtonText, confirmationText) {
+	$.confirmationDialog = function( confButtonText, confButtonFunction, cancelButtonText, confirmationText, cancelButtonFunction ) {
 
 		dialog = $('<div id="dialog-confirm"> \
 			<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"> \
@@ -22,6 +22,9 @@
 		};
 		buttonObj[ cancelButtonText ] = function(){
 			$( dialog ).dialog( "close" );
+			if ( typeof( cancelButtonFunction ) === 'function' ) {
+				cancelButtonFunction();
+			}
 		};
 
 		dialog.dialog( "option", "buttons", buttonObj );
