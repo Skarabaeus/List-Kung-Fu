@@ -14,6 +14,18 @@
 			};
 		},
 
+		_Filter: function() {
+			var widget = this;
+			var filtervalue = widget.selectedText;
+
+      if ( filtervalue === '' ) {
+				widget.listItemList.find( ".row" ).show();
+      } else {
+				widget.listItemList.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
+				widget.listItemList.find( ".row:Contains('" + filtervalue + "')").show();
+      }
+		},
+
 		_SetupDeadlineButton: function( $parentItem ) {
 			// prevent default for save-deadline button
 			var deadlineSettings = $parentItem.find( "#deadline-settings-wrapper" );
@@ -348,7 +360,6 @@
 							item.focus();
 						}
 						element.remove();
-						widget.toolbar.find( "#list-item-search" ).trigger( "ClearValue" );
 					});
 				},
 				lists: listItem.list_item.list_id,
@@ -483,10 +494,8 @@
 				'<button id="list-item-delete">Delete [del]</button>',
 				'<button id="list-item-edit">Edit [return]</button>',
 				'<button id="list-item-fullsize">Fullsize [l]</button>',
-				'<input type="input" id="list-item-search"/>',
 				'<input type="checkbox" id="showCompleted"/>',
 				'<label for="showCompleted">Show Completed Items</label>',
-				'<div id="list-item-search-cancel">&nbsp;</div>',
 				'</div></div>'];
 
 			widget.toolbar = $( toolbarArr.join('') );
@@ -569,28 +578,7 @@
 				widget._ToggleFullsize( widget.selectedListItem.element );
 			});
 
-			widget.toolbar.find("#list-item-search").bind( 'keyup', function ( e ) {
-				var filtervalue = $(this).val();
-
-        if ( filtervalue === '' ) {
-					widget.listItemList.find( ".row" ).show();
-        } else {
-					widget.listItemList.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
-					widget.listItemList.find( ".row:Contains('" + filtervalue + "')").show();
-        }
-			});
-
-			widget.toolbar.find( "#list-item-search-cancel" ).bind( 'click', function(){
-				widget.toolbar.find("#list-item-search").val("").trigger('keyup');
-			});
-
-			widget.toolbar.find( "#list-item-search" ).bind( 'ClearValue', function( e ){
-				$( e.target ).val("");
-				widget.listItemList.find( ".row" ).show();
-			});
-
 			widget.header.append( widget.toolbar );
-
 		},
 
 		_AddNewListItem: function() {
@@ -808,6 +796,11 @@
 			// unbind global events
 			$( document ).unbind( "keydown" , "c" )
 				.unbind( "keyup", "f" );
+		},
+
+		Filter: function( selectedText ) {
+			this.selectedText = selectedText;
+			this._Filter();
 		}
 		/**
 		*

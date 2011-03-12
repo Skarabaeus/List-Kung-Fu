@@ -190,6 +190,18 @@
 			return $listItemHtml;
 		},
 
+		_Filter: function() {
+			var widget = this;
+			var filtervalue = widget.selectedText;
+
+      if ( filtervalue === '' ) {
+				widget.wrapper.find( ".dashboard-item" ).show();
+      } else {
+				widget.wrapper.find( ".dashboard-item:not(:Contains('" + filtervalue + "'))").hide();
+				widget.wrapper.find( ".dashboard-item:Contains('" + filtervalue + "')").show();
+      }
+		},
+
 		_create: function() {
 		},
 		/**
@@ -222,7 +234,6 @@
 			widget.Hide();
 
 			widget.header = $( '<div id="dashboard-header" class="header"><h1>Dashboard</h1></div>')
-			widget.toolbar = $( '<div id="dashboard-toolbar"><input type="text" id="dashboard-search" value=""/></div>');
 			widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
 			widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1><div data-type="scheduleColumn"></div></div>' );
 			widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1><div data-type="scheduleColumn"></div></div>' );
@@ -231,7 +242,6 @@
 			widget.later = $( '<div id="later"><h1>Later</h1><div data-type="scheduleColumn"></div></div>' );
 
 			widget.element.append( widget.header );
-			widget.header.append( widget.toolbar );
 			widget.element.append( widget.wrapper );
 
 			widget.wrapper.append( widget.today );
@@ -241,7 +251,7 @@
 			widget.nextweek.append( widget.later );
 			widget.wrapper.append( '<div style="clear:both;">&nbsp;</div>' );
 
-			widget.toolbar.append( '<div id="dashboard-search-cancel">&nbsp;</div><div style="clear:both;">&nbsp;</div>' );
+
 
 			// Load scheduled items
 			ListItem.Index( {
@@ -262,23 +272,6 @@
 				},
 				send: { show: "dashboard" }
 			});
-
-			// bind events
-
-			widget.toolbar.find( '#dashboard-search' ).bind( 'keyup', function( e ){
-				var filtervalue = $( this ).val();
-
-        if ( filtervalue === '' ) {
-					widget.wrapper.find( ".dashboard-item" ).show();
-        } else {
-					widget.wrapper.find( ".dashboard-item:not(:Contains('" + filtervalue + "'))").hide();
-					widget.wrapper.find( ".dashboard-item:Contains('" + filtervalue + "')").show();
-        }
-			});
-
-			widget.toolbar.find( '#dashboard-search-cancel' ).bind( 'click', function(){
-				widget.toolbar.find("#dashboard-search").val("").trigger('keyup');
-			});
 		},
 
 		Hide: function() {
@@ -286,6 +279,11 @@
 		},
 
 		destroy: function() {
+		},
+
+		Filter: function( selectedText ) {
+			this.selectedText = selectedText;
+			this._Filter();
 		}
 		/**
 		*

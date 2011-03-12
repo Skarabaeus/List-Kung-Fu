@@ -151,8 +151,6 @@
 				'<button id="list-new">Create [shift+return]</button>',
 				'<button id="list-delete">Delete [del]</button>',
 				'<button id="list-edit">Edit [space]</button>',
-				'<input type="text" id="search-list" />',
-				'<div id="list-search-cancel">&nbsp;</div>',
 				'</div>'];
 
 			var toolbar = $( toolbarArr.join('') );
@@ -260,9 +258,6 @@
 
 										if ( errors === false ) {
 											widget._HideForm( json, template );
-
-											// clear searchfield
-											widget.toolbar.find( '#search-list' ).trigger( 'ClearValue' );
 										} else {
 											widget._HighlightFormErrors( widget.listForm, errors );
 										}
@@ -281,18 +276,6 @@
 				return false;
 			});
 
-			toolbar.find("#search-list").bind( 'keyup', function ( e ) {
-				widget._Filter();
-			});
-
-			toolbar.find( "#list-search-cancel" ).bind( 'click', function() {
-				toolbar.find( "#search-list" ).val("").trigger( "keyup" );
-			});
-
-			toolbar.find("#search-list").bind( 'ClearValue', function( e ){
-				$( e.target ).val("");
-				widget.listlist.find( ".row" ).show();
-			});
 
 			toolbar.find( "#list-edit" ).bind( 'click', function( e ) {
 				widget.listlist.hide('slide', { direction: 'left'}, 'slow', function(){
@@ -531,17 +514,6 @@
 			$(document).bind( 'keydown', 'ctrl+l', function(e) {
 				widget._SelectLastList();
 			});
-
-			$(document).bind( 'keydown', 'ctrl+f', function(e){
-				widget.toolbar.find( "#search-list" ).focus();
-			});
-
-			// since ctrl+f does not work in MS windows, adding shift+f as additional
-			// keyboard shortcut
-			$(document).bind( 'keydown', 'shift+f', function(e) {
-				widget.toolbar.find( "#search-list" ).focus();
-				return false;
-			})
 		},
 
 		_ShowListView: function( updatedElement, template ) {
@@ -597,7 +569,7 @@
 
 		_FilterBySearchText: function() {
 			var widget = this;
-			var filtervalue = widget.toolbar.find("#search-list").val();
+			var filtervalue = widget.selectedText;
 
       if (filtervalue === '') {
 				widget.listlist.find( ".row" ).show();
@@ -742,7 +714,6 @@
 
 					// add newly received Lists to DOM
 					widget._AddListToDOM( json, template );
-					widget.toolbar.find( "#search-list" ).trigger( "keyup" );
 					widget._Filter();
 
 					widget._ToggleEmptyListImage();
@@ -754,8 +725,9 @@
 			this._SelectLastList();
 		},
 
-		Filter: function( selectedTagsArray ) {
+		Filter: function( selectedTagsArray, selectedText ) {
 			this.selectedTags = selectedTagsArray;
+			this.selectedText = selectedText;
 			this._Filter();
 		},
 

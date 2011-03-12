@@ -848,6 +848,18 @@ jQuery(function ($) {
 			return $listItemHtml;
 		},
 
+		_Filter: function() {
+			var widget = this;
+			var filtervalue = widget.selectedText;
+
+      if ( filtervalue === '' ) {
+				widget.wrapper.find( ".dashboard-item" ).show();
+      } else {
+				widget.wrapper.find( ".dashboard-item:not(:Contains('" + filtervalue + "'))").hide();
+				widget.wrapper.find( ".dashboard-item:Contains('" + filtervalue + "')").show();
+      }
+		},
+
 		_create: function() {
 		},
 		/**
@@ -880,7 +892,6 @@ jQuery(function ($) {
 			widget.Hide();
 
 			widget.header = $( '<div id="dashboard-header" class="header"><h1>Dashboard</h1></div>')
-			widget.toolbar = $( '<div id="dashboard-toolbar"><input type="text" id="dashboard-search" value=""/></div>');
 			widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
 			widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1><div data-type="scheduleColumn"></div></div>' );
 			widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1><div data-type="scheduleColumn"></div></div>' );
@@ -889,7 +900,6 @@ jQuery(function ($) {
 			widget.later = $( '<div id="later"><h1>Later</h1><div data-type="scheduleColumn"></div></div>' );
 
 			widget.element.append( widget.header );
-			widget.header.append( widget.toolbar );
 			widget.element.append( widget.wrapper );
 
 			widget.wrapper.append( widget.today );
@@ -899,7 +909,7 @@ jQuery(function ($) {
 			widget.nextweek.append( widget.later );
 			widget.wrapper.append( '<div style="clear:both;">&nbsp;</div>' );
 
-			widget.toolbar.append( '<div id="dashboard-search-cancel">&nbsp;</div><div style="clear:both;">&nbsp;</div>' );
+
 
 			// Load scheduled items
 			ListItem.Index( {
@@ -920,23 +930,6 @@ jQuery(function ($) {
 				},
 				send: { show: "dashboard" }
 			});
-
-			// bind events
-
-			widget.toolbar.find( '#dashboard-search' ).bind( 'keyup', function( e ){
-				var filtervalue = $( this ).val();
-
-        if ( filtervalue === '' ) {
-					widget.wrapper.find( ".dashboard-item" ).show();
-        } else {
-					widget.wrapper.find( ".dashboard-item:not(:Contains('" + filtervalue + "'))").hide();
-					widget.wrapper.find( ".dashboard-item:Contains('" + filtervalue + "')").show();
-        }
-			});
-
-			widget.toolbar.find( '#dashboard-search-cancel' ).bind( 'click', function(){
-				widget.toolbar.find("#dashboard-search").val("").trigger('keyup');
-			});
 		},
 
 		Hide: function() {
@@ -944,6 +937,11 @@ jQuery(function ($) {
 		},
 
 		destroy: function() {
+		},
+
+		Filter: function( selectedText ) {
+			this.selectedText = selectedText;
+			this._Filter();
 		}
 		/**
 		*
@@ -1066,6 +1064,18 @@ jQuery(function ($) {
 				element: elem,
 				data: obj
 			};
+		},
+
+		_Filter: function() {
+			var widget = this;
+			var filtervalue = widget.selectedText;
+
+      if ( filtervalue === '' ) {
+				widget.listItemList.find( ".row" ).show();
+      } else {
+				widget.listItemList.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
+				widget.listItemList.find( ".row:Contains('" + filtervalue + "')").show();
+      }
 		},
 
 		_SetupDeadlineButton: function( $parentItem ) {
@@ -1402,7 +1412,6 @@ jQuery(function ($) {
 							item.focus();
 						}
 						element.remove();
-						widget.toolbar.find( "#list-item-search" ).trigger( "ClearValue" );
 					});
 				},
 				lists: listItem.list_item.list_id,
@@ -1537,10 +1546,8 @@ jQuery(function ($) {
 				'<button id="list-item-delete">Delete [del]</button>',
 				'<button id="list-item-edit">Edit [return]</button>',
 				'<button id="list-item-fullsize">Fullsize [l]</button>',
-				'<input type="input" id="list-item-search"/>',
 				'<input type="checkbox" id="showCompleted"/>',
 				'<label for="showCompleted">Show Completed Items</label>',
-				'<div id="list-item-search-cancel">&nbsp;</div>',
 				'</div></div>'];
 
 			widget.toolbar = $( toolbarArr.join('') );
@@ -1623,28 +1630,7 @@ jQuery(function ($) {
 				widget._ToggleFullsize( widget.selectedListItem.element );
 			});
 
-			widget.toolbar.find("#list-item-search").bind( 'keyup', function ( e ) {
-				var filtervalue = $(this).val();
-
-        if ( filtervalue === '' ) {
-					widget.listItemList.find( ".row" ).show();
-        } else {
-					widget.listItemList.find( ".row:not(:Contains('" + filtervalue + "'))").hide();
-					widget.listItemList.find( ".row:Contains('" + filtervalue + "')").show();
-        }
-			});
-
-			widget.toolbar.find( "#list-item-search-cancel" ).bind( 'click', function(){
-				widget.toolbar.find("#list-item-search").val("").trigger('keyup');
-			});
-
-			widget.toolbar.find( "#list-item-search" ).bind( 'ClearValue', function( e ){
-				$( e.target ).val("");
-				widget.listItemList.find( ".row" ).show();
-			});
-
 			widget.header.append( widget.toolbar );
-
 		},
 
 		_AddNewListItem: function() {
@@ -1862,6 +1848,11 @@ jQuery(function ($) {
 			// unbind global events
 			$( document ).unbind( "keydown" , "c" )
 				.unbind( "keyup", "f" );
+		},
+
+		Filter: function( selectedText ) {
+			this.selectedText = selectedText;
+			this._Filter();
 		}
 		/**
 		*
@@ -2026,8 +2017,6 @@ jQuery(function ($) {
 				'<button id="list-new">Create [shift+return]</button>',
 				'<button id="list-delete">Delete [del]</button>',
 				'<button id="list-edit">Edit [space]</button>',
-				'<input type="text" id="search-list" />',
-				'<div id="list-search-cancel">&nbsp;</div>',
 				'</div>'];
 
 			var toolbar = $( toolbarArr.join('') );
@@ -2135,9 +2124,6 @@ jQuery(function ($) {
 
 										if ( errors === false ) {
 											widget._HideForm( json, template );
-
-											// clear searchfield
-											widget.toolbar.find( '#search-list' ).trigger( 'ClearValue' );
 										} else {
 											widget._HighlightFormErrors( widget.listForm, errors );
 										}
@@ -2156,18 +2142,6 @@ jQuery(function ($) {
 				return false;
 			});
 
-			toolbar.find("#search-list").bind( 'keyup', function ( e ) {
-				widget._Filter();
-			});
-
-			toolbar.find( "#list-search-cancel" ).bind( 'click', function() {
-				toolbar.find( "#search-list" ).val("").trigger( "keyup" );
-			});
-
-			toolbar.find("#search-list").bind( 'ClearValue', function( e ){
-				$( e.target ).val("");
-				widget.listlist.find( ".row" ).show();
-			});
 
 			toolbar.find( "#list-edit" ).bind( 'click', function( e ) {
 				widget.listlist.hide('slide', { direction: 'left'}, 'slow', function(){
@@ -2406,17 +2380,6 @@ jQuery(function ($) {
 			$(document).bind( 'keydown', 'ctrl+l', function(e) {
 				widget._SelectLastList();
 			});
-
-			$(document).bind( 'keydown', 'ctrl+f', function(e){
-				widget.toolbar.find( "#search-list" ).focus();
-			});
-
-			// since ctrl+f does not work in MS windows, adding shift+f as additional
-			// keyboard shortcut
-			$(document).bind( 'keydown', 'shift+f', function(e) {
-				widget.toolbar.find( "#search-list" ).focus();
-				return false;
-			})
 		},
 
 		_ShowListView: function( updatedElement, template ) {
@@ -2472,7 +2435,7 @@ jQuery(function ($) {
 
 		_FilterBySearchText: function() {
 			var widget = this;
-			var filtervalue = widget.toolbar.find("#search-list").val();
+			var filtervalue = widget.selectedText;
 
       if (filtervalue === '') {
 				widget.listlist.find( ".row" ).show();
@@ -2617,7 +2580,6 @@ jQuery(function ($) {
 
 					// add newly received Lists to DOM
 					widget._AddListToDOM( json, template );
-					widget.toolbar.find( "#search-list" ).trigger( "keyup" );
 					widget._Filter();
 
 					widget._ToggleEmptyListImage();
@@ -2629,8 +2591,9 @@ jQuery(function ($) {
 			this._SelectLastList();
 		},
 
-		Filter: function( selectedTagsArray ) {
+		Filter: function( selectedTagsArray, selectedText ) {
 			this.selectedTags = selectedTagsArray;
+			this.selectedText = selectedText;
 			this._Filter();
 		},
 
