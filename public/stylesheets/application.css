@@ -486,6 +486,14 @@ button:focus, input[type=submit]:focus {
 	height:50px;
 }
 
+.full-content {
+	display:none;
+}
+
+.dashboard-item > .dashboard-list-item {
+	cursor:pointer;
+}
+
 
 /*--------------------*/
 
