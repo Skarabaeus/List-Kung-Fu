@@ -39,7 +39,7 @@
 					searchOptions: {
 						searchLists: widget.searchOptions.find( '#searchLists:checked' ).length > 0 ? true : false,
 						searchListItems: widget.searchOptions.find( '#searchListItems:checked' ).length > 0 ? true : false,
-						searchDashboard: widget.searchOptions.find( '#searchDashboard:checked' ).length > 0 ? true : false,
+						searchDashboard: widget.searchOptions.find( '#searchDashboard:checked' ).length > 0 ? true : false
 					},
 
 					searchText: value
