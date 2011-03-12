@@ -6244,6 +6244,10 @@ $.fn.layout = function (opts) {
 				widget.searchText.find( '#ultimate-search-text' ).val('').trigger( 'keyup' );
 			});
 
+			widget.searchText.bind( 'keyup', 'enter', function() {
+				widget.searchText.find( '#ultimate-search-text' ).trigger( 'keyup' );
+			});
+
 		},
 
 		// Once the element is created, all other calls to the widget
