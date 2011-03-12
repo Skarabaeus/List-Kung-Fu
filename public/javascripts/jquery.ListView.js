@@ -571,9 +571,9 @@
 			var widget = this;
 			var filtervalue = widget.selectedText;
 
-      if (filtervalue === '') {
-				widget.listlist.find( ".row" ).show();
-      } else {
+			widget.listlist.find( ".row" ).show();
+
+      if ( filtervalue ) {
 				widget.listlist.find( ".row:visible:not(:Contains('" + filtervalue + "'))").hide();
 				widget.listlist.find( ".row:visible:Contains('" + filtervalue + "')").show();
       }
@@ -726,8 +726,13 @@
 		},
 
 		Filter: function( selectedTagsArray, selectedText ) {
-			this.selectedTags = selectedTagsArray;
-			this.selectedText = selectedText;
+			if ( selectedTagsArray ) {
+				this.selectedTags = selectedTagsArray;
+			}
+
+			if ( !( selectedText == null || typeof( selectedText ) === 'undefined' ) ) {
+				this.selectedText = selectedText;
+			}
 			this._Filter();
 		},
 

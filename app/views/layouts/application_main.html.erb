@@ -19,6 +19,8 @@
 	          <%= content_tag :div, msg, :id => "flash_#{name}" %>
 	      <%- end -%>
 	  </div>
+		<div id="ultimate-search-widget">
+		</div>
 		<div id="main-menu">
 			<% if user_signed_in? %>
 				<a href="#" id="dashboard" accesskey="D">Dashboard</a> |
@@ -57,7 +59,7 @@
 
 		<%= javascript_include_tag 'jquery.SerializeForm', 'jquery.ConfirmationDialog' %>
 		<%= javascript_include_tag 'jquery.layout-1.2.0', 'json2', 'mustache', 'jquery.hotkeys' %>
-		<%= javascript_include_tag 'Controller', 'jquery.ListView', 'jquery.StatusBar', 'jquery.ListItemView', 'jquery.Dashboard', 'jquery.TagView' %>
+		<%= javascript_include_tag 'Controller', 'jquery.ListView', 'jquery.StatusBar', 'jquery.ListItemView', 'jquery.Dashboard', 'jquery.TagView', 'jquery.UltimateSearch.js' %>
 		<%= javascript_include_tag 'application' %>
 
 	<% else %>

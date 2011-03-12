@@ -116,7 +116,27 @@ $(document).ready(function () {
 			ListKungFu.LayoutWest.ListView( "ReloadLists" );
 		},
 		TagSelected: function( event, selectedTagsArray ) {
-			ListKungFu.LayoutWest.ListView( "Filter", selectedTagsArray );
+			ListKungFu.LayoutWest.ListView( "Filter", selectedTagsArray, null );
+		}
+	});
+
+	ListKungFu.LayoutNorth.find( '#ultimate-search-widget' ).UltimateSearch({
+		OnFilterChanged: function( event, filter ) {
+			var filterDashboard = filter.searchOptions.searchDashboard;
+			var filterLists = filter.searchOptions.searchLists;
+			var filterListItems = filter.searchOptions.searchListItems;
+
+			if ( filterDashboard ) {
+				ListKungFu.LayoutCenter.Dashboard( "Filter", filter.searchText );
+			}
+
+			if ( filterLists ) {
+				ListKungFu.LayoutWest.ListView( "Filter", null, filter.searchText );
+			}
+
+			if ( filterListItems ) {
+				ListKungFu.LayoutCenter.ListItemView( "Filter", filter.searchText );
+			}
 		}
 	});
 
