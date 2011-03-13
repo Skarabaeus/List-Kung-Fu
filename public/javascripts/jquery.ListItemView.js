@@ -236,7 +236,7 @@
 										newElement.data( "data", json );
 
 										// show all the rows again
-										widget.listItemList.find( '.row' ).show();
+										widget._Filter();
 
 										newElement.focus();
 									});
@@ -263,7 +263,7 @@
 								}
 
 								// show again all other rows
-								widget.listItemList.find( '.row' ).show();
+								widget._Filter();
 
 								newElement.focus();
 							});
