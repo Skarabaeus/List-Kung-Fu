@@ -490,7 +490,7 @@
 
 			// build new header
 		 	var toolbarArr = ['<div id="list-item-toolbar">',
-				'<div id="list-name"></div><div id="list-item-toolbar-buttons">',
+				'<div id="list-title"></div><div id="list-item-toolbar-buttons">',
 				'<button id="list-item-completed">Completed [space]</button>',
 				'<button id="list-item-new">Create [shift+return]</button>',
 				'<button id="list-item-delete">Delete [del]</button>',
@@ -502,7 +502,7 @@
 
 			widget.toolbar = $( toolbarArr.join('') );
 
-			widget.listName = widget.toolbar.find( "#list-name" );
+			widget.listName = widget.toolbar.find( "#list-title" );
 
 			// create buttons
 			widget.toolbar.find( "#list-item-new" ).button({
@@ -662,7 +662,7 @@
 
 			widget.wrapper = $( '<div class="ui-layout-content" id="list-item-wrapper"></div>' );
 			widget.listItemList = $( '<div id="list-item-list"></div>');
-			widget.header = $( '<div class="header"></div>' );
+			widget.header = $( '<div class="list-item-header"></div>' );
 
 			widget.element.append( widget.header );
 			widget.element.append( widget.wrapper );

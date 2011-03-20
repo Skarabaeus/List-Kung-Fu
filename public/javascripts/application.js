@@ -33,8 +33,8 @@ $(document).ready(function () {
 		},
 
 		north: {
-			maxSize: 92,
-			minSize: 92
+			maxSize: 72,
+			minSize: 72
 		},
 
 		south: {

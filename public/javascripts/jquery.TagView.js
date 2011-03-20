@@ -196,7 +196,7 @@
 
 		_create: function() {
 			widget = this;
-			widget.header = $( '<h1 id="tags-header">Notebook Tags</h1>' );
+			widget.header = $( '<h1 class="subsection-header">Notebook Tags</h1>' );
 			widget.toolbar = $( '<div id="tag-toolbar"></div>' );
 			widget.addTagInput = $( '<input type="text" value="" id="add-tag"/>' );
 			widget.addTagButton = $( '<button id="tag-new">Create Tag</button>' );
