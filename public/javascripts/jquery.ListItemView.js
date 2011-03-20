@@ -181,7 +181,11 @@
 
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
-						$form.find( "textarea" ).markItUp( mySettings );
+
+						$form.find( "textarea.editorarea" ).tinymce({
+							theme : "advanced"
+						});
+
 						widget._SetupDeadlineButton( $form );
 						widget._SetupCustomDeadlinePicker();
 
@@ -603,7 +607,10 @@
 
 					widget._SetupDeadlineButton( $form );
 					widget._SetupCustomDeadlinePicker();
-					$form.find( "textarea" ).markItUp( mySettings );
+
+					$form.find( "textarea.editorarea" ).tinymce({
+						
+					});
 
 					if ( focusTextarea ) {
 						$form.find( "textarea" ).focus();
