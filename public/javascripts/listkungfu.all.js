@@ -6090,11 +6090,13 @@ $.fn.layout = function (opts) {
 
 		_create: function() {
 			widget = this;
+			widget.header = $( '<h1 id="tags-header">Notebook Tags</h1>' );
 			widget.toolbar = $( '<div id="tag-toolbar"></div>' );
 			widget.addTagInput = $( '<input type="text" value="" id="add-tag"/>' );
 			widget.addTagButton = $( '<button id="tag-new">Create Tag</button>' );
 			widget.tagList = $( '<div class="tags"></div>' );
 
+			widget.element.append( widget.header );
 			widget.element.append( widget.toolbar );
 			widget.toolbar.append( widget.addTagInput );
 			widget.toolbar.append( widget.addTagButton );

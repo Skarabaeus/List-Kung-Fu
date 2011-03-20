@@ -447,6 +447,14 @@ button:focus, input[type=submit]:focus {
 	height:150;
 }
 
+#tags-header {
+	color:#ababab;
+	font-size:0.8em;
+	border-bottom:1px solid #ababab;
+	margin:0;
+	padding:15px 2px 2px 5px;
+}
+
 #add-tag {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
