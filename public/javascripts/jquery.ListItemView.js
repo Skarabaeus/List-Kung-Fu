@@ -285,7 +285,7 @@
 			newElement.bind( 'keydown', 'shift+return', function( e ){
 				widget.toolbar.find( "#list-item-new" ).effect('puff', {}, 300, function(){
 					$( this ).show();
-					widget._AddNewListItem();
+					widget._AddNewListItem( true );
 				});
 			});
 
@@ -543,7 +543,7 @@
 			// bind events
 
 			widget.toolbar.find( "#list-item-new" ).bind( 'click', function( e ){
-				widget._AddNewListItem();
+				widget._AddNewListItem( true );
 			});
 
 			widget.toolbar.find( "#showCompleted" ).bind( "change", function( e ){
@@ -583,7 +583,7 @@
 			widget.header.append( widget.toolbar );
 		},
 
-		_AddNewListItem: function() {
+		_AddNewListItem: function( focusTextarea ) {
 			var widget = this;
 			var data = widget.element.data( "data-list" );
 
@@ -604,7 +604,10 @@
 					widget._SetupDeadlineButton( $form );
 					widget._SetupCustomDeadlinePicker();
 					$form.find( "textarea" ).markItUp( mySettings );
-					$form.find( "textarea" ).focus();
+
+					if ( focusTextarea ) {
+						$form.find( "textarea" ).focus();
+					}
 
 
 					// hide existing rows when adding new item
@@ -759,12 +762,10 @@
 								return false;
 							}
 						});
-					} else {
-						widget.listItemList.find( ".row" ).first().focus();
 					}
 
 					if ( widget.listItemList.find( '.row' ).length === 0 ) {
-						widget._AddNewListItem();
+						widget._AddNewListItem( false );
 					}
 
 					// set list name
