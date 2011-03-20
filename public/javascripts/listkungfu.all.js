@@ -33,8 +33,8 @@ $(document).ready(function () {
 		},
 
 		north: {
-			maxSize: 92,
-			minSize: 92
+			maxSize: 72,
+			minSize: 72
 		},
 
 		south: {
@@ -1562,7 +1562,7 @@ jQuery(function ($) {
 
 			// build new header
 		 	var toolbarArr = ['<div id="list-item-toolbar">',
-				'<div id="list-name"></div><div id="list-item-toolbar-buttons">',
+				'<div id="list-title"></div><div id="list-item-toolbar-buttons">',
 				'<button id="list-item-completed">Completed [space]</button>',
 				'<button id="list-item-new">Create [shift+return]</button>',
 				'<button id="list-item-delete">Delete [del]</button>',
@@ -1574,7 +1574,7 @@ jQuery(function ($) {
 
 			widget.toolbar = $( toolbarArr.join('') );
 
-			widget.listName = widget.toolbar.find( "#list-name" );
+			widget.listName = widget.toolbar.find( "#list-title" );
 
 			// create buttons
 			widget.toolbar.find( "#list-item-new" ).button({
@@ -1734,7 +1734,7 @@ jQuery(function ($) {
 
 			widget.wrapper = $( '<div class="ui-layout-content" id="list-item-wrapper"></div>' );
 			widget.listItemList = $( '<div id="list-item-list"></div>');
-			widget.header = $( '<div class="header"></div>' );
+			widget.header = $( '<div class="list-item-header"></div>' );
 
 			widget.element.append( widget.header );
 			widget.element.append( widget.wrapper );
@@ -6094,7 +6094,7 @@ $.fn.layout = function (opts) {
 
 		_create: function() {
 			widget = this;
-			widget.header = $( '<h1 id="tags-header">Notebook Tags</h1>' );
+			widget.header = $( '<h1 class="subsection-header">Notebook Tags</h1>' );
 			widget.toolbar = $( '<div id="tag-toolbar"></div>' );
 			widget.addTagInput = $( '<input type="text" value="" id="add-tag"/>' );
 			widget.addTagButton = $( '<button id="tag-new">Create Tag</button>' );
