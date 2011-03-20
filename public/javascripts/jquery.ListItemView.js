@@ -440,6 +440,8 @@
 						checked === true ) {
 						widget._ToggleCompleted( true );
 					}
+
+					widget._Filter();
 				},
 				lists: listItem.list_item.list_id,
 				list_items: listItem.list_item.id,
@@ -665,6 +667,8 @@
 			widget.element.append( widget.header );
 			widget.element.append( widget.wrapper );
 			widget.wrapper.append( widget.listItemList );
+
+			widget.selectedText = '';
 
 			widget._TriggerResize();
 

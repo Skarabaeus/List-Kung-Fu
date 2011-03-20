@@ -134,6 +134,7 @@ html, body {
 	background-image:url(/images/item_background.gif);
 	background-repeat: repeat-x;
 	overflow:hidden;
+	font-size:0.8em;
 }
 
 #list-form form, #list-form input[type=text] {
@@ -184,6 +185,7 @@ button:focus, input[type=submit]:focus {
 	background-image:url(/images/item_background.gif);
 	background-repeat: repeat-x;
 	overflow:hidden;
+	font-size:0.8em;
 }
 
 #showCompleted {
@@ -549,7 +551,7 @@ button:focus, input[type=submit]:focus {
 }
 
 .assigned-tags {
-	font-size:0.7em;
+	font-size:0.8em;
 	padding-top:10px;
 	line-height:2em;
 }
