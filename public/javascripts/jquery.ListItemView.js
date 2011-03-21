@@ -179,12 +179,17 @@
 						// show only the row which the user wants to edit
 						widget.selectedListItem.element.show();
 
+						// hide content of selected list item
+						widget.selectedListItem.element.find( ".list-item-content" ).hide();
+						widget.selectedListItem.element.find( '.list-item-info' ).hide();
+
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
 
-						$form.find( "textarea.editorarea" ).tinymce({
-							theme : "advanced"
-						});
+						var mySettings = ListKungFu.TinyMCEDefaultOptions;
+						mySettings.height = widget.element.find( "#list-item-wrapper" ).height() - 110;
+
+						$form.find( "textarea.editorarea" ).tinymce( mySettings );
 
 						widget._SetupDeadlineButton( $form );
 						widget._SetupCustomDeadlinePicker();
@@ -223,7 +228,8 @@
 										widget.selectedListItem.element.find( ".handle" ).show();
 
 										// update list item content
-										newElement.find( '.list-item-content' ).html( json.list_item.body_rendered );
+										newElement.find( '.list-item-content' ).html( json.list_item.body_rendered ).show();
+										newElement.find( '.list-item-info' ).show();
 
 										// update deadline
 										newElement.find( '.list-item-deadline' ).html( json.list_item.deadline_in_words );
@@ -261,6 +267,10 @@
 							$form.hide( 'slow', function() {
 								$( this ).remove();
 
+								// show content again
+								widget.selectedListItem.element.find( ".list-item-content" ).show();
+								widget.selectedListItem.element.find( '.list-item-info' ).show();
+
 								// only toggleFullsize if not already fullsize (when canceling edit)
 								if ( elementAlreadyFullsize === false ) {
 									widget._ToggleFullsize( newElement );
@@ -289,7 +299,7 @@
 			newElement.bind( 'keydown', 'shift+return', function( e ){
 				widget.toolbar.find( "#list-item-new" ).effect('puff', {}, 300, function(){
 					$( this ).show();
-					widget._AddNewListItem( true );
+					widget._AddNewListItem();
 				});
 			});
 
@@ -547,7 +557,7 @@
 			// bind events
 
 			widget.toolbar.find( "#list-item-new" ).bind( 'click', function( e ){
-				widget._AddNewListItem( true );
+				widget._AddNewListItem();
 			});
 
 			widget.toolbar.find( "#showCompleted" ).bind( "change", function( e ){
@@ -587,7 +597,7 @@
 			widget.header.append( widget.toolbar );
 		},
 
-		_AddNewListItem: function( focusTextarea ) {
+		_AddNewListItem: function() {
 			var widget = this;
 			var data = widget.element.data( "data-list" );
 
@@ -608,14 +618,7 @@
 					widget._SetupDeadlineButton( $form );
 					widget._SetupCustomDeadlinePicker();
 
-					$form.find( "textarea.editorarea" ).tinymce({
-						
-					});
-
-					if ( focusTextarea ) {
-						$form.find( "textarea" ).focus();
-					}
-
+					$form.find( "textarea.editorarea" ).tinymce( ListKungFu.TinyMCEDefaultOptions );
 
 					// hide existing rows when adding new item
 					widget.listItemList.find( '.row' ).hide();
@@ -632,11 +635,6 @@
 					$form.find( ".deadline-button" ).bind( 'click', function( e ) {
 						e.preventDefault();
 						var serializedForm = $form.serializeForm();
-
-						// hacky hack hack. no idea why I have to do this
-						// when creating an list item.
-						// When editing an item, line breaks are sent correctly.
-						serializedForm.list_item.body = serializedForm.list_item.body.replace(/\n/g, "\n\n");
 
 						// add deadline indicator based on deadline type
 						serializedForm.list_item.deadlineType = $( e.target ).attr( 'data-deadline' );
@@ -772,7 +770,7 @@
 					}
 
 					if ( widget.listItemList.find( '.row' ).length === 0 ) {
-						widget._AddNewListItem( false );
+						widget._AddNewListItem();
 					}
 
 					// set list name

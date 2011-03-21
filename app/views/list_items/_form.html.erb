@@ -14,9 +14,6 @@
     </div>
   <% end %>
 
-  <div class="field" id="editorarea">
-    <%= f.text_area :body, :tabindex => 10001 %>
-	</div>
 	<div class="actions">
 		<% if list_item.saved? %>
 			<button id="keepit" class="deadline-button" tabindex="10005" data-deadline="keepit">Save</button>
@@ -53,5 +50,10 @@
 		</div>
 			<div style="clear:both">&nbsp;</div>
 	</div>
+
+  <div class="field">
+    <%= f.text_area :body, :tabindex => 10001, :class => 'editorarea' %>
+	</div>
+
 	<div style="clear:both">&nbsp;</div>
 <% end %>
