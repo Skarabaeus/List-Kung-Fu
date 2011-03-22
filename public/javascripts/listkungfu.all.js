@@ -1317,7 +1317,7 @@ jQuery(function ($) {
 										widget.selectedListItem.element.find( ".handle" ).show();
 
 										// update list item content
-										newElement.find( '.list-item-content' ).html( json.list_item.body_rendered ).show();
+										newElement.find( '.list-item-content' ).html( json.list_item.body ).show();
 										newElement.find( '.list-item-info' ).show();
 
 										// update deadline
@@ -1568,7 +1568,7 @@ jQuery(function ($) {
 					successCallback: function( template, json, status, xhr, errors ) {
 
 						$.each( json, function( index, listItem ) {
-							widget.completedList.append("<div>" + listItem.list_item.body_rendered + "</div>");
+							widget.completedList.append("<div>" + listItem.list_item.body + "</div>");
 						});
 
 						if ( json.length === 0 ) {
@@ -1833,6 +1833,7 @@ jQuery(function ($) {
 			widget._create();
 
 			widget.element.data( "data-list", data );
+			widget.selectedListItem = null;
 
 			ListListItem.Index( {
 				successCallback: function( template, json, status, xhr, errors ) {

@@ -46,9 +46,9 @@ class ListItem < ActiveRecord::Base
     !self.id.nil?
   end
 
-  def body_rendered
-    unless self.body.nil?
-      get_body_html self.body.length
+  def body
+    unless read_attribute(:body).nil?
+      get_body_html read_attribute(:body).length
     end
   end
 
@@ -75,12 +75,15 @@ class ListItem < ActiveRecord::Base
   private
 
   def get_body_html( length )
-    unless self.body.nil?
+    unless read_attribute(:body).nil?
       regex_url = /(\s|>)((https?|ftp):(\/\/)+([\w\d:\/\#@%;$()~_?\+-=\\\&][^<]*))(\s|<)/
       regex_links = /((<a)(.)*(\/a>))/
 
       # generate HTML from textile
-      html = RedCloth.new( self.body[ 0..length ] ).to_html
+      #html = RedCloth.new( read_attribute(:body)[ 0..length ] ).to_html
+      #html_without_links = String.new( html )
+
+      html = read_attribute(:body)[ 0..length ]
       html_without_links = String.new( html )
 
       # remove all existing links from the html:
@@ -97,10 +100,9 @@ class ListItem < ActiveRecord::Base
         html.gsub!(match, %Q-<a href="#{match}" target="_blank">#{match}</a>-)
       end
 
-      if length < self.body.length
-        html << "<span class=""dashboard-item-more"">[#{ self.body.length - length } characters more]</span>"
+      if length < read_attribute(:body).length
+        html << "<span class=""dashboard-item-more"">[#{ read_attribute(:body).length - length } characters more]</span>"
       end
-
 
       html
     end

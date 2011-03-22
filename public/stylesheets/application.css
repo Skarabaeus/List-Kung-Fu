@@ -124,15 +124,14 @@ html, body {
 }
 
 .selected-row {
-	border: 1px solid #009426 !important;
+	border: 1px solid #888 !important;
 	overflow-y:auto !important;
 	overflow-x:hidden !important;
 }
 
 #list-list .row {
+	border-bottom:1px solid #ddd;
 	margin:0px;
-	background-image:url(/images/item_background.gif);
-	background-repeat: repeat-x;
 	overflow:hidden;
 	font-size:0.8em;
 }
@@ -180,10 +179,9 @@ button:focus, input[type=submit]:focus {
 /* LIST ITEMS */
 
 #list-item-list .row {
+	border-bottom:1px solid #ddd;
 	margin:0px;
 	padding:7px;
-	background-image:url(/images/item_background.gif);
-	background-repeat: repeat-x;
 	overflow:hidden;
 	font-size:0.8em;
 }
