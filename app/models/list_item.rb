@@ -54,8 +54,12 @@ class ListItem < ActiveRecord::Base
 
   def body_shortend
     # not ideal... how to i cut HTML without breaking it?
-    clear_text = Sanitize.clean( self.body )
-    clear_text[ 0..60 ]
+    unless self.body.nil?
+      clear_text = Sanitize.clean( self.body )
+      clear_text[ 0..60 ]
+    else
+      ''
+    end
   end
 
   def deadline_in_words

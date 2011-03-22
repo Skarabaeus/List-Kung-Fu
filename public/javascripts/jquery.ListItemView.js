@@ -618,7 +618,10 @@
 					widget._SetupDeadlineButton( $form );
 					widget._SetupCustomDeadlinePicker();
 
-					$form.find( "textarea.editorarea" ).tinymce( ListKungFu.TinyMCEDefaultOptions );
+					var mySettings = ListKungFu.TinyMCEDefaultOptions;
+					mySettings.height = widget.listItemList.parent( "#list-item-wrapper" ).height() - 150;
+
+					$form.find( "textarea.editorarea" ).tinymce( mySettings );
 
 					// hide existing rows when adding new item
 					widget.listItemList.find( '.row' ).hide();
