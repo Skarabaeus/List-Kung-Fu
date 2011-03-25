@@ -8,6 +8,10 @@ var ListKungFu = {
 	LayoutCenter: $("#mainlayout-center")
 };
 
+ListKungFu.TinyMceInitAutoFocus = function( instance ) {
+	tinyMCE.execCommand( 'mceFocus', false, instance.editorId );
+}
+
 ListKungFu.TinyMCEDefaultOptions = {
 	// General options
 	theme : "advanced",
@@ -21,7 +25,7 @@ ListKungFu.TinyMCEDefaultOptions = {
 	theme_advanced_toolbar_align : "left",
 	theme_advanced_statusbar_location : "bottom",
 	theme_advanced_resizing : false,
-
+	init_instance_callback : ListKungFu.TinyMceInitAutoFocus,
 	width:'100%'
 }
 
