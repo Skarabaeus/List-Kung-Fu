@@ -1276,6 +1276,11 @@ jQuery(function ($) {
 						widget.selectedListItem.element.find( ".list-item-content" ).hide();
 						widget.selectedListItem.element.find( '.list-item-info' ).hide();
 
+						// remove select-row class; will be added again automatically
+						// once element gets back focus
+						widget.selectedListItem.element.removeClass( "selected-row" );
+
+
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
 
