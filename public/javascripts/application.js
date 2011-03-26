@@ -26,7 +26,34 @@ ListKungFu.TinyMCEDefaultOptions = {
 	theme_advanced_statusbar_location : "bottom",
 	theme_advanced_resizing : false,
 	init_instance_callback : ListKungFu.TinyMceInitAutoFocus,
-	width:'100%'
+	width:'100%',
+	setup : function( ed ) {
+		var altPressed = false;
+		ed.onKeyUp.add(function(ed, e) {
+
+			// 18 = alt
+			if ( e.keyCode === 18 ) {
+				altPressed = false;
+				return false;
+			}
+		});
+		ed.onKeyDown.add(function(ed, e) {
+
+			// 18 = alt
+			if ( e.keyCode === 18 ) {
+				altPressed = true;
+				return false;
+			}
+
+			// 83 = s
+			if ( altPressed === true && e.keyCode === 83 ) {
+				e.preventDefault();
+				ListKungFu.LayoutCenter.ListItemView( "FocusElement", "saveButton" );
+				return false;
+			}
+		});
+	}
+
 }
 
 /*

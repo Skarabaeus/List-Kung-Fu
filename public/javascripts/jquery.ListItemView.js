@@ -816,6 +816,15 @@
 		Filter: function( selectedText ) {
 			this.selectedText = selectedText;
 			this._Filter();
+		},
+
+		FocusElement: function( element ) {
+			switch( element ) {
+				case "saveButton":
+					$( "#save-whenever" ).focus(); // new dialog
+					$( "#keepit" ).focus(); // edit dialog
+					break;
+			}
 		}
 		/**
 		*
