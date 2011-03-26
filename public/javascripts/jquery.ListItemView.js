@@ -796,13 +796,9 @@
 			var effect = "highlight";
 
 			if ( widget.selectedListItem ) {
-				widget.selectedListItem.element.effect( effect, {}, 300, function(){
-					$( this ).show().focus();
-				});
+				widget.selectedListItem.element.effect( effect, {}, 300 ).focus();
 			} else {
-				widget.listItemList.find( '.row' ).first().effect( effect, {}, 300, function(){
-					$( this ).show().focus();
-				});
+				widget.listItemList.find( '.row' ).first().effect( effect, {}, 300 ).focus();
 			}
 		},
 

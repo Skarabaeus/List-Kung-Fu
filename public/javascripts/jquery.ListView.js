@@ -495,15 +495,9 @@
 			var effect = "highlight";
 
 			if ( widget.selectedList ) {
-				widget.selectedList.element.effect( effect, {}, 300, function(){
-					$(this).show();
-					$(this).focus();
-				});
+				widget.selectedList.element.effect( effect, {}, 300 ).show().focus();
 			} else {
-				widget.listlist.find( '.row' ).first().effect( effect, {}, 300, function(){
-					$(this).show();
-					$(this).focus();
-				});
+				widget.listlist.find( '.row' ).first().effect( effect, {}, 300 ).show().focus();
 			}
 		},
 
