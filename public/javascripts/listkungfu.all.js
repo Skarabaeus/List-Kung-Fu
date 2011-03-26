@@ -59,7 +59,7 @@ $(document).ready(function () {
 		},
 
 		south: {
-			minSize: 40
+			minSize: 30
 		},
 
 		west: {
@@ -1889,13 +1889,9 @@ jQuery(function ($) {
 			var effect = "highlight";
 
 			if ( widget.selectedListItem ) {
-				widget.selectedListItem.element.effect( effect, {}, 300, function(){
-					$( this ).show().focus();
-				});
+				widget.selectedListItem.element.effect( effect, {}, 300 ).focus();
 			} else {
-				widget.listItemList.find( '.row' ).first().effect( effect, {}, 300, function(){
-					$( this ).show().focus();
-				});
+				widget.listItemList.find( '.row' ).first().effect( effect, {}, 300 ).focus();
 			}
 		},
 
@@ -2421,15 +2417,9 @@ jQuery(function ($) {
 			var effect = "highlight";
 
 			if ( widget.selectedList ) {
-				widget.selectedList.element.effect( effect, {}, 300, function(){
-					$(this).show();
-					$(this).focus();
-				});
+				widget.selectedList.element.effect( effect, {}, 300 ).show().focus();
 			} else {
-				widget.listlist.find( '.row' ).first().effect( effect, {}, 300, function(){
-					$(this).show();
-					$(this).focus();
-				});
+				widget.listlist.find( '.row' ).first().effect( effect, {}, 300 ).show().focus();
 			}
 		},
 
