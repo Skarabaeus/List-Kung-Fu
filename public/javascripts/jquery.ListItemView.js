@@ -825,6 +825,10 @@
 					$( "#keepit" ).focus(); // edit dialog
 					break;
 			}
+		},
+
+		CloseEditor: function() {
+			$( "#cancel-edit" ).click();
 		}
 		/**
 		*

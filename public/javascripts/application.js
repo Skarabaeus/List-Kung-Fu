@@ -39,6 +39,12 @@ ListKungFu.TinyMCEDefaultOptions = {
 		});
 		ed.onKeyDown.add(function(ed, e) {
 
+			// 27 = esc
+			if (e.keyCode === 27 ) {
+				ListKungFu.LayoutCenter.ListItemView( "CloseEditor" );
+				return false;
+			}
+
 			// 18 = alt
 			if ( e.keyCode === 18 ) {
 				altPressed = true;
