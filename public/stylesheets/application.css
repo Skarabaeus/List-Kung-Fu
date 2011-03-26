@@ -134,6 +134,9 @@ html, body {
 	margin:0px;
 	overflow:hidden;
 	font-size:0.8em;
+	-moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 #list-form form, #list-form input[type=text] {

@@ -363,7 +363,11 @@
 			//	bind Events for new List DOM
 			/////////////////////////////
 
+
 			if ( $.browser.msie ) {
+				// disable ability to select text
+				newElement.get( 0 ).onselectstart = function () { return false; };
+
 				newElement.bind( 'click', function(){
 					newElement.focus();
 					return false;

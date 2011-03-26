@@ -1254,7 +1254,8 @@ jQuery(function ($) {
 						}
 					}
 
-					widget._SetSelectedListItem( $( e.target ), $( e.target ).data( "data" ) );
+					widget._SetSelectedListItem( $( e.target ), data );
+
 				}
 			});
 
@@ -1407,6 +1408,11 @@ jQuery(function ($) {
 								widget._Filter();
 
 								newElement.focus();
+
+								// msie needs the click for focusing the element
+								if ( $.browser.msie ) {
+									newElement.click();
+								}
 							});
 
 							return false;
@@ -1759,6 +1765,11 @@ jQuery(function ($) {
 							$( this ).remove();
 							widget.listItemList.find( '.row' ).show();
 							widget.listItemList.find( '.row' ).first().focus();
+
+							// msie needs the click for focusing the element
+							if ( $.browser.msie ) {
+								widget.listItemList.find( '.row' ).first().click();
+							}
 						});
 					});
 
@@ -2324,7 +2335,11 @@ jQuery(function ($) {
 			//	bind Events for new List DOM
 			/////////////////////////////
 
+
 			if ( $.browser.msie ) {
+				// disable ability to select text
+				newElement.get( 0 ).onselectstart = function () { return false; };
+
 				newElement.bind( 'click', function(){
 					newElement.focus();
 					return false;
