@@ -211,10 +211,6 @@
 							$form.find( "textarea" ).focus();
 						});
 
-						$form.find( "textarea" ).bind( "keydown", 'esc', function(){
-							$form.find( "#cancel-edit" ).trigger( "click" );
-						});
-
 						$form.find( ".deadline-button" ).bind( "keydown click", 'return', function( e ) {
 							e.preventDefault();
 							var serializedForm = newElement.find("form").serializeForm();
@@ -665,9 +661,6 @@
 						return false;
 					});
 
-					$form.find( "textarea" ).bind( 'keydown', 'esc', function( e ){
-						$form.find( "#cancel-edit" ).trigger( 'click' );
-					});
 				},
 				lists: data.list.id
 			} );
