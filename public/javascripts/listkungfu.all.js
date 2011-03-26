@@ -2040,6 +2040,8 @@ jQuery(function ($) {
 							successCallback: function( template, json, status, xhr, errors ) {
 
 								$( event.target ).find(".fake-drop").remove();
+								$( event.target ).find(".list-name").show();
+								$( event.target ).find(".list-tag").show();
 								newElement.effect( 'highlight', {}, 3000 );
 							},
 							lists: dropList.list.id
@@ -2047,12 +2049,17 @@ jQuery(function ($) {
 					}
 				},
 				over: function(event, ui) {
+					$( event.target ).find(".list-name").hide();
+					$( event.target ).find(".list-tag").hide();
+
 					var wrapper = $('<div class="fake-drop"></div>');
 					wrapper.html( '<p>' + ui.helper.text() + '</p>' );
 					$(event.target).append( wrapper );
 				},
 				out: function( event, ui ) {
 					$(event.target).find(".fake-drop").remove();
+					$( event.target ).find(".list-name").show();
+					$( event.target ).find(".list-tag").show();
 				}
 
 			};
@@ -2658,9 +2665,9 @@ jQuery(function ($) {
 		SetupDroppable: function( dragType ) {
 			var widget = this;
 
-			widget.listlist.find( '.row' ).each(function(){
+			widget.listlist.find( '.row' ).each( function(){
 				var list = $(this)
-				list.droppable( "destroy");
+				list.droppable( "destroy" );
 				switch( dragType ) {
 				case 'listitem':
 					list.droppable( widget._DroppableConfigListItems( list ) );
