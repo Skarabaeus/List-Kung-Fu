@@ -25,7 +25,7 @@ html, body {
 	display:none;
 	text-align:center;
 	width:100%;
-	font-size:1.7em;
+	font-size:1.3em;
 }
 
 #mainlayout-south #notice {
@@ -213,8 +213,8 @@ button:focus, input[type=submit]:focus {
 }
 
 #list-item-toolbar {
-	height:56px;
-	max-height:56px;
+	height:61px;
+	max-height:61px;
 }
 
 #list-title {
@@ -222,6 +222,7 @@ button:focus, input[type=submit]:focus {
 	padding: 3px 10px;
 	background-color:#eee;
 	color:#888;
+	margin: 0 0 5px 0;
 }
 
 #list-item-toolbar-buttons > button {

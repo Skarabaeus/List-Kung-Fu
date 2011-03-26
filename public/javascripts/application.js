@@ -59,7 +59,7 @@ $(document).ready(function () {
 		},
 
 		south: {
-			minSize: 40
+			minSize: 30
 		},
 
 		west: {
