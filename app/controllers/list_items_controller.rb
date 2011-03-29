@@ -100,7 +100,7 @@ class ListItemsController < ApplicationController
       date = Time.local date_arr.first, date_arr.second, date_arr.third
       date + 12.hours
     else
-      nil
+      (params[ :list_item ][ :deadline ]).nil? ? nil : params[ :list_item ][ :deadline ]
     end
   end
 end

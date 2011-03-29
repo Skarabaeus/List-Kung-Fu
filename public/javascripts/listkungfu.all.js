@@ -2029,14 +2029,8 @@ jQuery(function ($) {
 						var originalListItem = ui.draggable.data( "data" );
 						var dropList = $( this ).data( "data" );
 
-						var data = {
-							list_item: {
-								body: originalListItem.list_item.body.replace(/\n/g, "\n\n")
-							}
-						};
-
 						ListListItem.Create({
-							send: data,
+							send: originalListItem,
 							successCallback: function( template, json, status, xhr, errors ) {
 
 								$( event.target ).find(".fake-drop").remove();
