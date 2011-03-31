@@ -118,16 +118,6 @@
 
 					var data = $( e.target ).data( "data" );
 
-					if ( widget.toolbar ) {
-						if ( $( e.target ).data("isFullsize") === true ) {
-							widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons"
-								, { primary:'ui-icon-zoomout' } );
-						} else {
-							widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons"
-								, { primary:'ui-icon-zoomin' } );
-						}
-					}
-
 					widget._SetSelectedListItem( $( e.target ), data );
 
 				}
@@ -152,7 +142,11 @@
 				return false;
 			});
 
-			newElement.bind( 'keydown dblclick', 'return', function(){
+			newElement.bind( 'keydown', 'e', function(){
+				newElement.trigger( 'edit' );
+			});
+
+			newElement.bind( 'edit', function(){
 				// if we display already the form for this element,
 				// just exit.
 				if ( newElement.find( "form" ).length > 0 ) {
@@ -200,11 +194,6 @@
 						widget._SetupDeadlineButton( $form );
 						widget._SetupCustomDeadlinePicker();
 
-						// only toggleFullsize if not already fullsize (when opening the editing dialog)
-						if ( elementAlreadyFullsize === false ) {
-							widget._ToggleFullsize( newElement );
-						}
-
 						// hide drag and drop handle
 						widget.selectedListItem.element.find( ".handle" ).hide();
 
@@ -239,11 +228,6 @@
 										// correct height of drag and drop handle
 										newElement.find( ".handle" ).height( newElement.find( '.list-item-content' ).height() );
 
-										// only toggleFullsize if not already fullsize (when saving item)
-										if ( elementAlreadyFullsize === false ) {
-											widget._ToggleFullsize( newElement );
-										}
-
 										widget._SetSelectedListItem( newElement, json );
 										newElement.data( "data", json );
 
@@ -272,11 +256,6 @@
 								// show content again
 								widget.selectedListItem.element.find( ".list-item-content" ).show();
 								widget.selectedListItem.element.find( '.list-item-info' ).show();
-
-								// only toggleFullsize if not already fullsize (when canceling edit)
-								if ( elementAlreadyFullsize === false ) {
-									widget._ToggleFullsize( newElement );
-								}
 
 								// show again all other rows
 								widget._Filter();
@@ -310,13 +289,24 @@
 				});
 			});
 
-			newElement.bind( 'keydown', 'l', function( e ) {
-				widget.toolbar.find( "#list-item-fullsize" ).effect('puff', {}, 300, function(){
-					widget.toolbar.find( '#list-item-fullsize' ).trigger( 'click' );
-					$( this ).show();
-				});
-				return false;
+			newElement.bind( 'keydown dblclick', 'return', function(){
+				newElement.trigger( 'show' );
 			});
+
+			newElement.bind( 'show', function(){
+				var anchor = widget.element;
+				var listItem = widget.selectedListItem.data;
+
+				// remove the list item view.
+				widget.RemoveList();
+
+				// show single list item.
+				anchor.ListItemShow( {
+					listItem: listItem
+				});
+
+			});
+
 
 			// code for drag and drop of item to new list.
 			if ( ListKungFu && ListKungFu.LayoutCenter ) {
@@ -343,24 +333,9 @@
 			widget._CorrectHeight( newElement );
 		},
 
-		_ToggleFullsize: function ( element ) {
+		_CorrectHeight: function( element ) {
 			var widget = this;
-			if ( element.data( "isFullsize" ) === true ) {
-				widget._CorrectHeight( element, false );
-				element.data( "isFullsize", false );
-				widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons"
-					, { primary:'ui-icon-zoomin' } );
-			} else {
-				widget._CorrectHeight( element, true );
-				element.data( "isFullsize", true );
-				widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons"
-					, { primary:'ui-icon-zoomout' } );
-			}
-		},
-
-		_CorrectHeight: function( element, setToFullSize ) {
-			var widget = this;
-			if ( element.height() > 150 && !setToFullSize ) {
+			if ( element.height() > 150 ) {
 				element.height( 150 );
 			} else {
 				element.height( "auto" );
@@ -516,7 +491,6 @@
 				'<button id="list-item-new">Create [shift+return]</button>',
 				'<button id="list-item-delete">Delete [del]</button>',
 				'<button id="list-item-edit">Edit [return]</button>',
-				'<button id="list-item-fullsize">Fullsize [l]</button>',
 				'<input type="checkbox" id="showCompleted"/>',
 				'<label for="showCompleted">Show Completed Items</label>',
 				'</div></div>'];
@@ -554,13 +528,6 @@
 				}
 			});
 
-			widget.toolbar.find( "#list-item-fullsize" ).button({
-				text: false,
-				icons: {
-					primary: 'ui-icon-zoomin'
-				}
-			});
-
 			// bind events
 
 			widget.toolbar.find( "#list-item-new" ).bind( 'click', function( e ){
@@ -594,11 +561,7 @@
 			});
 
 			widget.toolbar.find( "#list-item-edit" ).bind( 'click', function( e ) {
-				widget.selectedListItem.element.trigger( 'dblclick' );
-			});
-
-			widget.toolbar.find( "#list-item-fullsize" ).bind( 'click', function( e ) {
-				widget._ToggleFullsize( widget.selectedListItem.element );
+				widget.selectedListItem.element.trigger( 'edit' );
 			});
 
 			widget.header.append( widget.toolbar );
@@ -750,9 +713,22 @@
 									 .unbind( "keyup", "f" );
 		},
 
+		destroy: function() {
+			var widget = this;
+
+			// remove elements
+			widget.element.children().remove();
+
+			// unbind global events
+			$( document ).unbind( "keydown" , "c" )
+				.unbind( "keyup", "f" );
+		},
+
 		OpenList: function( data ) {
 			var widget = this;
 			widget.RemoveList();
+			widget.element.ListItemShow( "destroy" );
+
 			widget._create();
 
 			widget.element.data( "data-list", data );
@@ -804,17 +780,6 @@
 			} else {
 				widget.listItemList.find( '.row' ).first().effect( effect, {}, 300 ).focus();
 			}
-		},
-
-		destroy: function() {
-			var widget = this;
-
-			// remove elements
-			widget.element.children().remove();
-
-			// unbind global events
-			$( document ).unbind( "keydown" , "c" )
-				.unbind( "keyup", "f" );
 		},
 
 		Filter: function( selectedText ) {

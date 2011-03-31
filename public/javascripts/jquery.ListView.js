@@ -428,7 +428,7 @@
 				}).trigger('click');
 			});
 
-			newElement.bind( 'keydown', 'space', function(){
+			newElement.bind( 'keydown', 'e', function(){
 				widget.toolbar.find( "#list-edit" ).effect('puff', {}, 300, function(){
 					$(this).show();
 					$(this).trigger('click') });
