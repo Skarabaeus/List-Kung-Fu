@@ -124,7 +124,11 @@
 			});
 
 			if ( $.browser.msie ) {
-				newElement.bind( 'click ', function() {
+
+				// disable ability to select text
+				newElement.get( 0 ).onselectstart = function () { return false; };
+
+				newElement.bind( 'click', function() {
 					newElement.focus();
 					return false;
 				});
@@ -185,9 +189,11 @@
 
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
+						widget.selectedListItem.element.height( "auto" );
 
 						var mySettings = ListKungFu.TinyMCEDefaultOptions;
 						mySettings.height = widget.element.find( "#list-item-wrapper" ).height() - 110;
+
 
 						$form.find( "textarea.editorarea" ).tinymce( mySettings );
 
@@ -233,8 +239,9 @@
 
 										// show all the rows again
 										widget._Filter();
-
+										widget._CorrectHeight( newElement );
 										newElement.focus();
+
 									});
 								},
 								lists: widget.selectedListItem.data.list_item.list_id,
@@ -268,6 +275,8 @@
 								}
 							});
 
+							widget._CorrectHeight( newElement );
+
 							return false;
 						});
 
@@ -289,8 +298,14 @@
 				});
 			});
 
-			newElement.bind( 'keydown dblclick', 'return', function(){
+			newElement.bind( 'keydown', 'return', function(){
 				newElement.trigger( 'show' );
+				return false;
+			});
+
+			newElement.bind( 'dblclick', function(){
+				newElement.trigger( 'show' );
+				return false;
 			});
 
 			newElement.bind( 'show', function(){

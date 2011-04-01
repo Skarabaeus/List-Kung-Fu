@@ -1039,23 +1039,23 @@ jQuery(function ($) {
 */
 
 (function(jQuery){
-	
+
 	jQuery.hotkeys = {
 		version: "0.8",
 
 		specialKeys: {
 			8: "backspace", 9: "tab", 13: "return", 16: "shift", 17: "ctrl", 18: "alt", 19: "pause",
 			20: "capslock", 27: "esc", 32: "space", 33: "pageup", 34: "pagedown", 35: "end", 36: "home",
-			37: "left", 38: "up", 39: "right", 40: "down", 45: "insert", 46: "del", 
+			37: "left", 38: "up", 39: "right", 40: "down", 45: "insert", 46: "del",
 			96: "0", 97: "1", 98: "2", 99: "3", 100: "4", 101: "5", 102: "6", 103: "7",
-			104: "8", 105: "9", 106: "*", 107: "+", 109: "-", 110: ".", 111 : "/", 
-			112: "f1", 113: "f2", 114: "f3", 115: "f4", 116: "f5", 117: "f6", 118: "f7", 119: "f8", 
+			104: "8", 105: "9", 106: "*", 107: "+", 109: "-", 110: ".", 111 : "/",
+			112: "f1", 113: "f2", 114: "f3", 115: "f4", 116: "f5", 117: "f6", 118: "f7", 119: "f8",
 			120: "f9", 121: "f10", 122: "f11", 123: "f12", 144: "numlock", 145: "scroll", 191: "/", 224: "meta"
 		},
-	
+
 		shiftNums: {
-			"`": "~", "1": "!", "2": "@", "3": "#", "4": "$", "5": "%", "6": "^", "7": "&", 
-			"8": "*", "9": "(", "0": ")", "-": "_", "=": "+", ";": ": ", "'": "\"", ",": "<", 
+			"`": "~", "1": "!", "2": "@", "3": "#", "4": "$", "5": "%", "6": "^", "7": "&",
+			"8": "*", "9": "(", "0": ")", "-": "_", "=": "+", ";": ": ", "'": "\"", ",": "<",
 			".": ">",  "/": "?",  "\\": "|"
 		}
 	};
@@ -1065,17 +1065,17 @@ jQuery(function ($) {
 		if ( typeof handleObj.data !== "string" ) {
 			return;
 		}
-		
+
 		var origHandler = handleObj.handler,
 			keys = handleObj.data.toLowerCase().split(" ");
-	
+
 		handleObj.handler = function( event ) {
 			// Don't fire in text-accepting inputs that we didn't directly bind to
 			if ( this !== event.target && (/textarea|select/i.test( event.target.nodeName ) ||
 				 event.target.type === "text") ) {
 				return;
 			}
-			
+
 			// Keypress represents characters, not special keys
 			var special = event.type !== "keypress" && jQuery.hotkeys.specialKeys[ event.which ],
 				character = String.fromCharCode( event.which ).toLowerCase(),
@@ -1089,7 +1089,7 @@ jQuery(function ($) {
 			if ( event.ctrlKey && special !== "ctrl" ) {
 				modif += "ctrl+";
 			}
-			
+
 			// TODO: Need to make sure this works consistently across platforms
 			if ( event.metaKey && !event.ctrlKey && special !== "meta" ) {
 				modif += "meta+";
@@ -1244,23 +1244,17 @@ jQuery(function ($) {
 
 					var data = $( e.target ).data( "data" );
 
-					if ( widget.toolbar ) {
-						if ( $( e.target ).data("isFullsize") === true ) {
-							widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons"
-								, { primary:'ui-icon-zoomout' } );
-						} else {
-							widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons"
-								, { primary:'ui-icon-zoomin' } );
-						}
-					}
-
 					widget._SetSelectedListItem( $( e.target ), data );
 
 				}
 			});
 
 			if ( $.browser.msie ) {
-				newElement.bind( 'click ', function() {
+
+				// disable ability to select text
+				newElement.get( 0 ).onselectstart = function () { return false; };
+
+				newElement.bind( 'click', function() {
 					newElement.focus();
 					return false;
 				});
@@ -1278,7 +1272,11 @@ jQuery(function ($) {
 				return false;
 			});
 
-			newElement.bind( 'keydown dblclick', 'return', function(){
+			newElement.bind( 'keydown', 'e', function(){
+				newElement.trigger( 'edit' );
+			});
+
+			newElement.bind( 'edit', function(){
 				// if we display already the form for this element,
 				// just exit.
 				if ( newElement.find( "form" ).length > 0 ) {
@@ -1317,19 +1315,16 @@ jQuery(function ($) {
 
 						$form.hide();
 						widget.selectedListItem.element.prepend( $form );
+						widget.selectedListItem.element.height( "auto" );
 
 						var mySettings = ListKungFu.TinyMCEDefaultOptions;
 						mySettings.height = widget.element.find( "#list-item-wrapper" ).height() - 110;
+
 
 						$form.find( "textarea.editorarea" ).tinymce( mySettings );
 
 						widget._SetupDeadlineButton( $form );
 						widget._SetupCustomDeadlinePicker();
-
-						// only toggleFullsize if not already fullsize (when opening the editing dialog)
-						if ( elementAlreadyFullsize === false ) {
-							widget._ToggleFullsize( newElement );
-						}
 
 						// hide drag and drop handle
 						widget.selectedListItem.element.find( ".handle" ).hide();
@@ -1365,18 +1360,14 @@ jQuery(function ($) {
 										// correct height of drag and drop handle
 										newElement.find( ".handle" ).height( newElement.find( '.list-item-content' ).height() );
 
-										// only toggleFullsize if not already fullsize (when saving item)
-										if ( elementAlreadyFullsize === false ) {
-											widget._ToggleFullsize( newElement );
-										}
-
 										widget._SetSelectedListItem( newElement, json );
 										newElement.data( "data", json );
 
 										// show all the rows again
 										widget._Filter();
-
+										widget._CorrectHeight( newElement );
 										newElement.focus();
+
 									});
 								},
 								lists: widget.selectedListItem.data.list_item.list_id,
@@ -1399,11 +1390,6 @@ jQuery(function ($) {
 								widget.selectedListItem.element.find( ".list-item-content" ).show();
 								widget.selectedListItem.element.find( '.list-item-info' ).show();
 
-								// only toggleFullsize if not already fullsize (when canceling edit)
-								if ( elementAlreadyFullsize === false ) {
-									widget._ToggleFullsize( newElement );
-								}
-
 								// show again all other rows
 								widget._Filter();
 
@@ -1414,6 +1400,8 @@ jQuery(function ($) {
 									newElement.click();
 								}
 							});
+
+							widget._CorrectHeight( newElement );
 
 							return false;
 						});
@@ -1436,13 +1424,30 @@ jQuery(function ($) {
 				});
 			});
 
-			newElement.bind( 'keydown', 'l', function( e ) {
-				widget.toolbar.find( "#list-item-fullsize" ).effect('puff', {}, 300, function(){
-					widget.toolbar.find( '#list-item-fullsize' ).trigger( 'click' );
-					$( this ).show();
-				});
+			newElement.bind( 'keydown', 'return', function(){
+				newElement.trigger( 'show' );
 				return false;
 			});
+
+			newElement.bind( 'dblclick', function(){
+				newElement.trigger( 'show' );
+				return false;
+			});
+
+			newElement.bind( 'show', function(){
+				var anchor = widget.element;
+				var listItem = widget.selectedListItem.data;
+
+				// remove the list item view.
+				widget.RemoveList();
+
+				// show single list item.
+				anchor.ListItemShow( {
+					listItem: listItem
+				});
+
+			});
+
 
 			// code for drag and drop of item to new list.
 			if ( ListKungFu && ListKungFu.LayoutCenter ) {
@@ -1469,24 +1474,9 @@ jQuery(function ($) {
 			widget._CorrectHeight( newElement );
 		},
 
-		_ToggleFullsize: function ( element ) {
+		_CorrectHeight: function( element ) {
 			var widget = this;
-			if ( element.data( "isFullsize" ) === true ) {
-				widget._CorrectHeight( element, false );
-				element.data( "isFullsize", false );
-				widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons"
-					, { primary:'ui-icon-zoomin' } );
-			} else {
-				widget._CorrectHeight( element, true );
-				element.data( "isFullsize", true );
-				widget.toolbar.find( "#list-item-fullsize" ).button( "option", "icons"
-					, { primary:'ui-icon-zoomout' } );
-			}
-		},
-
-		_CorrectHeight: function( element, setToFullSize ) {
-			var widget = this;
-			if ( element.height() > 150 && !setToFullSize ) {
+			if ( element.height() > 150 ) {
 				element.height( 150 );
 			} else {
 				element.height( "auto" );
@@ -1642,7 +1632,6 @@ jQuery(function ($) {
 				'<button id="list-item-new">Create [shift+return]</button>',
 				'<button id="list-item-delete">Delete [del]</button>',
 				'<button id="list-item-edit">Edit [return]</button>',
-				'<button id="list-item-fullsize">Fullsize [l]</button>',
 				'<input type="checkbox" id="showCompleted"/>',
 				'<label for="showCompleted">Show Completed Items</label>',
 				'</div></div>'];
@@ -1680,13 +1669,6 @@ jQuery(function ($) {
 				}
 			});
 
-			widget.toolbar.find( "#list-item-fullsize" ).button({
-				text: false,
-				icons: {
-					primary: 'ui-icon-zoomin'
-				}
-			});
-
 			// bind events
 
 			widget.toolbar.find( "#list-item-new" ).bind( 'click', function( e ){
@@ -1720,11 +1702,7 @@ jQuery(function ($) {
 			});
 
 			widget.toolbar.find( "#list-item-edit" ).bind( 'click', function( e ) {
-				widget.selectedListItem.element.trigger( 'dblclick' );
-			});
-
-			widget.toolbar.find( "#list-item-fullsize" ).bind( 'click', function( e ) {
-				widget._ToggleFullsize( widget.selectedListItem.element );
+				widget.selectedListItem.element.trigger( 'edit' );
 			});
 
 			widget.header.append( widget.toolbar );
@@ -1876,9 +1854,22 @@ jQuery(function ($) {
 									 .unbind( "keyup", "f" );
 		},
 
+		destroy: function() {
+			var widget = this;
+
+			// remove elements
+			widget.element.children().remove();
+
+			// unbind global events
+			$( document ).unbind( "keydown" , "c" )
+				.unbind( "keyup", "f" );
+		},
+
 		OpenList: function( data ) {
 			var widget = this;
 			widget.RemoveList();
+			widget.element.ListItemShow( "destroy" );
+
 			widget._create();
 
 			widget.element.data( "data-list", data );
@@ -1930,17 +1921,6 @@ jQuery(function ($) {
 			} else {
 				widget.listItemList.find( '.row' ).first().effect( effect, {}, 300 ).focus();
 			}
-		},
-
-		destroy: function() {
-			var widget = this;
-
-			// remove elements
-			widget.element.children().remove();
-
-			// unbind global events
-			$( document ).unbind( "keydown" , "c" )
-				.unbind( "keyup", "f" );
 		},
 
 		Filter: function( selectedText ) {
@@ -2400,7 +2380,7 @@ jQuery(function ($) {
 				}).trigger('click');
 			});
 
-			newElement.bind( 'keydown', 'space', function(){
+			newElement.bind( 'keydown', 'e', function(){
 				widget.toolbar.find( "#list-edit" ).effect('puff', {}, 300, function(){
 					$(this).show();
 					$(this).trigger('click') });
@@ -6355,4 +6335,113 @@ $.fn.layout = function (opts) {
 	};
 	// register widget
 	$.widget("ui.UltimateSearch", UltimateSearch);
+})();
+(function(){
+	var ListItemShow = {
+
+		_CreateToolbar: function() {
+			var widget = this;
+			// empty header
+			widget.header.html("");
+
+			// build new header
+		 	var toolbarArr = ['<div id="list-item-show-toolbar">',
+				'<button id="back-to-list">Back [Alt+Backspace]</button>',
+				'<div style="clear:both">&nbsp;</div>',
+				'</div>'];
+
+			widget.toolbar = $( toolbarArr.join('') );
+
+			// create buttons
+			widget.toolbar.find( "#back-to-list" ).button({
+				text: false,
+				icons: {
+					primary: 'ui-icon-arrowthick-1-w'
+				}
+			});
+
+
+			// bind events
+
+			widget.toolbar.find( "#back-to-list" ).bind( 'click', function( e ){
+				widget.listItemElement.trigger( 'back-to-list' );
+			});
+
+			widget.header.append( widget.toolbar );
+		},
+
+		_create: function() {
+			// nothing
+		},
+
+		_init: function() {
+			var widget = this;
+
+			widget.element.children().remove();
+
+			widget.wrapper = $( '<div class="ui-layout-content" id="list-item-show-wrapper"></div>' );
+			widget.header = $( '<div id="list-item-show-header"></div>' );
+
+			widget.element.append( widget.header );
+			widget.element.append( widget.wrapper );
+
+			widget._CreateToolbar();
+
+			ListListItem.Show({
+				successCallback: function( template, json, status, xhr, errors ) {
+					var newElement = $( $.mustache( template, json.list_item ) );
+
+					newElement.data( 'data', json );
+
+					newElement.bind( 'keydown', 'alt+backspace', function(){
+						newElement.trigger( 'back-to-list' );
+					});
+
+					newElement.bind( 'back-to-list', function(){
+						var data = widget.listItemElement.data( 'data' );
+						widget.destroy();
+						widget.element.ListItemView( "OpenList", data.list_item );
+					});
+
+					if ( $.browser.msie ) {
+						newElement.bind( 'click', function() {
+							newElement.focus();
+							return false;
+						});
+					}
+
+					newElement.height( widget.element.height() - 60 );
+
+					widget.wrapper.append( newElement );
+					newElement.focus();
+
+					widget.listItemElement = newElement;
+
+				},
+				lists: widget.options.listItem.list_item.list_id,
+				list_items: widget.options.listItem.list_item.id
+			});
+		},
+
+/*
+Options
+*/
+		options: {
+			listItem: null
+		},
+
+
+/*
+Public functions
+*/
+
+		destroy: function() {
+			var widget = this;
+
+			// remove elements
+			widget.element.children().remove();
+		}
+	};
+	// register widget
+	$.widget("ui.ListItemShow", ListItemShow);
 })();
