@@ -55,7 +55,7 @@
 
 					newElement.data( 'data', json );
 
-					newElement.bind( 'keydown', 'alt+backspace', function(){
+					newElement.bind( 'keydown', 'left', function(){
 						newElement.trigger( 'back-to-list' );
 					});
 
