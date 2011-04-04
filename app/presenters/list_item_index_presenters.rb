@@ -12,6 +12,11 @@ module ListItemIndexPresenters
     def data
       @data = ListItem.all_scheduled_uncompleted( @user_id )
     end
+
+    def json
+      self.data.to_json( :include => :list,
+        :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date ])
+    end
   end
 
   class ListItemView
@@ -34,6 +39,12 @@ module ListItemIndexPresenters
       else # all uncompleted of a specific list
         @data = ListItem.all_list_uncompleted( @user_id, @list_id )
       end
+    end
+
+    def json
+      self.data.to_json( :include => :list,
+        :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date, :body_word_count ],
+        :except => [ :body ] )
     end
   end
 

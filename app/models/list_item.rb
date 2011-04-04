@@ -62,6 +62,16 @@ class ListItem < ActiveRecord::Base
     end
   end
 
+  def body_word_count
+    unless self.body.nil?
+      clear_text = Sanitize.clean( self.body )
+      length = clear_text.strip.split(/\S+/).size
+      length == 0 ? 1 : length
+    else
+      0
+    end
+  end
+
   def deadline_in_words
     get_deadline_category
   end

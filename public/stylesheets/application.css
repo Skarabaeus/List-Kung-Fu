@@ -256,7 +256,7 @@ button:focus, input[type=submit]:focus {
 	text-align:right;
 }
 
-.list-item-deadline {
+.list-item-info {
 	font-color:#888;
 	font-size:0.8em;
 }
