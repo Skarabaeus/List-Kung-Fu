@@ -49,7 +49,7 @@
 
 			ListListItem.Edit({
 				successCallback: function( template, json, status, xhr, errors ) {
-					widget.element.trigger( "beforeShowForm" );
+					widget.element.trigger( 'beforeEdit' );
 
 					var $form = $( template );
 					$form.hide();
@@ -85,7 +85,7 @@
 								$form.hide( 'slow', function( e ) {
 									widget.destroy();
 
-									widget.element.trigger( "afterHideForm", json );
+									widget.element.trigger( 'afterEdit', json );
 								});
 							},
 							lists: widget.options.listId,
@@ -98,7 +98,7 @@
 					$form.find( "#cancel-edit" ).bind( "keydown click", 'return', function( e ) {
 						e.preventDefault();
 						widget.destroy();
-						widget.element.trigger( "afterHideForm" );
+						widget.element.trigger( 'afterEdit' );
 
 						return false;
 					});

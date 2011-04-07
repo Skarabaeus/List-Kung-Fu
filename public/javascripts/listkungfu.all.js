@@ -1275,7 +1275,7 @@ jQuery(function ($) {
 				newElement.trigger( 'edit' );
 			});
 
-			newElement.bind( 'beforeShowForm', function(){
+			newElement.bind( 'beforeEdit', function(){
 				// hide all rows
 				widget.listItemList.find( '.row' ).hide();
 
@@ -1294,24 +1294,24 @@ jQuery(function ($) {
 				widget.selectedListItem.element.find( ".handle" ).hide();
 			});
 
-			newElement.bind( 'afterHideForm', function( e, json ) {
+			newElement.bind( 'afterEdit', function( e, json ) {
 				// show drag and drop handle
 				widget.selectedListItem.element.find( ".handle" ).show();
 
 				if ( json ) {
 					// update list item content
 					newElement.find( '.list-item-content' ).html( json.list_item.body );
-					
+
 					// update deadline
 					newElement.find( '.list-item-deadline' ).html( json.list_item.deadline_in_words );
 
 					widget._SetSelectedListItem( newElement, json );
 					newElement.data( "data", json );
 				}
-				
+
 				// correct height of drag and drop handle
 				newElement.find( ".handle" ).height( newElement.find( '.list-item-content' ).height() );
-				
+
 				newElement.find( '.list-item-content' ).show();
 				newElement.find( '.list-item-info' ).show();
 
@@ -6280,6 +6280,7 @@ $.fn.layout = function (opts) {
 			// build new header
 		 	var toolbarArr = ['<div id="list-item-show-toolbar">',
 				'<button id="back-to-list">Back [Alt+Backspace]</button>',
+				'<button id="list-item-edit">Edit [return]</button>',
 				'<div style="clear:both">&nbsp;</div>',
 				'</div>'];
 
@@ -6293,11 +6294,21 @@ $.fn.layout = function (opts) {
 				}
 			});
 
+			widget.toolbar.find( "#list-item-edit" ).button({
+				text: false,
+				icons: {
+					primary: 'ui-icon-pencil'
+				}
+			});
 
 			// bind events
 
-			widget.toolbar.find( "#back-to-list" ).bind( 'click', function( e ){
+			widget.toolbar.find( '#back-to-list' ).bind( 'click', function( e ){
 				widget.listItemElement.trigger( 'back-to-list' );
+			});
+
+			widget.toolbar.find( '#list-item-edit' ).bind( 'click', function( e ){
+				widget.listItemElement.trigger( 'edit' );
 			});
 
 			widget.header.append( widget.toolbar );
@@ -6320,20 +6331,52 @@ $.fn.layout = function (opts) {
 
 			widget._CreateToolbar();
 
+			widget.wrapper.bind( 'beforeEdit', function( e ){
+				widget.element.find( '#list-item-show-content' ).hide();
+			});
+
+			widget.wrapper.bind( 'afterEdit', function( e, json ){
+				if ( json ) {
+					widget.element.find( '#list-item-show-content' ).html( json.list_item.body );
+				}
+
+				widget.element.find( '#list-item-show-content' ).show().focus();
+			});
+
 			ListListItem.Show({
 				successCallback: function( template, json, status, xhr, errors ) {
 					var newElement = $( $.mustache( template, json.list_item ) );
 
 					newElement.data( 'data', json );
 
+					// bind events
+
 					newElement.bind( 'keydown', 'left', function(){
 						newElement.trigger( 'back-to-list' );
+					});
+
+					newElement.bind( 'keydown', 'return', function(){
+						widget.toolbar.find( "#list-item-edit" ).effect( 'puff', {}, 300, function(){
+							$( this ).show();
+						});
+						newElement.trigger( 'edit' );
 					});
 
 					newElement.bind( 'back-to-list', function(){
 						var data = widget.listItemElement.data( 'data' );
 						widget.destroy();
 						widget.element.ListItemView( "OpenList", data.list_item );
+					});
+
+					newElement.bind( 'edit', function(){
+						var data = widget.listItemElement.data( 'data' );
+
+						widget.element.find( '#list-item-show-wrapper' ).ListItemEdit({
+							height: widget.element.find( "#list-item-show-wrapper" ).height() - 70,
+							listId: data.list_item.list_id,
+							listItemId: data.list_item.id
+						});
+
 					});
 
 					if ( $.browser.msie ) {
@@ -6424,17 +6467,17 @@ Public functions
 
 		_init: function() {
 			var widget = this;
-			
+
 			widget.destroy();
-			
+
 			ListListItem.Edit({
 				successCallback: function( template, json, status, xhr, errors ) {
-					widget.element.trigger( "beforeShowForm" );
-					
+					widget.element.trigger( 'beforeEdit' );
+
 					var $form = $( template );
 					$form.hide();
-					
-					
+
+
 					widget.element.prepend( $form );
 					widget.element.height( "auto" );
 
@@ -6465,7 +6508,7 @@ Public functions
 								$form.hide( 'slow', function( e ) {
 									widget.destroy();
 
-									widget.element.trigger( "afterHideForm", json );
+									widget.element.trigger( 'afterEdit', json );
 								});
 							},
 							lists: widget.options.listId,
@@ -6478,7 +6521,7 @@ Public functions
 					$form.find( "#cancel-edit" ).bind( "keydown click", 'return', function( e ) {
 						e.preventDefault();
 						widget.destroy();
-						widget.element.trigger( "afterHideForm" );
+						widget.element.trigger( 'afterEdit' );
 
 						return false;
 					});

@@ -149,7 +149,7 @@
 				newElement.trigger( 'edit' );
 			});
 
-			newElement.bind( 'beforeShowForm', function(){
+			newElement.bind( 'beforeEdit', function(){
 				// hide all rows
 				widget.listItemList.find( '.row' ).hide();
 
@@ -168,7 +168,7 @@
 				widget.selectedListItem.element.find( ".handle" ).hide();
 			});
 
-			newElement.bind( 'afterHideForm', function( e, json ) {
+			newElement.bind( 'afterEdit', function( e, json ) {
 				// show drag and drop handle
 				widget.selectedListItem.element.find( ".handle" ).show();
 
