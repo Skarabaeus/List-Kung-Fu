@@ -75,7 +75,6 @@
 
 			var newElement = $( $.mustache( template, listItem.list_item ) );
 			newElement.data( "data", listItem );
-			newElement.data( "isFullsize", false );
 
 			if ( isFirst ) {
 				widget.listItemList.prepend(newElement);
@@ -106,7 +105,7 @@
 				return false;
 			});
 
-			newElement.bind( 'focus', function(e){
+			newElement.bind( 'focus', function( e ) {
 
 				if ( $( e.target ).hasClass( 'row' ) ) {
 
@@ -150,6 +149,52 @@
 				newElement.trigger( 'edit' );
 			});
 
+			newElement.bind( 'beforeShowForm', function(){
+				// hide all rows
+				widget.listItemList.find( '.row' ).hide();
+
+				// show only the row which the user wants to edit
+				widget.selectedListItem.element.show();
+
+				// hide content of selected list item
+				widget.selectedListItem.element.find( ".list-item-content" ).hide();
+				widget.selectedListItem.element.find( '.list-item-info' ).hide();
+
+				// remove select-row class; will be added again automatically
+				// once element gets back focus
+				widget.selectedListItem.element.removeClass( "selected-row" );
+
+				// hide drag and drop handle
+				widget.selectedListItem.element.find( ".handle" ).hide();
+			});
+
+			newElement.bind( 'afterHideForm', function( e, json ) {
+				// show drag and drop handle
+				widget.selectedListItem.element.find( ".handle" ).show();
+
+				if ( json ) {
+					// update list item content
+					newElement.find( '.list-item-content' ).html( json.list_item.body );
+
+					// update deadline
+					newElement.find( '.list-item-deadline' ).html( json.list_item.deadline_in_words );
+
+					widget._SetSelectedListItem( newElement, json );
+					newElement.data( "data", json );
+				}
+
+				// correct height of drag and drop handle
+				newElement.find( ".handle" ).height( newElement.find( '.list-item-content' ).height() );
+
+				newElement.find( '.list-item-content' ).show();
+				newElement.find( '.list-item-info' ).show();
+
+				// show all the rows again (considering the filter of cause)
+				widget._Filter();
+				widget._CorrectHeight( newElement );
+				newElement.focus();
+			});
+
 			newElement.bind( 'edit', function(){
 				// if we display already the form for this element,
 				// just exit.
@@ -162,129 +207,17 @@
 				});
 
 				// close all open forms
-				widget.listItemList.find( ".row" ).find( "form" ).remove();
+				//widget.listItemList.find( ".row" ).find( "form" ).remove();
+				widget.listItemList.find( ".row" ).ListItemEdit( "destroy" );
 
-				ListListItem.Edit({
-					successCallback: function( template, json, status, xhr, errors ) {
-						if ( $.browser.msie && newElement.find( "form" ).length > 0 ) {
-							return false;
-						}
-
-						var $form = $( template );
-						var elementAlreadyFullsize = newElement.data( "isFullsize" );
-
-						// hide all rows
-						widget.listItemList.find( '.row' ).hide();
-						// show only the row which the user wants to edit
-						widget.selectedListItem.element.show();
-
-						// hide content of selected list item
-						widget.selectedListItem.element.find( ".list-item-content" ).hide();
-						widget.selectedListItem.element.find( '.list-item-info' ).hide();
-
-						// remove select-row class; will be added again automatically
-						// once element gets back focus
-						widget.selectedListItem.element.removeClass( "selected-row" );
-
-
-						$form.hide();
-						widget.selectedListItem.element.prepend( $form );
-						widget.selectedListItem.element.height( "auto" );
-
-						var mySettings = ListKungFu.TinyMCEDefaultOptions;
-						mySettings.height = widget.element.find( "#list-item-wrapper" ).height() - 110;
-
-
-						$form.find( "textarea.editorarea" ).tinymce( mySettings );
-
-						widget._SetupDeadlineButton( $form );
-						widget._SetupCustomDeadlinePicker();
-
-						// hide drag and drop handle
-						widget.selectedListItem.element.find( ".handle" ).hide();
-
-						$form.show('slow', function(){
-							$form.find( "textarea" ).focus();
-						});
-
-						$form.find( ".deadline-button" ).bind( "keydown click", 'return', function( e ) {
-							e.preventDefault();
-							var serializedForm = newElement.find("form").serializeForm();
-
-							// add deadline indicator based on deadline type
-							serializedForm.list_item.deadlineType = $( e.target ).attr( 'data-deadline' );
-							serializedForm.list_item.customDeadlineValue = $( '#custom-deadline-value' ).val();
-
-							ListListItem.Update({
-								send: serializedForm,
-								successCallback: function( template, json, status, xhr, errors ){
-									$form.hide( 'slow', function( e ) {
-										$( this ).remove();
-
-										// show drag and drop handle
-										widget.selectedListItem.element.find( ".handle" ).show();
-
-										// update list item content
-										newElement.find( '.list-item-content' ).html( json.list_item.body ).show();
-										newElement.find( '.list-item-info' ).show();
-
-										// update deadline
-										newElement.find( '.list-item-deadline' ).html( json.list_item.deadline_in_words );
-
-										// correct height of drag and drop handle
-										newElement.find( ".handle" ).height( newElement.find( '.list-item-content' ).height() );
-
-										widget._SetSelectedListItem( newElement, json );
-										newElement.data( "data", json );
-
-										// show all the rows again
-										widget._Filter();
-										widget._CorrectHeight( newElement );
-										newElement.focus();
-
-									});
-								},
-								lists: widget.selectedListItem.data.list_item.list_id,
-								list_items: widget.selectedListItem.data.list_item.id
-							});
-
-							return false;
-						});
-
-						$form.find( "#cancel-edit" ).bind( "keydown click", 'return', function( e ) {
-							e.preventDefault();
-
-							// show drag and drop handle
-							widget.selectedListItem.element.find( ".handle" ).show();
-
-							$form.hide( 'slow', function() {
-								$( this ).remove();
-
-								// show content again
-								widget.selectedListItem.element.find( ".list-item-content" ).show();
-								widget.selectedListItem.element.find( '.list-item-info' ).show();
-
-								// show again all other rows
-								widget._Filter();
-
-								newElement.focus();
-
-								// msie needs the click for focusing the element
-								if ( $.browser.msie ) {
-									newElement.click();
-								}
-							});
-
-							widget._CorrectHeight( newElement );
-
-							return false;
-						});
-
-						return false;
-					},
-					lists: widget.selectedListItem.data.list_item.list_id,
-					list_items: widget.selectedListItem.data.list_item.id
+				widget.selectedListItem.element.ListItemEdit({
+					height: widget.element.find( "#list-item-wrapper" ).height() - 110,
+					listId: widget.selectedListItem.data.list_item.list_id,
+					listItemId: widget.selectedListItem.data.list_item.id
 				});
+
+
+
 			});
 
 			newElement.bind( 'keydown', 'left', function( e ){

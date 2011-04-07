@@ -10,7 +10,7 @@ src_dir = File.join( prefix, 'ListKungFu/public/javascripts' )
 build_dir = File.join( prefix, 'ListKungFu/lib/build' )
 dist_dir = File.join( prefix, 'ListKungFu/public/javascripts' )
 
-base_files = %w{application Controller jquery-rails jquery.ConfirmationDialog jquery.Dashboard jquery.hotkeys jquery.ListItemView jquery.ListView jquery.SerializeForm jquery.StatusBar json2 mustache jquery.layout-1.2.0 jquery.TagView jquery.UltimateSearch jQuery.ListItemShow}.map { |js| File.join( src_dir, "#{js}.js" ) }
+base_files = %w{application Controller jquery-rails jquery.ConfirmationDialog jquery.Dashboard jquery.hotkeys jquery.ListItemView jquery.ListView jquery.SerializeForm jquery.StatusBar json2 mustache jquery.layout-1.2.0 jquery.TagView jquery.UltimateSearch jquery.ListItemShow jquery.ListItemEdit}.map { |js| File.join( src_dir, "#{js}.js" ) }
 
 jq = File.join( dist_dir, "listkungfu.all.js" )
 jq_min = File.join( dist_dir, "listkungfu.all.min.js" )
