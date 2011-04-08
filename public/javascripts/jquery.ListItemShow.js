@@ -91,6 +91,10 @@
 						newElement.trigger( 'edit' );
 					});
 
+					newElement.bind( 'dblclick', function(){
+						newElement.trigger( 'edit' );
+					});
+
 					newElement.bind( 'back-to-list', function(){
 						var data = widget.listItemElement.data( 'data' );
 						widget.destroy();
