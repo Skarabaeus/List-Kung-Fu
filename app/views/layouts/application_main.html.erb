@@ -51,8 +51,8 @@
 	</div>
 
 	<% unless use_minified_javascript? %>
-		<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js' %>
-		<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.js' %>
+		<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.js' %>
+		<%= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js' %>
 
 		<%= javascript_include_tag 'jquery.SerializeForm', 'jquery.ConfirmationDialog' %>
 		<%= javascript_include_tag 'jquery.layout-1.2.0', 'json2', 'mustache', 'jquery.hotkeys' %>
@@ -61,8 +61,8 @@
 		<%= javascript_include_tag 'application' %>
 
 	<% else %>
-		<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js' %>
-		<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js' %>
+		<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js' %>
+		<%= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.js' %>
 		<%= javascript_include_tag 'tiny_mce/tiny_mce.js', 'tiny_mce/jquery.tinymce.js' %>
 		<%= javascript_include_tag 'listkungfu.all.min' %>
 	<% end %>
