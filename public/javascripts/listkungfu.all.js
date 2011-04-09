@@ -346,6 +346,10 @@ var Controller = function(spec, my) {
 			processData: true,
 			contentType: "application/json",
 			data: data,
+			beforeSend: function( xhr )
+			{
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+			},
 			success: function ( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
 			},
@@ -365,6 +369,10 @@ var Controller = function(spec, my) {
 			type: "GET",
 			processData: false,
 			contentType: "application/json",
+			beforeSend: function( xhr )
+			{
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+			},
 			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
 			},
@@ -384,6 +392,10 @@ var Controller = function(spec, my) {
 			type: "GET",
 			processData: false,
 			contentType: "application/json",
+			beforeSend: function( xhr )
+			{
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+			},
 			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
 			},
@@ -406,6 +418,10 @@ var Controller = function(spec, my) {
 			processData: false,
 			contentType: "application/json",
 			data: data,
+			beforeSend: function( xhr )
+			{
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+			},
 			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
 			},
@@ -425,6 +441,10 @@ var Controller = function(spec, my) {
 			type: "GET",
 			parseData: false,
 			contentType: "application/json",
+			beforeSend: function( xhr )
+			{
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+			},
 			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
 			},
@@ -453,6 +473,7 @@ var Controller = function(spec, my) {
 			beforeSend: function( xhr )
 			{
 				xhr.setRequestHeader("X-Http-Method-Override", "PUT");
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
 			},
 			success: function( data, status, xhr ) {
 				that.DefaultCallback( successCallback, data, status, xhr );
@@ -476,6 +497,7 @@ var Controller = function(spec, my) {
 			beforeSend: function(xhr)
 			{
 				xhr.setRequestHeader("X-Http-Method-Override", "DELETE");
+				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
 			},
 			success: function( data, status, xhr ){
 				that.DefaultCallback( successCallback, data, status, xhr );
