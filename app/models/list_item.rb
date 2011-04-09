@@ -56,7 +56,7 @@ class ListItem < ActiveRecord::Base
     # not ideal... how to i cut HTML without breaking it?
     unless self.body.nil?
       clear_text = Sanitize.clean( self.body )
-      clear_text[ 0..60 ]
+      clear_text[ 0..120 ]
     else
       ''
     end

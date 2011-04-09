@@ -854,6 +854,14 @@ jQuery(function ($) {
 				widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
 			});
 
+			$listItemHtml.find( '.full-content' ).bind( 'dblclick', function(){
+				widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
+			});
+
+			$listItemHtml.find( '.shortend-content' ).bind( 'dblclick', function(){
+				widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
+			});
+
 			$listItemHtml.find( '.full-content' ).bind( 'click', function( e ) {
 				$(this).hide();
 				$listItemHtml.find( '.shortend-content' ).show();
@@ -863,7 +871,6 @@ jQuery(function ($) {
 				$(this).hide();
 				$listItemHtml.find( '.full-content' ).show();
 			});
-
 
 			$listItemHtml.find( '.dashboard-item-completed' ).bind( 'click', function( e ){
 				$that = $( this );
