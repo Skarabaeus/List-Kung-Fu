@@ -6,6 +6,7 @@ class ListItemsController < ApplicationController
   respond_to :xml
 
   def index
+
     case params[ :show ]
     when "dashboard"
       @presenter = ListItemIndexPresenters::Dashboard.new( current_user.id )
@@ -13,12 +14,16 @@ class ListItemsController < ApplicationController
       @presenter = ListItemIndexPresenters::ListItemView.new( current_user.id, params[ :list_id ], params[ :show ] )
     end
 
-    respond_with( @list_items )
+    #if stale?( :etag => @presenter.data, :last_modified => @presenter.data.order( 'updated_at desc' ).first.updated_at.utc, :public => true )
+      respond_with( @presenter )
+    #end
   end
 
   def show
     @list_item = @list.list_items.find( params[ :id ] )
-    respond_with(@list_item)
+    if stale?( :etag => @list_item, :last_modified => @list_item.updated_at.utc, :public => true )
+      respond_with( @list_item )
+    end
   end
 
   def new
@@ -32,7 +37,6 @@ class ListItemsController < ApplicationController
 
   def edit
     @list_item = @list.list_items.find( params[ :id ] )
-
 
     respond_with( @list_item ) do |format|
       format.js
