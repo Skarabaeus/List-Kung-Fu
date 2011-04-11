@@ -1,7 +1,8 @@
 class ListsController < ApplicationController
 
 	before_filter :authenticate_user!
-
+  before_filter :set_cache_buster
+  
   respond_to :xml
 
   def index
