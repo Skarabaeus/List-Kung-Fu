@@ -14,9 +14,12 @@ class ListItemsController < ApplicationController
       @presenter = ListItemIndexPresenters::ListItemView.new( current_user.id, params[ :list_id ], params[ :show ] )
     end
 
-    #if stale?( :etag => @presenter.data, :last_modified => @presenter.data.order( 'updated_at desc' ).first.updated_at.utc, :public => true )
+    last_updated_item = get_last_updated_model( @presenter.data )
+    last_updated = last_updated_item.updated_at.utc
+
+    if stale?( :etag => last_updated_item, :last_modified => last_updated, :public => true )
       respond_with( @presenter )
-    #end
+    end
   end
 
   def show

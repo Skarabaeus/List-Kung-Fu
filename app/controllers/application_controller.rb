@@ -43,4 +43,11 @@ class ApplicationController < ActionController::Base
       session[:dev_javascript] = false
     end
   end
+
+  def get_last_updated_model( model_collection )
+    data_sorted = model_collection.sort do |x,y|
+      x.updated_at.utc <=> y.updated_at.utc
+    end
+    data_sorted.last
+  end
 end
