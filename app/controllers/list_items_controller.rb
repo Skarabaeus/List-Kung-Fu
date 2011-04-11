@@ -2,6 +2,7 @@ class ListItemsController < ApplicationController
 
   before_filter :authenticate_user!
   before_filter :load_list, :except => :index
+  before_filter :set_cache_buster
 
   respond_to :xml
 
