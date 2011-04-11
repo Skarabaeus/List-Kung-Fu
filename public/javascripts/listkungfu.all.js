@@ -346,7 +346,6 @@ var Controller = function(spec, my) {
 			processData: true,
 			contentType: "application/json",
 			data: data,
-			cache:false,
 			beforeSend: function( xhr )
 			{
 				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
@@ -370,7 +369,6 @@ var Controller = function(spec, my) {
 			type: "GET",
 			processData: false,
 			contentType: "application/json",
-			cache: false,
 			beforeSend: function( xhr )
 			{
 				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
@@ -394,7 +392,6 @@ var Controller = function(spec, my) {
 			type: "GET",
 			processData: false,
 			contentType: "application/json",
-			cache: false,
 			beforeSend: function( xhr )
 			{
 				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
@@ -421,7 +418,6 @@ var Controller = function(spec, my) {
 			processData: false,
 			contentType: "application/json",
 			data: data,
-			cache: false,
 			beforeSend: function( xhr )
 			{
 				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
@@ -445,7 +441,6 @@ var Controller = function(spec, my) {
 			type: "GET",
 			parseData: false,
 			contentType: "application/json",
-			cache: false,
 			beforeSend: function( xhr )
 			{
 				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
@@ -475,7 +470,6 @@ var Controller = function(spec, my) {
 			processData: false,
 			contentType: "application/json",
 			data: data,
-			cache: false,
 			beforeSend: function( xhr )
 			{
 				xhr.setRequestHeader("X-Http-Method-Override", "PUT");
@@ -500,7 +494,6 @@ var Controller = function(spec, my) {
 			type: "POST",
 			processData: false,
 			contentType: "application/json",
-			cache: false,
 			beforeSend: function(xhr)
 			{
 				xhr.setRequestHeader("X-Http-Method-Override", "DELETE");
