@@ -2,6 +2,9 @@ class ListItem < ActiveRecord::Base
   # ASSOCIATIONS
 
   belongs_to :list
+  after_save :update_list
+  after_destroy :update_list
+
 
   # for now not supporting this, because I'm not yet pursuated that
   # this feature is really needed. simple todo lists are more likely
@@ -91,6 +94,10 @@ class ListItem < ActiveRecord::Base
     else
       self.deadline.strftime('%Y-%m-%d')
     end
+  end
+
+  def update_list
+    self.list.save
   end
 
   private

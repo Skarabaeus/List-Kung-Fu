@@ -15,6 +15,8 @@ class List < ActiveRecord::Base
 
   attr_accessible :title
 
+  before_save :update_timestamp
+
   def tag_helper_color
     red, green, blue = 0, 0, 0
 
@@ -38,6 +40,13 @@ class List < ActiveRecord::Base
   def destroy_tag!( tag )
     self.tags.delete( tag )
     self.save
+  end
+
+  private
+
+  # ensure that the timestamp gets updated, even if no other attribute changes.
+  def update_timestamp
+    self.updated_at = Time.now
   end
 
 end
