@@ -13,6 +13,10 @@ module ListItemIndexPresenters
       @data = ListItem.all_scheduled_uncompleted( @user_id )
     end
 
+    def last_updated_utc
+      Time.now.utc
+    end
+
     def json
       self.data.to_json( :include => :list,
         :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date ])
@@ -24,13 +28,7 @@ module ListItemIndexPresenters
       @user_id = user_id
       @list_id = list_id
       @filter = list_filter
-    end
 
-    def template
-      @template = 'list_item.html'
-    end
-
-    def data
       case @filter
       when "all" # all of a specific list
         @data = ListItem.all_list( @user_id, @list_id )
@@ -39,6 +37,18 @@ module ListItemIndexPresenters
       else # all uncompleted of a specific list
         @data = ListItem.all_list_uncompleted( @user_id, @list_id )
       end
+    end
+
+    def template
+      @template = 'list_item.html'
+    end
+
+    def data
+      @data
+    end
+
+    def last_updated_utc
+      Time.now.utc
     end
 
     def json

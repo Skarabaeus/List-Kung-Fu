@@ -1564,7 +1564,7 @@ jQuery(function ($) {
 					successCallback: function( template, json, status, xhr, errors ) {
 
 						$.each( json, function( index, listItem ) {
-							widget.completedList.append("<div>" + listItem.list_item.body + "</div>");
+							widget.completedList.append("<div>" + listItem.list_item.body_shortend + "</div>");
 						});
 
 						if ( json.length === 0 ) {

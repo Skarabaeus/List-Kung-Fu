@@ -44,13 +44,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def get_last_updated_model( model_collection )
-    data_sorted = model_collection.sort do |x,y|
-      x.updated_at.utc <=> y.updated_at.utc
-    end
-    data_sorted.last
-  end
-
   def set_cache_buster
     #response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
     #response.headers["Pragma"] = "no-cache"

@@ -12,11 +12,16 @@ class ListItem < ActiveRecord::Base
 
   # SCOPES
 
-  scope( :all_scheduled_uncompleted, lambda { |user_id|
+  scope( :all_scheduled, lambda { |user_id|
     joins( :list ).
     includes( :list ).
     where( "list_items.deadline > ?", Time.zone.now.yesterday.end_of_day).
-    where( "lists.owner_id=? AND list_items.completed=? AND not list_items.deadline is ?", user_id, false, nil).
+    where( "lists.owner_id=? AND not list_items.deadline is ?", user_id, nil)
+  })
+
+  scope( :all_scheduled_uncompleted, lambda { |user_id|
+    all_scheduled( user_id ).
+    where( "list_items.completed=?", false ).
     order( "list_items.deadline asc" )
   })
 
