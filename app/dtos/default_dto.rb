@@ -1,10 +1,16 @@
 class DefaultDto
   
-  def initialize( header, data, errors )
-    @header = header
+  attr_reader :template, :data, :errors
+  
+  def initialize( template, data, errors )
     @data = data
     @errors = errors
   end
   
+  def initialize( presenter )
+    @template = presenter.template
+    @data = presenter.json
+    @errors = nil    
+  end
   
 end

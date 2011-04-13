@@ -2,7 +2,7 @@ class TagsController < ApplicationController
 
 	before_filter :authenticate_user!
 
-  respond_to :xml
+  respond_to :json
 
   def index
     @tags = current_user.tags.order( "name asc" )

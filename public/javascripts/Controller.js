@@ -132,7 +132,7 @@ var Controller = function(spec, my) {
 
 		var result = $.ajax({
 			url: that.baseURL + route,
-			dataType: "xml",
+			dataType: "json",
 			type: "GET",
 			processData: true,
 			contentType: "application/json",
@@ -156,7 +156,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route,
-			dataType: "xml",
+			dataType: "json",
 			type: "GET",
 			processData: false,
 			contentType: "application/json",
@@ -179,7 +179,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route + "/new",
-			dataType: "xml",
+			dataType: "json",
 			type: "GET",
 			processData: false,
 			contentType: "application/json",
@@ -204,7 +204,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route,
-			dataType: "xml",
+			dataType: "json",
 			type: "POST",
 			processData: false,
 			contentType: "application/json",
@@ -228,7 +228,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route + "/edit",
-			dataType: "xml",
+			dataType: "json",
 			type: "GET",
 			parseData: false,
 			contentType: "application/json",
@@ -256,7 +256,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route,
-			dataType: "xml",
+			dataType: "json",
 			type: "POST",
 			processData: false,
 			contentType: "application/json",
@@ -281,7 +281,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route,
-			dataType: "xml",
+			dataType: "json",
 			type: "POST",
 			processData: false,
 			contentType: "application/json",

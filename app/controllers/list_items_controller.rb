@@ -4,7 +4,7 @@ class ListItemsController < ApplicationController
   before_filter :load_list, :except => :index
   before_filter :set_cache_buster
 
-  respond_to :xml
+  respond_to :json
 
   def index
 
@@ -17,7 +17,7 @@ class ListItemsController < ApplicationController
 
     # don't use etag here, because it might not change (if the same item is edited multiple times)
     if stale?( :last_modified => @presenter.last_updated_utc, :public => true )
-      respond_with( @presenter )
+      respond_with( DefaultDto.new( @presenter ) )
     end
   end
 

@@ -9,13 +9,9 @@ module ListItemIndexPresenters
       @template = 'list_item_dashboard.html'
     end
 
-    def data
-      @data = ListItem.all_scheduled_uncompleted( @user_id )
-    end
-
     def last_updated_utc
       last_updated_item = ListItem.all_scheduled( @user_id ).order( 'lists.updated_at desc' ).first
-      unless last_updated_item.nil?
+      @last_updated_utc = unless last_updated_item.nil?
         last_updated_item.list.updated_at.utc
       else
         Time.now.utc
@@ -23,8 +19,14 @@ module ListItemIndexPresenters
     end
 
     def json
-      self.data.to_json( :include => :list,
-        :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date ])
+      ActiveSupport::JSON.decode( data.to_json( :include => :list,
+        :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date ]) )
+    end
+    
+    private
+    
+    def data
+      ListItem.all_scheduled_uncompleted( @user_id )
     end
   end
 
@@ -62,9 +64,9 @@ module ListItemIndexPresenters
     end
 
     def json
-      self.data.to_json( :include => :list,
+      ActiveSupport::JSON.decode( self.data.to_json( :include => :list,
         :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date, :body_word_count ],
-        :except => [ :body ] )
+        :except => [ :body ] ) )
     end
   end
 
