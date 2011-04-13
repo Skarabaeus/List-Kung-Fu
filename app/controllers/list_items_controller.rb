@@ -46,7 +46,19 @@ class ListItemsController < ApplicationController
   end
 
   def create
-    @list_item = ListItem.new( params[ :list_item ] )
+    @list_item = ListItem.new
+
+    # if we have an id here, that means the
+    # user dragged and dropped an existing list item
+    # to another list
+    existing_id = params[ :list_item ][ :id ]
+
+    @list_item.body = unless existing_id.nil?
+      ListItem.find( existing_id ).body
+    else
+      params[ :list_item ][ :body ]
+    end
+
     @list_item.list_id = @list.id
     @list_item.deadline = get_deadline
 

@@ -259,7 +259,10 @@
 			// code for drag and drop of item to new list.
 			if ( ListKungFu && ListKungFu.LayoutCenter ) {
 				newElement.draggable( {
-					helper: function(){ return $('<div class="list-item-drag-helper">'+newElement.find(".list-item-content").text().substring(0, 20)+' . . .'+'</div>').get(0) },
+					helper: function(){
+						return $('<div class="list-item-drag-helper">'+newElement
+							.find(".list-item-content").text().substring(0, 20)+' . . .'+'</div>').get(0)
+					},
 					appendTo: ListKungFu.LayoutCenter,
 					revert: "invalid",
 					handle: ".handle",
