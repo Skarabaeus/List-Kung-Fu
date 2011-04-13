@@ -14,7 +14,12 @@ module ListItemIndexPresenters
     end
 
     def last_updated_utc
-      ListItem.all_scheduled( @user_id ).order( 'lists.updated_at desc' ).first.list.updated_at.utc
+      last_updated_item = ListItem.all_scheduled( @user_id ).order( 'lists.updated_at desc' ).first
+      unless last_updated_item.nil?
+        last_updated_item.list.updated_at.utc
+      else
+        Time.now.utc
+      end
     end
 
     def json
@@ -48,7 +53,12 @@ module ListItemIndexPresenters
     end
 
     def last_updated_utc
-      @data.first.list.updated_at.utc
+      last_updated_item = @data.first
+      unless last_updated_item.nil?
+        last_updated_item.list.updated_at.utc
+      else
+        Time.now.utc
+      end
     end
 
     def json
