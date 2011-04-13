@@ -156,6 +156,12 @@ $(document).ready(function () {
 		OpenList: function( event, data ) {
 			ListKungFu.LayoutCenter.Dashboard( "Hide" );
 			ListKungFu.LayoutCenter.ListItemView( "OpenList", data.selectedList );
+		},
+		OpenListItem: function( event, data ) {
+			ListKungFu.LayoutCenter.Dashboard( "Hide" );
+			ListKungFu.LayoutCenter.ListItemShow( {
+				listItem: data.selectedListItem
+			});
 		}
 	});
 

@@ -156,6 +156,12 @@ $(document).ready(function () {
 		OpenList: function( event, data ) {
 			ListKungFu.LayoutCenter.Dashboard( "Hide" );
 			ListKungFu.LayoutCenter.ListItemView( "OpenList", data.selectedList );
+		},
+		OpenListItem: function( event, data ) {
+			ListKungFu.LayoutCenter.Dashboard( "Hide" );
+			ListKungFu.LayoutCenter.ListItemShow( {
+				listItem: data.selectedListItem
+			});
 		}
 	});
 
@@ -877,7 +883,7 @@ jQuery(function ($) {
 			});
 
 			$listItemHtml.find( '.full-content' ).bind( 'dblclick', function(){
-				widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
+				widget._trigger( "OpenListItem", 0, { selectedListItem: listItem } );
 			});
 
 			$listItemHtml.find( '.shortend-content' ).bind( 'dblclick', function(){
