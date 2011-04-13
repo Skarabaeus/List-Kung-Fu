@@ -174,7 +174,7 @@
 
 				if ( json ) {
 					// update list item content
-					newElement.find( '.list-item-content' ).html( json.list_item.body );
+					newElement.find( '.list-item-content' ).html( json.list_item.body_shortend );
 
 					// update deadline
 					newElement.find( '.list-item-deadline' ).html( json.list_item.deadline_in_words );
