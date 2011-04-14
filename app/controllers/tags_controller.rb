@@ -6,29 +6,24 @@ class TagsController < ApplicationController
 
   def index
     @tags = current_user.tags.order( "name asc" )
-    respond_with(@tags)
+    respond_with( DefaultDto.new( :template => 'tags-tag',
+      :data => @tags ) )
   end
 
   def show
     @tag = current_user.tags.where( "id = ?", params[:id] ).first
-    respond_with(@tag)
+    respond_with( DefaultDto.new( :template => '', :data => @tag ) )
   end
 
   def new
     @tag = Tag.new
     @tag.user = current_user
-
-    respond_with( @tag ) do |format|
-      format.js
-    end
+    respond_with( DefaultDto.new( :template => 'tags-form', :data => @tag ) )
   end
 
   def edit
     @tag = current_user.tags.where( "id = ?", params[:id] ).first
-
-    respond_with( @tag ) do |format|
-      format.js
-    end
+    respond_with( DefaultDto.new( :template => 'tags-form', :data => @tag ) )
   end
 
   def create
@@ -39,7 +34,9 @@ class TagsController < ApplicationController
       flash[:notice] = 'Tag has been created.'
     end
 
-    respond_with( @tag )
+    respond_with( DefaultDto.new( :template => 'tags-tag',
+      :data => @tag,
+      :errors => @tag.errors ) )
   end
 
   def update
@@ -59,14 +56,15 @@ class TagsController < ApplicationController
       flash[:notice] = flash_notice
     end
 
-    respond_with( @tag )
+    respond_with( DefaultDto.new( :template => 'tags-tag',
+      :data => @tag,
+      :errors => @tag.errors ) )
   end
 
   def destroy
     @tag = current_user.tags.where( "id = ?", params[:id] ).first
     @tag.destroy
-
-    respond_with( @tag )
+    respond_with( DefaultDto.new( :template => '', :data => @tag, :errors => @tag.errors ) )
   end
 
 

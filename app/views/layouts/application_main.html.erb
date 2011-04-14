@@ -73,8 +73,14 @@
 	<script id="lists-list" type="text/html">
 		<%= render "lists/list.html" %>
 	</script>
-	<script id="lists-form">
+	<script id="lists-form" type="texst/html">
 		<%= render( :partial => 'lists/form.html', :locals => { :list => List.new } ) %>
+	</script>
+	<script id="tags-tag" type="text/html">
+		<%= render "tags/tag.html" %>
+	</script>
+	<script id="tags-form" type="text/html">
+		<%= render "tags/form.html" %>
 	</script>
 	<%= javascript_tag do %>
       try {
