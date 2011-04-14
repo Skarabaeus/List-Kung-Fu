@@ -2,7 +2,7 @@ class ListsController < ApplicationController
 
 	before_filter :authenticate_user!
   before_filter :set_cache_buster
-  
+
   respond_to :json
 
   def index
@@ -17,7 +17,7 @@ class ListsController < ApplicationController
   def new
     @list = List.new
 
-    respond_with( DefaultDto.new( :template => 'lists-form', 
+    respond_with( DefaultDto.new( :template => 'lists-form',
       :data => @list.to_json( :methods => [ :tag_helper_color ] ) ) )
   end
 
@@ -25,7 +25,7 @@ class ListsController < ApplicationController
     @list = current_user.lists.find( params[:id] )
 
 
-    respond_with( DefaultDto.new( :template => 'lists-form', 
+    respond_with( DefaultDto.new( :template => 'lists-form',
       :data => @list.to_json( :methods => [ :tag_helper_color ] ) ) )
   end
 
@@ -37,9 +37,12 @@ class ListsController < ApplicationController
       flash[:notice] = 'List has been created.'
     end
 
-    respond_with( DefaultDto.new( :template => 'lists-list',
-      :data => @list.to_json( :methods => [ :tag_helper_color ] ),
-      :errors => @list.errors ) )
+    respond_to do |format|
+      format.js { render :json => DefaultDto.new( :template => 'lists-list',
+        :data => @list.to_json( :methods => [ :tag_helper_color ] ),
+        :errors => @list.errors ), :status => :created }
+    end
+
   end
 
   def update
