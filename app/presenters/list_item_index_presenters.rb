@@ -6,7 +6,7 @@ module ListItemIndexPresenters
     end
 
     def template
-      @template = 'list_item_dashboard.html'
+      @template = 'list_items-list_item_dashboard'
     end
 
     def last_updated_utc
@@ -19,8 +19,8 @@ module ListItemIndexPresenters
     end
 
     def json
-      ActiveSupport::JSON.decode( data.to_json( :include => :list,
-        :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date ]) )
+      data.to_json( :include => :list,
+        :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date ])
     end
     
     private
@@ -64,9 +64,9 @@ module ListItemIndexPresenters
     end
 
     def json
-      ActiveSupport::JSON.decode( self.data.to_json( :include => :list,
+      self.data.to_json( :include => :list,
         :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date, :body_word_count ],
-        :except => [ :body ] ) )
+        :except => [ :body ] )
     end
   end
 

@@ -17,7 +17,7 @@ class ListItemsController < ApplicationController
 
     # don't use etag here, because it might not change (if the same item is edited multiple times)
     if stale?( :last_modified => @presenter.last_updated_utc, :public => true )
-      respond_with( DefaultDto.new( @presenter ) )
+      respond_with( DefaultDto.new( :presenter => @presenter ) )
     end
   end
 

@@ -66,8 +66,16 @@
 		<%= javascript_include_tag 'tiny_mce/tiny_mce.js', 'tiny_mce/jquery.tinymce.js' %>
 		<%= javascript_include_tag 'listkungfu.all.min' %>
 	<% end %>
-
-
+	
+	<script id="list_items-list_item_dashboard" type="text/html">
+		<%= render "list_items/list_item_dashboard.html" %>
+	</script>
+	<script id="lists-list" type="text/html">
+		<%= render "lists/list.html" %>
+	</script>
+	<script id="lists-form">
+		<%= render( :partial => 'lists/form.html', :locals => { :list => List.new } ) %>
+	</script>
 	<%= javascript_tag do %>
       try {
           var pageTracker = _gat._getTracker("UA-9672233-3");

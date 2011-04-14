@@ -7,39 +7,39 @@ class ListsController < ApplicationController
 
   def index
     @lists = current_user.lists.order( "created_at desc" )
-    respond_with(@lists)
-  end
-
-  def show
-    @list = current_user.lists.find( params[:id] )
-    respond_with(@list)
+    respond_with( DefaultDto.new( :template => 'lists-list', :data => @lists.to_json( :methods => [ :tag_helper_color ],
+      :include => { :tags => {
+         :only => [ :id, :name ],
+         :methods => [ :color_rgb, :foreground_color_rgb ] }
+        }) ) )
   end
 
   def new
     @list = List.new
 
-    respond_with( @list ) do |format|
-      format.js
-    end
+    respond_with( DefaultDto.new( :template => 'lists-form', 
+      :data => @list.to_json( :methods => [ :tag_helper_color ] ) ) )
   end
 
   def edit
     @list = current_user.lists.find( params[:id] )
 
-    respond_with( @list ) do |format|
-      format.js
-    end
+
+    respond_with( DefaultDto.new( :template => 'lists-form', 
+      :data => @list.to_json( :methods => [ :tag_helper_color ] ) ) )
   end
 
   def create
-    @list = List.new(params[:list])
+    @list = List.new( params[:list] )
     @list.owner = current_user
 
     if @list.save
       flash[:notice] = 'List has been created.'
     end
 
-    respond_with( @list )
+    respond_with( DefaultDto.new( :template => 'lists-list',
+      :data => @list.to_json( :methods => [ :tag_helper_color ] ),
+      :errors => @list.errors ) )
   end
 
   def update
@@ -69,13 +69,21 @@ class ListsController < ApplicationController
       flash[:notice] = flash_notice
     end
 
-    respond_with( @list )
+    respond_with( DefaultDto.new( :template => 'lists-list',
+      :data => @list.to_json( :methods => [ :tag_helper_color ],
+        :include => { :tags => {
+           :only => [ :id, :name ],
+           :methods => [ :color_rgb, :foreground_color_rgb ] }
+          }),
+      :errors => @list.errors ) )
   end
 
   def destroy
     @list = current_user.lists.find( params[:id] )
     @list.destroy
 
-    respond_with( @list )
+    respond_with( DefaultDto.new( :template => '',
+      :data => @list,
+      :errors => @list.errors ) )
   end
 end

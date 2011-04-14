@@ -68,9 +68,9 @@ var Controller = function(spec, my) {
 	that.DefaultCallback = function( callback, data, status, xhr ) {
 		that.SetFlash( xhr );
 
-		var json = $.parseJSON( $( data ).find( 'JSON' ).text() );
-		var template = $( data ).find( 'Template' ).text();
-		var errors = ConstructErrorObj( $( data ).find( 'Error' ) );
+		var json = data.data;
+		var template = $( "#" + data.template ).html();
+		var errors = ConstructErrorObj( data.errors );
 
 
 		if ( typeof( callback ) === 'function' ) {
