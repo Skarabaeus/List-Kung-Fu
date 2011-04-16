@@ -72,13 +72,15 @@ class ListsController < ApplicationController
       flash[:notice] = flash_notice
     end
 
-    respond_with( DefaultDto.new( :template => 'lists-list',
-      :data => @list.to_json( :methods => [ :tag_helper_color ],
-        :include => { :tags => {
-           :only => [ :id, :name ],
-           :methods => [ :color_rgb, :foreground_color_rgb ] }
-          }),
-      :errors => @list.errors ) )
+    respond_to do |format|
+      format.js { render :json => DefaultDto.new( :template => 'lists-list',
+        :data => @list.to_json( :methods => [ :tag_helper_color ],
+          :include => { :tags => {
+             :only => [ :id, :name ],
+             :methods => [ :color_rgb, :foreground_color_rgb ] }
+            }),
+        :errors => @list.errors ) }
+    end
   end
 
   def destroy

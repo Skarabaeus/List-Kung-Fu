@@ -226,7 +226,7 @@
 					List.New({
 						successCallback: function( template, json, status, xhr, errors ) {
 							widget.emptyListImage.hide();
-							widget.listForm.append( template );
+							widget.listForm.append( $.mustache( template, json.list ) );
 							widget.listForm.show('slide', { direction: 'left' }, 'slow', function(){
 								widget.listForm.find('#list_title').first().focus();
 							});
@@ -291,7 +291,7 @@
 					// HTML of the form.
 					List.Edit({
 						successCallback: function( template, json, status, xhr, errors ) {
-							widget.listForm.append( template );
+							widget.listForm.append( $( $.mustache( template, json.list ) ) );
 							widget.listForm.show('slide', { direction: 'left' }, 'slow', function(){
 								widget.listForm.find( '#list_title' ).first().focus();
 							});

@@ -48,7 +48,7 @@ var Controller = function(spec, my) {
 
 		var json = data.data;
 		var template = '';
-		if ( data.template.trim() !== '' ) {
+		if ( data.template && data.template.trim() !== '' ) {
 			template = $( "#" + data.template ).html();
 		}
 		var errors = data.errors;
