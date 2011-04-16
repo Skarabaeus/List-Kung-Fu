@@ -98,26 +98,22 @@
 		},
 
 		_HighlightFormErrors: function( form, errors ) {
-			for ( var model in errors ) {
-				var currentModel = errors[ model ];
+			for ( var field in errors ) {
+				var currentField = errors[ field ];
 
-				for ( var field in currentModel ) {
-					var currentField = currentModel[ field ];
+				var errorExplanation = $( '<div class="error_explanation"><ul></ul></div>' );
+				var errorList = errorExplanation.find( "ul" );
 
-					var errorExplanation = $( '<div class="error_explanation"><ul></ul></div>' );
-					var errorList = errorExplanation.find( "ul" );
+				var input = $('*[name*="' + field + '"]');
 
-					var name = model + "[" + field + "]";
-					var input = form.find( "*[name=" + name + "]" );
-
-					for (var i = 0; i < currentField.length; i++ ) {
-						input.parent( ".field" ).addClass( "field_with_errors" );
-						errorList.append( '<li>' + currentField[ i ] + '</li>' );
-					}
-
-					input.parent( ".field" ).append( errorExplanation );
+				for ( var i = 0; i < currentField.length; i++ ) {
+					input.parent( ".field" ).addClass( "field_with_errors" );
+					errorList.append( '<li>' + currentField[ i ] + '</li>' );
 				}
+
+				input.parent( ".field" ).append( errorExplanation );
 			}
+
 		},
 
 		_ClearFormErrors: function( form ) {

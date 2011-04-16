@@ -4,11 +4,12 @@ class DefaultDto
 
   def initialize( args )
 
+
     if args.has_key?( :presenter )
       presenter = args[ :presenter ]
       @template = presenter.template
       @data = ActiveSupport::JSON.decode( presenter.json )
-      @errors = ''
+      @errors = false
     end
 
     if args.has_key?( :template ) and args.has_key?( :data )
@@ -19,12 +20,13 @@ class DefaultDto
         @data = data
       end
       @template = args[ :template ]
-      
+
       if args.has_key?( :errors )
-        @errors = args[ :errors ]
+        @errors = args[ :errors ].length == 0 ? false : args[ :errors ]
       else
-        @errors = ''
+        @errors = false
       end
+
     end
 
   end

@@ -85,8 +85,8 @@ class ListsController < ApplicationController
     @list = current_user.lists.find( params[:id] )
     @list.destroy
 
-    respond_with( DefaultDto.new( :template => '',
-      :data => @list,
-      :errors => @list.errors ) )
+    respond_to do |format|
+      format.js { render :json => DefaultDto.new( :template => '', :data => {} ) }
+    end
   end
 end
