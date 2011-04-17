@@ -8,7 +8,11 @@ class DefaultDto
     if args.has_key?( :presenter )
       presenter = args[ :presenter ]
       @template = presenter.template
-      @data = ActiveSupport::JSON.decode( presenter.json )
+      begin
+        @data = ActiveSupport::JSON.decode( presenter.json )
+      rescue Exception #which exception exception is thrown here?
+        @data = []
+      end
       @errors = false
     end
 

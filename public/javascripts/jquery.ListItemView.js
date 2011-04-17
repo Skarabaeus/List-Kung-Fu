@@ -210,14 +210,13 @@
 				//widget.listItemList.find( ".row" ).find( "form" ).remove();
 				widget.listItemList.find( ".row" ).ListItemEdit( "destroy" );
 
-				widget.selectedListItem.element.ListItemEdit({
-					height: widget.element.find( "#list-item-wrapper" ).height() - 110,
-					listId: widget.selectedListItem.data.list_item.list_id,
-					listItemId: widget.selectedListItem.data.list_item.id
-				});
-
-
-
+				if ( widget.selectedListItem ) {
+					widget.selectedListItem.element.ListItemEdit({
+						height: widget.element.find( "#list-item-wrapper" ).height() - 110,
+						listId: widget.selectedListItem.data.list_item.list_id,
+						listItemId: widget.selectedListItem.data.list_item.id
+					});
+				}
 			});
 
 			newElement.bind( 'keydown', 'left', function( e ){
@@ -512,7 +511,9 @@
 			});
 
 			widget.toolbar.find( "#list-item-edit" ).bind( 'click', function( e ) {
-				widget.selectedListItem.element.trigger( 'edit' );
+				if ( widget.selectedListItem ) {
+					widget.selectedListItem.element.trigger( 'edit' );
+				}
 			});
 
 			widget.header.append( widget.toolbar );
@@ -533,7 +534,7 @@
 						return false;
 					}
 
-					var $form = $( template );
+					var $form = $( $.mustache( template, json.list_item ) );
 					widget.listItemList.prepend( $form );
 
 					widget._SetupDeadlineButton( $form );

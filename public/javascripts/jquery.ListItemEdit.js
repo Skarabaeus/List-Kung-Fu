@@ -51,7 +51,7 @@
 				successCallback: function( template, json, status, xhr, errors ) {
 					widget.element.trigger( 'beforeEdit' );
 
-					var $form = $( template );
+					var $form = $( $.mustache( template, json.list_item ) );
 					$form.hide();
 
 

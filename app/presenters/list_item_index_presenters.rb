@@ -22,9 +22,9 @@ module ListItemIndexPresenters
       data.to_json( :include => :list,
         :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date ])
     end
-    
+
     private
-    
+
     def data
       ListItem.all_scheduled_uncompleted( @user_id )
     end
@@ -47,7 +47,7 @@ module ListItemIndexPresenters
     end
 
     def template
-      @template = 'list_item.html'
+      @template = 'list_items-list_item'
     end
 
     def data

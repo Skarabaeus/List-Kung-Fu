@@ -35,10 +35,7 @@ var Controller = function(spec, my) {
 				spec.onFlashUpdate( that.flash.notice, that.flash.error, that.flash.warning, that.flash.message );
 			}
 		}
-
 	};
-
-
 
 	that.baseURL = spec.base_url || GetDefaultBaseUrl();
 	that.route = spec.route;
@@ -53,6 +50,13 @@ var Controller = function(spec, my) {
 		}
 		var errors = data.errors;
 
+		// extend data object
+		if ( !$.isArray( json ) ) {
+			for ( var propertyName in json ) {
+				json[ propertyName ].isSaved = (json[ propertyName ].id && json[ propertyName ].id !== null) ? true : false;
+				json[ propertyName ].isNew = (json[ propertyName ].id && json[ propertyName ].id !== null) ? false : true;
+			}
+		}
 
 		if ( typeof( callback ) === 'function' ) {
 			callback( template, json , status, xhr, errors );

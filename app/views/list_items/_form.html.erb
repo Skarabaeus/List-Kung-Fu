@@ -1,38 +1,21 @@
 <%= form_for( list_item, :remote => true ) do |f| %>
-  <% unless list_item.saved? %>
+  {{#isNew}}
 		<p>Add New Item:</p>
-	<% end %>
-	<% if list_item.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(list_item.errors.count, "error") %> prohibited this list item from being saved:</h2>
-
-      <ul>
-      <% list_item.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+	{{/isNew}}
 
 	<div class="actions">
-		<% if list_item.saved? %>
+		{{#isSaved}}
 			<button id="keepit" class="deadline-button" tabindex="10005" data-deadline="keepit">Save</button>
-		<% else %>
-			<button id="save-whenever" class="deadline-button" tabindex="10002" data-deadline="whenever">Save Without Deadline</button>
-		<% end %>
-		<% if list_item.saved? %>
 			<button id="save-deadline" tabindex="10010">Save With New Deadline</button>
-		<% else %>
-			<button id="save-deadline" tabindex="10010">Save With Deadline</button>
-		<% end %>
-		<% if list_item.saved? and !list_item.deadline.nil? %>
 			<button id="save-whenever" class="deadline-button" tabindex="10011" data-deadline="whenever">Whenever</button>
-		<% end %>
-		<% if list_item.saved? %>
 			<button id="cancel-edit" tabindex="10100">Don't change anything</button>
-		<% else %>
+		{{/isSaved}}
+		{{#isNew}}
+			<button id="save-whenever" class="deadline-button" tabindex="10002" data-deadline="whenever">Save Without Deadline</button>
+			<button id="save-deadline" tabindex="10010">Save With Deadline</button>
 			<button id="cancel-edit" tabindex="10100">Don't create this item</button>
-		<% end %>
+		{{/isNew}}
+
   </div>
 
 	<div id="deadline-settings-wrapper">
@@ -52,7 +35,7 @@
 	</div>
 
   <div class="field">
-    <%= f.text_area :body, :tabindex => 10001, :class => 'editorarea' %>
+    <%= f.text_area :body, :tabindex => 10001, :class => 'editorarea', :value => '{{body}}' %>
 	</div>
 
 	<div style="clear:both">&nbsp;</div>

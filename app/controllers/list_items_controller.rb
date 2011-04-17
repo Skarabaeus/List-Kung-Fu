@@ -24,7 +24,9 @@ class ListItemsController < ApplicationController
   def show
     @list_item = @list.list_items.find( params[ :id ] )
     if stale?( :etag => @list_item, :last_modified => @list_item.updated_at.utc, :public => true )
-      respond_with( @list_item )
+      respond_with( DefaultDto.new( :data => @list_item.to_json( :include => :list,
+        :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date ] ),
+        :template => 'list_items-show' ) )
     end
   end
 
@@ -32,17 +34,17 @@ class ListItemsController < ApplicationController
     @list_item = ListItem.new
     @list_item.list_id = @list.id
 
-    respond_with( @list_item ) do |format|
-      format.js
+    respond_to do |format|
+      format.js { render :json => DefaultDto.new( :template => 'list_items-form',
+        :data => @list_item.to_json( :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date ] ) ) }
     end
   end
 
   def edit
     @list_item = @list.list_items.find( params[ :id ] )
 
-    respond_with( @list_item ) do |format|
-      format.js
-    end
+    respond_with( DefaultDto.new( :template => 'list_items-form',
+      :data => @list_item.to_json( :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date ] ) ) )
   end
 
   def create
@@ -66,7 +68,11 @@ class ListItemsController < ApplicationController
       flash[:notice] = 'List Item has been created.'
     end
 
-    respond_with( @list_item )
+    respond_to do |format|
+      format.js { render :json  => DefaultDto.new( :template => 'list_items-list_item',
+        :data => @list_item.to_json( :methods => [ :deadline_category, :deadline_in_words, :body_shortend, :deadline_date ] ) ),
+        :status => :created }
+    end
   end
 
   def update
@@ -86,14 +92,18 @@ class ListItemsController < ApplicationController
       flash[:notice] = 'List Item has been updated.'
     end
 
-    respond_with( @list_item )
+    respond_to do |format|
+      format.js { render :json => DefaultDto.new( :presenter => @presenter ) }
+    end
   end
 
   def destroy
     @list_item = @list.list_items.find( params[ :id ] )
     @list_item.destroy
 
-    respond_with( @list_item )
+    respond_to do |format|
+      format.js { render :json => DefaultDto.new( :template => '', :data => {} ) }
+    end
   end
 
   private

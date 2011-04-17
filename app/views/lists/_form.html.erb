@@ -4,7 +4,12 @@
     <%= f.text_field :title, :tabindex => 10001, :value => '{{title}}' %>
   </div>
   <div class="actions">
-    <%= f.submit :tabindex => 10003 %>
+		{{#isNew}}
+			<%= f.submit :tabindex => 10003, :value => 'Create' %>
+		{{/isNew}}
+		{{#isSaved}}
+			<%= f.submit :tabindex => 10003, :value => 'Update' %>
+		{{/isSaved}}
 		<button id="list-back-button" tabindex="10004">Back</button>
   </div>
 <% end %>
