@@ -226,28 +226,6 @@ var Controller = function(spec, my) {
 		return protocol + hostname + port + "/";
 	};
 
-	var ConstructErrorObj = function( errors ) {
-		var errorObj = $( errors ).length > 0 ? {} : false;
-
-		$( errors ).each(function( index, error ){
-			var model = $( error ).attr( "model" );
-			var field = $( error ).attr( "field" );
-			var message = $( error ).text();
-
-			// init model
-			errorObj[ model ] = errorObj[ model ] || {};
-
-			// init field
-			errorObj[ model ][ field ] = errorObj[ model ][ field ] || [];
-
-			// push current error message
-			errorObj[ model ][ field ].push( message );
-
-		});
-
-		return errorObj;
-	};
-
 	that.ClearFlash = function() {
 		that.flash = {
 			notice: "",
@@ -272,10 +250,7 @@ var Controller = function(spec, my) {
 				spec.onFlashUpdate( that.flash.notice, that.flash.error, that.flash.warning, that.flash.message );
 			}
 		}
-
 	};
-
-
 
 	that.baseURL = spec.base_url || GetDefaultBaseUrl();
 	that.route = spec.route;
@@ -283,10 +258,20 @@ var Controller = function(spec, my) {
 	that.DefaultCallback = function( callback, data, status, xhr ) {
 		that.SetFlash( xhr );
 
-		var json = $.parseJSON( $( data ).find( 'JSON' ).text() );
-		var template = $( data ).find( 'Template' ).text();
-		var errors = ConstructErrorObj( $( data ).find( 'Error' ) );
+		var json = data.data;
+		var template = '';
+		if ( data.template && data.template.trim() !== '' ) {
+			template = $( "#" + data.template ).html();
+		}
+		var errors = data.errors;
 
+		// extend data object
+		if ( !$.isArray( json ) ) {
+			for ( var propertyName in json ) {
+				json[ propertyName ].isSaved = (json[ propertyName ].id && json[ propertyName ].id !== null) ? true : false;
+				json[ propertyName ].isNew = (json[ propertyName ].id && json[ propertyName ].id !== null) ? false : true;
+			}
+		}
 
 		if ( typeof( callback ) === 'function' ) {
 			callback( template, json , status, xhr, errors );
@@ -347,7 +332,7 @@ var Controller = function(spec, my) {
 
 		var result = $.ajax({
 			url: that.baseURL + route,
-			dataType: "xml",
+			dataType: "json",
 			type: "GET",
 			processData: true,
 			contentType: "application/json",
@@ -371,7 +356,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route,
-			dataType: "xml",
+			dataType: "json",
 			type: "GET",
 			processData: false,
 			contentType: "application/json",
@@ -394,7 +379,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route + "/new",
-			dataType: "xml",
+			dataType: "json",
 			type: "GET",
 			processData: false,
 			contentType: "application/json",
@@ -419,7 +404,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route,
-			dataType: "xml",
+			dataType: "json",
 			type: "POST",
 			processData: false,
 			contentType: "application/json",
@@ -443,7 +428,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route + "/edit",
-			dataType: "xml",
+			dataType: "json",
 			type: "GET",
 			parseData: false,
 			contentType: "application/json",
@@ -471,7 +456,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route,
-			dataType: "xml",
+			dataType: "json",
 			type: "POST",
 			processData: false,
 			contentType: "application/json",
@@ -496,7 +481,7 @@ var Controller = function(spec, my) {
 
 		$.ajax({
 			url: that.baseURL + route,
-			dataType: "xml",
+			dataType: "json",
 			type: "POST",
 			processData: false,
 			contentType: "application/json",
@@ -1371,14 +1356,13 @@ jQuery(function ($) {
 				//widget.listItemList.find( ".row" ).find( "form" ).remove();
 				widget.listItemList.find( ".row" ).ListItemEdit( "destroy" );
 
-				widget.selectedListItem.element.ListItemEdit({
-					height: widget.element.find( "#list-item-wrapper" ).height() - 110,
-					listId: widget.selectedListItem.data.list_item.list_id,
-					listItemId: widget.selectedListItem.data.list_item.id
-				});
-
-
-
+				if ( widget.selectedListItem ) {
+					widget.selectedListItem.element.ListItemEdit({
+						height: widget.element.find( "#list-item-wrapper" ).height() - 110,
+						listId: widget.selectedListItem.data.list_item.list_id,
+						listItemId: widget.selectedListItem.data.list_item.id
+					});
+				}
 			});
 
 			newElement.bind( 'keydown', 'left', function( e ){
@@ -1420,7 +1404,10 @@ jQuery(function ($) {
 			// code for drag and drop of item to new list.
 			if ( ListKungFu && ListKungFu.LayoutCenter ) {
 				newElement.draggable( {
-					helper: function(){ return $('<div class="list-item-drag-helper">'+newElement.find(".list-item-content").text().substring(0, 20)+' . . .'+'</div>').get(0) },
+					helper: function(){
+						return $('<div class="list-item-drag-helper">'+newElement
+							.find(".list-item-content").text().substring(0, 20)+' . . .'+'</div>').get(0)
+					},
 					appendTo: ListKungFu.LayoutCenter,
 					revert: "invalid",
 					handle: ".handle",
@@ -1670,7 +1657,9 @@ jQuery(function ($) {
 			});
 
 			widget.toolbar.find( "#list-item-edit" ).bind( 'click', function( e ) {
-				widget.selectedListItem.element.trigger( 'edit' );
+				if ( widget.selectedListItem ) {
+					widget.selectedListItem.element.trigger( 'edit' );
+				}
 			});
 
 			widget.header.append( widget.toolbar );
@@ -1691,7 +1680,7 @@ jQuery(function ($) {
 						return false;
 					}
 
-					var $form = $( template );
+					var $form = $( $.mustache( template, json.list_item ) );
 					widget.listItemList.prepend( $form );
 
 					widget._SetupDeadlineButton( $form );
@@ -2018,26 +2007,22 @@ jQuery(function ($) {
 		},
 
 		_HighlightFormErrors: function( form, errors ) {
-			for ( var model in errors ) {
-				var currentModel = errors[ model ];
+			for ( var field in errors ) {
+				var currentField = errors[ field ];
 
-				for ( var field in currentModel ) {
-					var currentField = currentModel[ field ];
+				var errorExplanation = $( '<div class="error_explanation"><ul></ul></div>' );
+				var errorList = errorExplanation.find( "ul" );
 
-					var errorExplanation = $( '<div class="error_explanation"><ul></ul></div>' );
-					var errorList = errorExplanation.find( "ul" );
+				var input = $('*[name*="' + field + '"]');
 
-					var name = model + "[" + field + "]";
-					var input = form.find( "*[name=" + name + "]" );
-
-					for (var i = 0; i < currentField.length; i++ ) {
-						input.parent( ".field" ).addClass( "field_with_errors" );
-						errorList.append( '<li>' + currentField[ i ] + '</li>' );
-					}
-
-					input.parent( ".field" ).append( errorExplanation );
+				for ( var i = 0; i < currentField.length; i++ ) {
+					input.parent( ".field" ).addClass( "field_with_errors" );
+					errorList.append( '<li>' + currentField[ i ] + '</li>' );
 				}
+
+				input.parent( ".field" ).append( errorExplanation );
 			}
+
 		},
 
 		_ClearFormErrors: function( form ) {
@@ -2150,7 +2135,7 @@ jQuery(function ($) {
 					List.New({
 						successCallback: function( template, json, status, xhr, errors ) {
 							widget.emptyListImage.hide();
-							widget.listForm.append( template );
+							widget.listForm.append( $.mustache( template, json.list ) );
 							widget.listForm.show('slide', { direction: 'left' }, 'slow', function(){
 								widget.listForm.find('#list_title').first().focus();
 							});
@@ -2215,7 +2200,7 @@ jQuery(function ($) {
 					// HTML of the form.
 					List.Edit({
 						successCallback: function( template, json, status, xhr, errors ) {
-							widget.listForm.append( template );
+							widget.listForm.append( $( $.mustache( template, json.list ) ) );
 							widget.listForm.show('slide', { direction: 'left' }, 'slow', function(){
 								widget.listForm.find( '#list_title' ).first().focus();
 							});
@@ -6513,7 +6498,7 @@ Public functions
 				successCallback: function( template, json, status, xhr, errors ) {
 					widget.element.trigger( 'beforeEdit' );
 
-					var $form = $( template );
+					var $form = $( $.mustache( template, json.list_item ) );
 					$form.hide();
 
 
