@@ -127,7 +127,7 @@
 			});
 
 			$listItemHtml.find( '.shortend-content' ).bind( 'dblclick', function(){
-				widget._trigger( "OpenList", 0, { selectedList: listItem.list_item } );
+				widget._trigger( "OpenListItem", 0, { selectedListItem: listItem } );
 			});
 
 			$listItemHtml.find( '.full-content' ).bind( 'click', function( e ) {
