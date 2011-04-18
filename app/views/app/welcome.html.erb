@@ -1,12 +1,11 @@
 <div id="left">
 	<h3>Welcome to List Kung Fu!</h3>
 	<%= image_tag 'bird.jpg' %>
-	<h4>Create lists for anything easily!</h4>
+	<h4>Create lists, make notes, get organized!</h4>
 </div>
 <div id="right">
 	<h1>Sign Up Now!</h1>
 	<p class="center">It's free. And always will be!</p>
-
 	<%= render :template => 'devise/registrations/new_easy', :locals => { :resource  => User.new } %>
 </div>
 <div style="clear:both;"></div>
