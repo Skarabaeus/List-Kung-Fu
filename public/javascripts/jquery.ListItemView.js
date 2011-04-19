@@ -486,7 +486,9 @@
 
 			widget.toolbar.find( "#showCompleted" ).bind( "change", function( e ){
 				widget._ToggleCompleted( e.target.checked );
-				widget.selectedListItem.element.focus();
+				if ( widget.selectedListItem ) {
+					widget.selectedListItem.element.focus();
+				}
 			});
 
 			widget.toolbar.find( "#list-item-completed" ).bind( 'click', function( e ) {
@@ -678,16 +680,17 @@
 
 		OpenList: function( data ) {
 			var widget = this;
-			widget.RemoveList();
-			widget.element.ListItemShow( "destroy" );
-
-			widget._create();
-
-			widget.element.data( "data-list", data );
-			widget.selectedListItem = null;
 
 			ListListItem.Index( {
 				successCallback: function( template, json, status, xhr, errors ) {
+					widget.RemoveList();
+					widget.element.ListItemShow( "destroy" );
+
+					widget._create();
+
+					widget.element.data( "data-list", data );
+					widget.selectedListItem = null;
+
 					widget._CreateToolbar();
 
 					$.each( json, function( index, listItem ) {
@@ -716,11 +719,11 @@
 
 					// set list name
 					widget.listName.text( data.list.title );
+
+					widget._TriggerReinitOfPanes();
 				},
 				lists: data.list.id
 			});
-
-			widget._TriggerReinitOfPanes();
 		},
 
 		SelectListItem: function() {

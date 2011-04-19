@@ -24,10 +24,12 @@ var Controller = function(spec, my) {
 	that.ClearFlash();
 
 	that.SetFlash = function( xhr ) {
-		that.flash.notice = xhr.getResponseHeader("X-Flash-Notice") || "";
-		that.flash.error = xhr.getResponseHeader("X-Flash-Error") || "";
-		that.flash.warning = xhr.getResponseHeader("X-Flash-Warning") || "";
-		that.flash.message = xhr.getResponseHeader("X-Flash-Message") || "";
+		if ( xhr && !xhr.cachedAt ) {
+			that.flash.notice = xhr.getResponseHeader("X-Flash-Notice") || "";
+			that.flash.error = xhr.getResponseHeader("X-Flash-Error") || "";
+			that.flash.warning = xhr.getResponseHeader("X-Flash-Warning") || "";
+			that.flash.message = xhr.getResponseHeader("X-Flash-Message") || "";
+		}
 
 		if ( typeof( spec.onFlashUpdate ) === 'function' ) {
 			if ( that.flash.notice !== "" || that.flash.error !== "" ||
@@ -113,26 +115,13 @@ var Controller = function(spec, my) {
 	that.Index = function( setup ) {
 		var successCallback = setup.successCallback || null;
 		var route = that.ConstructRoute( setup );
-		var data = setup.send;
+		var data = setup.send || {};
 
-		var result = $.ajax({
-			url: that.baseURL + route,
-			dataType: "json",
-			type: "GET",
-			processData: true,
-			contentType: "application/json",
-			data: data,
-			beforeSend: function( xhr )
-			{
-				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-			},
-			success: function ( data, status, xhr ) {
-				that.DefaultCallback( successCallback, data, status, xhr );
-			},
-			error: function( xhr, errorType, exception ) {
-				that.DefaultErrorCallback( xhr, errorType, exception );
-			}
-		});
+		var result = jQuery.retrieveJSON( that.baseURL + route, data, function( data, textStatus, jqXhr) {
+			that.DefaultCallback( successCallback, data, textStatus, jqXhr );
+		}, that.DefaultErrorCallback );
+
+
 	};
 
 	that.Show = function( setup ) {

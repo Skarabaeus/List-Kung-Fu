@@ -7,6 +7,24 @@
 		*
 		**/
 
+		_ClearDashboard: function() {
+			var widget = this;
+			widget.today.find( '.data-schedule-column' ).children().remove();
+			widget.tomorrow.find( '.data-schedule-column' ).children().remove();
+			widget.thisweek.find( '.data-schedule-column' ).children().remove();
+			widget.nextweek.find( '.data-schedule-column' ).children().remove();
+			widget.later.find( '.data-schedule-column' ).children().remove();
+		},
+
+		_InitCategories: function() {
+			var widget = this;
+			widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1><div data-type="scheduleColumn" class="data-schedule-column"></div></div>' );
+			widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1><div data-type="scheduleColumn" class="data-schedule-column"></div></div>' );
+			widget.thisweek = $( '<div id="thisweek" class="schedule-column"><h1>This Week</h1><div data-type="scheduleColumn" class="data-schedule-column"></div></div>' );
+			widget.nextweek = $( '<div id="nextweek" class="schedule-column"><h1>Next Week</h1><div data-type="scheduleColumn" class="data-schedule-column"></div></div>' );
+			widget.later = $( '<div id="later"><h1>Later</h1><div data-type="scheduleColumn" class="data-schedule-column"></div></div>' );
+		},
+
 		_TriggerResize: function() {
 			this._trigger("ContentDimensionsChanged", 0, {} );
 		},
@@ -242,11 +260,7 @@
 
 			widget.header = $( '<div id="dashboard-header" class="header"><h1>Dashboard</h1></div>')
 			widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
-			widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1><div data-type="scheduleColumn"></div></div>' );
-			widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1><div data-type="scheduleColumn"></div></div>' );
-			widget.thisweek = $( '<div id="thisweek" class="schedule-column"><h1>This Week</h1><div data-type="scheduleColumn"></div></div>' );
-			widget.nextweek = $( '<div id="nextweek" class="schedule-column"><h1>Next Week</h1><div data-type="scheduleColumn"></div></div>' );
-			widget.later = $( '<div id="later"><h1>Later</h1><div data-type="scheduleColumn"></div></div>' );
+			widget._InitCategories();
 
 			widget.element.append( widget.header );
 			widget.element.append( widget.wrapper );
@@ -258,11 +272,14 @@
 			widget.nextweek.append( widget.later );
 			widget.wrapper.append( '<div style="clear:both;">&nbsp;</div>' );
 
-
-
 			// Load scheduled items
 			ListItem.Index( {
 				successCallback: function( template, json, status, xhr, errors ) {
+					// need to clear the dashboard because eventually we already
+					// have items from the cache in the list.
+					if ( status === 'success' ) {
+						widget._ClearDashboard();
+					}
 
 					$.each( json, function( index, listItem ) {
 						widget._CreateDashboardItem( listItem, template );

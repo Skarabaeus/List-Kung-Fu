@@ -610,10 +610,7 @@
 			widget.listForm = null;
 			widget.selectedTags = [];
 
-			var date = new Date();
-			var seconds = Date.UTC( date.getFullYear(), date.getMonth(), date.getDay(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds());
-
-			widget.emptyListImage = $('<img src="/images/empty/list.jpg?' + seconds + '"/>');
+			widget.emptyListImage = $('<img src="/images/empty/list.jpg"/>');
 			widget.emptyListImage.css({
 				position: 'absolute',
 				top: '45px',

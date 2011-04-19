@@ -220,6 +220,9 @@
 			// retrieve all tags and display them
 			Tag.Index( {
 				successCallback: function( template, json, status, xhr, errors ) {
+					if ( status === 'success' ) {
+						widget.tagList.find( '.tag' ).remove();
+					}
 
 					for ( var i = 0; i < json.length; i++ ) {
 						widget.tagList.append( widget._GetTag( json[ i ], template ) ) ;
