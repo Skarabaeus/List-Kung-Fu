@@ -239,10 +239,12 @@ var Controller = function(spec, my) {
 	that.ClearFlash();
 
 	that.SetFlash = function( xhr ) {
-		that.flash.notice = xhr.getResponseHeader("X-Flash-Notice") || "";
-		that.flash.error = xhr.getResponseHeader("X-Flash-Error") || "";
-		that.flash.warning = xhr.getResponseHeader("X-Flash-Warning") || "";
-		that.flash.message = xhr.getResponseHeader("X-Flash-Message") || "";
+		if ( xhr && !xhr.cachedAt ) {
+			that.flash.notice = xhr.getResponseHeader("X-Flash-Notice") || "";
+			that.flash.error = xhr.getResponseHeader("X-Flash-Error") || "";
+			that.flash.warning = xhr.getResponseHeader("X-Flash-Warning") || "";
+			that.flash.message = xhr.getResponseHeader("X-Flash-Message") || "";
+		}
 
 		if ( typeof( spec.onFlashUpdate ) === 'function' ) {
 			if ( that.flash.notice !== "" || that.flash.error !== "" ||
@@ -328,26 +330,13 @@ var Controller = function(spec, my) {
 	that.Index = function( setup ) {
 		var successCallback = setup.successCallback || null;
 		var route = that.ConstructRoute( setup );
-		var data = setup.send;
+		var data = setup.send || {};
 
-		var result = $.ajax({
-			url: that.baseURL + route,
-			dataType: "json",
-			type: "GET",
-			processData: true,
-			contentType: "application/json",
-			data: data,
-			beforeSend: function( xhr )
-			{
-				xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-			},
-			success: function ( data, status, xhr ) {
-				that.DefaultCallback( successCallback, data, status, xhr );
-			},
-			error: function( xhr, errorType, exception ) {
-				that.DefaultErrorCallback( xhr, errorType, exception );
-			}
-		});
+		var result = jQuery.retrieveJSON( that.baseURL + route, data, function( data, textStatus, jqXhr) {
+			that.DefaultCallback( successCallback, data, textStatus, jqXhr );
+		}, that.DefaultErrorCallback );
+
+
 	};
 
 	that.Show = function( setup ) {
@@ -752,6 +741,24 @@ jQuery(function ($) {
 		*
 		**/
 
+		_ClearDashboard: function() {
+			var widget = this;
+			widget.today.find( '.data-schedule-column' ).children().remove();
+			widget.tomorrow.find( '.data-schedule-column' ).children().remove();
+			widget.thisweek.find( '.data-schedule-column' ).children().remove();
+			widget.nextweek.find( '.data-schedule-column' ).children().remove();
+			widget.later.find( '.data-schedule-column' ).children().remove();
+		},
+
+		_InitCategories: function() {
+			var widget = this;
+			widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1><div data-type="scheduleColumn" class="data-schedule-column"></div></div>' );
+			widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1><div data-type="scheduleColumn" class="data-schedule-column"></div></div>' );
+			widget.thisweek = $( '<div id="thisweek" class="schedule-column"><h1>This Week</h1><div data-type="scheduleColumn" class="data-schedule-column"></div></div>' );
+			widget.nextweek = $( '<div id="nextweek" class="schedule-column"><h1>Next Week</h1><div data-type="scheduleColumn" class="data-schedule-column"></div></div>' );
+			widget.later = $( '<div id="later"><h1>Later</h1><div data-type="scheduleColumn" class="data-schedule-column"></div></div>' );
+		},
+
 		_TriggerResize: function() {
 			this._trigger("ContentDimensionsChanged", 0, {} );
 		},
@@ -987,11 +994,7 @@ jQuery(function ($) {
 
 			widget.header = $( '<div id="dashboard-header" class="header"><h1>Dashboard</h1></div>')
 			widget.wrapper = $( '<div class="ui-layout-content" id="dashboard-view"></div>' );
-			widget.today = $( '<div id="today" class="schedule-column"><h1>Today</h1><div data-type="scheduleColumn"></div></div>' );
-			widget.tomorrow = $( '<div id="tomorrow" class="schedule-column"><h1>Tomorrow</h1><div data-type="scheduleColumn"></div></div>' );
-			widget.thisweek = $( '<div id="thisweek" class="schedule-column"><h1>This Week</h1><div data-type="scheduleColumn"></div></div>' );
-			widget.nextweek = $( '<div id="nextweek" class="schedule-column"><h1>Next Week</h1><div data-type="scheduleColumn"></div></div>' );
-			widget.later = $( '<div id="later"><h1>Later</h1><div data-type="scheduleColumn"></div></div>' );
+			widget._InitCategories();
 
 			widget.element.append( widget.header );
 			widget.element.append( widget.wrapper );
@@ -1003,11 +1006,14 @@ jQuery(function ($) {
 			widget.nextweek.append( widget.later );
 			widget.wrapper.append( '<div style="clear:both;">&nbsp;</div>' );
 
-
-
 			// Load scheduled items
 			ListItem.Index( {
 				successCallback: function( template, json, status, xhr, errors ) {
+					// need to clear the dashboard because eventually we already
+					// have items from the cache in the list.
+					if ( status === 'success' ) {
+						widget._ClearDashboard();
+					}
 
 					$.each( json, function( index, listItem ) {
 						widget._CreateDashboardItem( listItem, template );
@@ -1632,7 +1638,9 @@ jQuery(function ($) {
 
 			widget.toolbar.find( "#showCompleted" ).bind( "change", function( e ){
 				widget._ToggleCompleted( e.target.checked );
-				widget.selectedListItem.element.focus();
+				if ( widget.selectedListItem ) {
+					widget.selectedListItem.element.focus();
+				}
 			});
 
 			widget.toolbar.find( "#list-item-completed" ).bind( 'click', function( e ) {
@@ -1824,16 +1832,17 @@ jQuery(function ($) {
 
 		OpenList: function( data ) {
 			var widget = this;
-			widget.RemoveList();
-			widget.element.ListItemShow( "destroy" );
-
-			widget._create();
-
-			widget.element.data( "data-list", data );
-			widget.selectedListItem = null;
 
 			ListListItem.Index( {
 				successCallback: function( template, json, status, xhr, errors ) {
+					widget.RemoveList();
+					widget.element.ListItemShow( "destroy" );
+
+					widget._create();
+
+					widget.element.data( "data-list", data );
+					widget.selectedListItem = null;
+
 					widget._CreateToolbar();
 
 					$.each( json, function( index, listItem ) {
@@ -1862,11 +1871,11 @@ jQuery(function ($) {
 
 					// set list name
 					widget.listName.text( data.list.title );
+
+					widget._TriggerReinitOfPanes();
 				},
 				lists: data.list.id
 			});
-
-			widget._TriggerReinitOfPanes();
 		},
 
 		SelectListItem: function() {
@@ -2519,10 +2528,7 @@ jQuery(function ($) {
 			widget.listForm = null;
 			widget.selectedTags = [];
 
-			var date = new Date();
-			var seconds = Date.UTC( date.getFullYear(), date.getMonth(), date.getDay(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds());
-
-			widget.emptyListImage = $('<img src="/images/empty/list.jpg?' + seconds + '"/>');
+			widget.emptyListImage = $('<img src="/images/empty/list.jpg"/>');
 			widget.emptyListImage.css({
 				position: 'absolute',
 				top: '45px',
@@ -6132,6 +6138,9 @@ $.fn.layout = function (opts) {
 			// retrieve all tags and display them
 			Tag.Index( {
 				successCallback: function( template, json, status, xhr, errors ) {
+					if ( status === 'success' ) {
+						widget.tagList.find( '.tag' ).remove();
+					}
 
 					for ( var i = 0; i < json.length; i++ ) {
 						widget.tagList.append( widget._GetTag( json[ i ], template ) ) ;
@@ -6574,3 +6583,216 @@ Public functions
 	// register widget
 	$.widget("ui.ListItemEdit", ListItemEdit);
 })();
+/*!
+ * jQuery Offline
+ * Version 1.0.0
+ *
+ * http://github.com/wycats/jquery-offline
+ *
+ * Copyright 2010, Yehuda Katz
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * Date: Fri Jul 9 10:20:00 2010 -0800
+ */
+
+(function($) {
+
+  var prefix = "offline.jquery:",
+    mostRecent = null,
+    requesting = {};
+
+  // Allow the user to explicitly turn off localStorage
+  // before loading this plugin
+  if (typeof $.support.localStorage === "undefined") {
+    $.support.localStorage = !!window.localStorage;
+  }
+
+  // modified getJSON which uses ifModified: true
+  function getJSON(url, data, fn, errorFn) {
+    if (jQuery.isFunction(data)) {
+      fn = data;
+      data = null;
+    }
+
+    var requestingKey = url + "?" + $.param(data || {});
+    if (requesting[requestingKey]) {
+      return false;
+    }
+
+    requesting[requestingKey] = true;
+
+    return jQuery.ajax({
+      type: "GET",
+      url: url,
+      data: data,
+      success: function(responseData, text) {
+        delete requesting[requestingKey];
+
+        // handle lack of response (error callback isn't called in this case)
+        if (undefined === responseData) {
+          if (!window.navigator.onLine) {
+            // requeue the request for the next time we come online
+            mostRecent = function() {
+              getJSON(url, data, fn, errorFn);
+            };
+          }
+          return;
+        }
+
+        fn(responseData, text);
+      },
+      error: function(xhr, errorType, exception) {
+				errorFn(xhr, errorType, exception);
+        delete requesting[requestingKey];
+      },
+      dataType: "json",
+      ifModified: true
+    });
+  }
+
+  if ($.support.localStorage) {
+    // If localStorage is available, define jQuery.retrieveJSON
+    // and jQuery.clearJSON to operate in terms of the offline
+    // cache
+    // If the user comes online, run the most recent request
+    // that was queued due to the user being offline
+    $(window).bind("online", function() {
+      if (mostRecent) {
+        mostRecent();
+      }
+    });
+
+    // If the user goes offline, hide any loading bar
+    // the user may have created
+    $(window).bind("offline", function() {
+      jQuery.event.trigger("ajaxStop");
+    });
+
+    $.retrieveJSON = function(url, data, fn, errorFn) {
+      // allow jQuery.retrieveJSON(url, fn)
+      if ($.isFunction(data)) {
+        fn = data;
+        data = {};
+      }
+
+      // remember when this request started so we can report
+      // the time when a follow-up Ajax request completes.
+      // this is especially important when the user comes
+      // back online, since retrieveDate may be minutes,
+      // hours or even days before the Ajax request finally
+      // completes
+      var retrieveDate = new Date;
+
+      // get a String value for the data passed in, and then
+      // use it to calculate a cache key
+      var param       = $.param(data),
+          key         = prefix + url + ":" + param,
+          text        = localStorage[key],
+          dateString  = localStorage[key + ":date"],
+          date        = new Date(Date.parse(dateString));
+
+      function cleanupLocalStorage() {
+        // take all date keys and remove the oldest half
+        var dateKeys = [];
+        for (var i = 0; i < localStorage.length; ++i) {
+          var key = localStorage.key(i);
+          if (/:date$/.test(key)) {
+            dateKeys.push(key);
+          }
+        }
+        dateKeys.sort(function(a, b) {
+          var date_a = localStorage[a], date_b = localStorage[b];
+          return date_a < date_b ? -1 : (date_a > date_b ? +1 : 0);
+        });
+        for (var i = 0; i < dateKeys.length / 2; ++i) {
+          var key = dateKeys[i];
+          delete localStorage[key];
+          delete localStorage[key.substr(0, key.length - 5)]; // :date
+        }
+      }
+
+      // create a function that will make an Ajax request and
+      // store the result in the cache. This function will be
+      // deferred until later if the user is offline
+      function getData() {
+        getJSON(url, data, function(json, status) {
+          if ( status == 'notmodified' ) {
+            // Just return if the response has a 304 status code
+            return false;
+          }
+
+          while (true) {
+            try {
+              localStorage[key] = JSON.stringify(json);
+              localStorage[key + ":date"] = new Date;
+              break;
+            } catch (e) {
+                if (e.name == "QUOTA_EXCEEDED_ERR" || e.name ==
+                    "NS_ERROR_DOM_QUOTA_REACHED") {
+                  cleanupLocalStorage();
+                }
+            }
+          }
+
+          // If this is a follow-up request, create an object
+          // containing both the original time of the cached
+          // data and the time that the data was originally
+          // retrieved from the cache. With this information,
+          // users of jQuery Offline can provide the user
+          // with improved feedback if the lag is large
+          var data = text && { cachedAt: date, retrievedAt: retrieveDate };
+          fn(json, status, data);
+        }, errorFn);
+      }
+
+      // If there is anything in the cache, call the callback
+      // right away, with the "cached" status string
+      if( text ) {
+        var response = fn( $.parseJSON(text), "cached", { cachedAt: date } );
+        if( response === false ) return false;
+      }
+
+      // If the user is online, make the Ajax request right away;
+      // otherwise, make it the most recent callback so it will
+      // get triggered when the user comes online
+      if (window.navigator.onLine) {
+        getData();
+      } else {
+        mostRecent = getData;
+      }
+
+      return true;
+    };
+
+    // jQuery.clearJSON is simply a wrapper around deleting the
+    // localStorage for a URL/data pair
+    $.clearJSON = function(url, data) {
+      var param = $.param(data || {});
+      delete localStorage[prefix + url + ":" + param];
+      delete localStorage[prefix + url + ":" + param + ":date"];
+    };
+  } else {
+    // If localStorage is unavailable, just make all requests
+    // regular Ajax requests.
+    $.retrieveJSON = getJSON;
+    $.clearJSON = $.noop;
+  }
+
+})(jQuery);
