@@ -492,10 +492,12 @@
 			});
 
 			widget.toolbar.find( "#list-item-completed" ).bind( 'click', function( e ) {
-				var data = widget.selectedListItem.data;
-				var $element = widget.selectedListItem.element;
+				if ( widget.selectedListItem ) {
+					var data = widget.selectedListItem.data;
+					var $element = widget.selectedListItem.element;
 
-				widget._MarkCompleted( $element, data );
+					widget._MarkCompleted( $element, data );
+				}
 			});
 
 			widget.toolbar.find( "#list-item-delete" ).bind( 'click', function( e ) {
