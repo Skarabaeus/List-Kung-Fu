@@ -332,11 +332,11 @@ var Controller = function(spec, my) {
 		var route = that.ConstructRoute( setup );
 		var data = setup.send || {};
 
-		var result = jQuery.retrieveJSON( that.baseURL + route, data, function( data, textStatus, jqXhr) {
+		var jqXhr = jQuery.retrieveJSON( that.baseURL + route, data, function( data, textStatus, jqXhr) {
 			that.DefaultCallback( successCallback, data, textStatus, jqXhr );
-		}, that.DefaultErrorCallback );
+		} );
 
-
+		jqXhr.error( that.DefaultErrorCallback );
 	};
 
 	that.Show = function( setup ) {
@@ -1644,10 +1644,12 @@ jQuery(function ($) {
 			});
 
 			widget.toolbar.find( "#list-item-completed" ).bind( 'click', function( e ) {
-				var data = widget.selectedListItem.data;
-				var $element = widget.selectedListItem.element;
+				if ( widget.selectedListItem ) {
+					var data = widget.selectedListItem.data;
+					var $element = widget.selectedListItem.element;
 
-				widget._MarkCompleted( $element, data );
+					widget._MarkCompleted( $element, data );
+				}
 			});
 
 			widget.toolbar.find( "#list-item-delete" ).bind( 'click', function( e ) {
@@ -6625,7 +6627,7 @@ Public functions
   }
 
   // modified getJSON which uses ifModified: true
-  function getJSON(url, data, fn, errorFn) {
+  function getJSON(url, data, fn) {
     if (jQuery.isFunction(data)) {
       fn = data;
       data = null;
@@ -6650,7 +6652,7 @@ Public functions
           if (!window.navigator.onLine) {
             // requeue the request for the next time we come online
             mostRecent = function() {
-              getJSON(url, data, fn, errorFn);
+              getJSON(url, data, fn);
             };
           }
           return;
@@ -6658,8 +6660,7 @@ Public functions
 
         fn(responseData, text);
       },
-      error: function(xhr, errorType, exception) {
-				errorFn(xhr, errorType, exception);
+      error: function() {
         delete requesting[requestingKey];
       },
       dataType: "json",
@@ -6685,7 +6686,7 @@ Public functions
       jQuery.event.trigger("ajaxStop");
     });
 
-    $.retrieveJSON = function(url, data, fn, errorFn) {
+    $.retrieveJSON = function(url, data, fn) {
       // allow jQuery.retrieveJSON(url, fn)
       if ($.isFunction(data)) {
         fn = data;
@@ -6732,7 +6733,7 @@ Public functions
       // store the result in the cache. This function will be
       // deferred until later if the user is offline
       function getData() {
-        getJSON(url, data, function(json, status) {
+        return getJSON(url, data, function(json, status) {
           if ( status == 'notmodified' ) {
             // Just return if the response has a 304 status code
             return false;
@@ -6759,7 +6760,7 @@ Public functions
           // with improved feedback if the lag is large
           var data = text && { cachedAt: date, retrievedAt: retrieveDate };
           fn(json, status, data);
-        }, errorFn);
+        });
       }
 
       // If there is anything in the cache, call the callback
@@ -6772,13 +6773,15 @@ Public functions
       // If the user is online, make the Ajax request right away;
       // otherwise, make it the most recent callback so it will
       // get triggered when the user comes online
+			var jqXhr;
       if (window.navigator.onLine) {
-        getData();
+        jqXhr = getData();
       } else {
         mostRecent = getData;
+				jqXhr = true
       }
 
-      return true;
+      return jqXhr;
     };
 
     // jQuery.clearJSON is simply a wrapper around deleting the

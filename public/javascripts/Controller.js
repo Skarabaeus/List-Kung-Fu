@@ -117,11 +117,11 @@ var Controller = function(spec, my) {
 		var route = that.ConstructRoute( setup );
 		var data = setup.send || {};
 
-		var result = jQuery.retrieveJSON( that.baseURL + route, data, function( data, textStatus, jqXhr) {
+		var jqXhr = jQuery.retrieveJSON( that.baseURL + route, data, function( data, textStatus, jqXhr) {
 			that.DefaultCallback( successCallback, data, textStatus, jqXhr );
-		}, that.DefaultErrorCallback );
+		} );
 
-
+		jqXhr.error( that.DefaultErrorCallback );
 	};
 
 	that.Show = function( setup ) {

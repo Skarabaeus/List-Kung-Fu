@@ -40,7 +40,7 @@
   }
 
   // modified getJSON which uses ifModified: true
-  function getJSON(url, data, fn, errorFn) {
+  function getJSON(url, data, fn) {
     if (jQuery.isFunction(data)) {
       fn = data;
       data = null;
@@ -65,7 +65,7 @@
           if (!window.navigator.onLine) {
             // requeue the request for the next time we come online
             mostRecent = function() {
-              getJSON(url, data, fn, errorFn);
+              getJSON(url, data, fn);
             };
           }
           return;
@@ -73,8 +73,7 @@
 
         fn(responseData, text);
       },
-      error: function(xhr, errorType, exception) {
-				errorFn(xhr, errorType, exception);
+      error: function() {
         delete requesting[requestingKey];
       },
       dataType: "json",
@@ -100,7 +99,7 @@
       jQuery.event.trigger("ajaxStop");
     });
 
-    $.retrieveJSON = function(url, data, fn, errorFn) {
+    $.retrieveJSON = function(url, data, fn) {
       // allow jQuery.retrieveJSON(url, fn)
       if ($.isFunction(data)) {
         fn = data;
@@ -147,7 +146,7 @@
       // store the result in the cache. This function will be
       // deferred until later if the user is offline
       function getData() {
-        getJSON(url, data, function(json, status) {
+        return getJSON(url, data, function(json, status) {
           if ( status == 'notmodified' ) {
             // Just return if the response has a 304 status code
             return false;
@@ -174,7 +173,7 @@
           // with improved feedback if the lag is large
           var data = text && { cachedAt: date, retrievedAt: retrieveDate };
           fn(json, status, data);
-        }, errorFn);
+        });
       }
 
       // If there is anything in the cache, call the callback
@@ -187,13 +186,15 @@
       // If the user is online, make the Ajax request right away;
       // otherwise, make it the most recent callback so it will
       // get triggered when the user comes online
+			var jqXhr;
       if (window.navigator.onLine) {
-        getData();
+        jqXhr = getData();
       } else {
         mostRecent = getData;
+				jqXhr = true
       }
 
-      return true;
+      return jqXhr;
     };
 
     // jQuery.clearJSON is simply a wrapper around deleting the
