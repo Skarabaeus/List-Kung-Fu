@@ -10,6 +10,7 @@ gem 'RedCloth' # for textile support
 gem 'aws-s3', :require => 'aws/s3'
 gem 'jquery-rails'
 gem 'sanitize'
+gem 'dalli'
 
 group :development, :test do
 	gem 'ruby-debug'

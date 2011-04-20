@@ -37,6 +37,7 @@ GEM
     bcrypt-ruby (2.1.4)
     builder (2.1.2)
     columnize (0.3.2)
+    dalli (1.0.3)
     devise (1.2.1)
       bcrypt-ruby (~> 2.1.2)
       orm_adapter (~> 0.0.3)
@@ -108,6 +109,7 @@ PLATFORMS
 DEPENDENCIES
   RedCloth
   aws-s3
+  dalli
   devise
   factory_girl_rails
   jquery-rails
