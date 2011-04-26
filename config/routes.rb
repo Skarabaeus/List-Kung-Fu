@@ -9,7 +9,14 @@ ListKungFu::Application.routes.draw do
 
   resources :tags
 
-  devise_for :users, :controllers => { :sessions => "sessions" }
+  # use ssl in production
+  if Rails.env == 'production'
+    constraints :protocol => "https", :domain => 'listkungfu.heroku.com' do
+      devise_for :users, :controllers => { :sessions => "sessions" }
+    end
+  else
+    devise_for :users, :controllers => { :sessions => "sessions" }
+  end
 
   get "app/main"
   get "app/welcome"
