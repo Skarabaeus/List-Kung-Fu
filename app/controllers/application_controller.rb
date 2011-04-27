@@ -16,6 +16,10 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def get_session_key
+    request.session_options[:id]
+  end
+
   def set_timezone
     Time.zone = current_user.time_zone if user_signed_in?
   end

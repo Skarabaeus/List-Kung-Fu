@@ -5,14 +5,6 @@ class ListItem < ActiveRecord::Base
   after_save :update_list
   after_destroy :update_list
 
-
-  # for now not supporting this, because I'm not yet pursuated that
-  # this feature is really needed. simple todo lists are more likely
-  # to be actually used.
-  # keeping the parent_id field in the DB for now, might drop that later.
-  #belongs_to :parent_item, :class_name => 'ListItem'
-  #has_many :children_items, :class_name => 'ListItem', :foreign_key => 'parent_item_id', :dependent => :destroy
-
   # SCOPES
 
   scope( :all_scheduled, lambda { |user_id|
