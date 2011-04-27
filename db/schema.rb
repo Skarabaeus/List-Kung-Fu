@@ -10,20 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110131212621) do
-
-  create_table "filters", :force => true do |t|
-    t.string    "name"
-    t.string    "searchtext"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
-    t.integer   "user_id"
-  end
-
-  create_table "filters_tags", :id => false, :force => true do |t|
-    t.integer "filter_id"
-    t.integer "tag_id"
-  end
+ActiveRecord::Schema.define(:version => 20110427180920) do
 
   create_table "list_items", :force => true do |t|
     t.text      "body"
@@ -45,11 +32,6 @@ ActiveRecord::Schema.define(:version => 20110131212621) do
   create_table "lists_tags", :id => false, :force => true do |t|
     t.integer "list_id"
     t.integer "tag_id"
-  end
-
-  create_table "lists_users", :id => false, :force => true do |t|
-    t.integer "list_id"
-    t.integer "user_id"
   end
 
   create_table "sessions", :force => true do |t|
