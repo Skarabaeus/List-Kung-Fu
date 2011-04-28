@@ -1732,7 +1732,6 @@ jQuery(function ($) {
 								$form.hide( 'slow', function(){
 									widget._AddListItem( json, template, true );
 									$( this ).remove();
-									widget.toolbar.find( "#list-item-search" ).trigger( "ClearValue" );
 									widget.listItemList.find( ".row" ).show();
 									widget.listItemList.find( ".row" ).first().focus();
 									widget.listItemList.find( ".row" ).first().find( ".handle" ).height( widget.listItemList.find( ".row" ).first().find( ".list-item-content" ).height() );
@@ -1778,12 +1777,6 @@ jQuery(function ($) {
 					$completedInput.trigger( "change" );
 				}
 			});
-
-			$( document ).bind( "keyup", "f", function( e ) {
-				widget.toolbar.find( "#list-item-search" ).focus();
-			});
-
-
 		},
 		/**
 		*
@@ -1873,8 +1866,8 @@ jQuery(function ($) {
 
 					// set list name
 					widget.listName.text( data.list.title );
-
 					widget._TriggerReinitOfPanes();
+					widget._TriggerResize();
 				},
 				lists: data.list.id
 			});
