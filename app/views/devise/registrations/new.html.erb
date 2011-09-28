@@ -4,10 +4,10 @@
   <%= devise_error_messages! %>
 
 	<p><%= f.label :username %><br />
-	<%= f.text_field :username %></p>
+	<%= f.text_field :username, :autocomplete => 'off' %></p>
 
   <p><%= f.label :email %><br />
-  <%= f.text_field :email %></p>
+  <%= f.text_field :email, :autocomplete => 'off'  %></p>
 
 	<p><%= f.label :time_zone %><br />
 	<%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all %></p>
